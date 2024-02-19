@@ -160,3 +160,5 @@ cython_debug/
 #.idea/
 .env
 reserved_notes.txt
+
+persfvg_dump*
