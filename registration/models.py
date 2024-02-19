@@ -123,3 +123,23 @@ class EventParticipation(models.Model):
     class Meta:
         verbose_name = _("Event Participation")
         verbose_name_plural = _("Event Participations")
+
+
+class EventLog(models.Model):
+
+    EMAIL_SENT = "EMAIL_SENT"
+    SUBSCRIPTION_SET = "SUBSCRIPTION_SET"
+    SUBSCRIPTION_REMOVED = "SUBSCRIPTION_REMOVED"
+    LOGIN = "LOGIN"
+    LOGIN_FAILED = "LOGIN_FAILED"
+    LOGIN_SUCCESS = "LOGIN_SUCCESS"
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    event_type = models.CharField(max_length=128, null=True)
+    event_title = models.CharField(max_length=256, null=True)
+    event_data = models.TextField(null=True)
+    event_target = models.CharField(max_length=256, null=True, blank=True)
+
+    def __str__(self):
+        return f"EventLog #{self.id}  event_type={self.event_type} event_target={self.event_target} event_title={self.event_title} {self.created_at}"

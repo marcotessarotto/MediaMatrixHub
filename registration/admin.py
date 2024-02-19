@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InformationEvent, Subscriber, EventParticipation
+from .models import InformationEvent, Subscriber, EventParticipation, EventLog
 
 
 @admin.register(InformationEvent)
@@ -25,4 +25,11 @@ class EventParticipationAdmin(admin.ModelAdmin):
     list_display = ('id', 'event', 'subscriber')
     list_filter = ('event', 'subscriber')
     search_fields = ('event__title', 'subscriber__name', 'subscriber__surname')
+
+
+@admin.register(EventLog)
+class EventLogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'created_at', 'event_type', 'event_title', 'event_target', 'event_data', 'created_at')
+    list_filter = [ 'event_type']
+
 

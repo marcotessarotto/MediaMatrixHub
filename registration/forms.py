@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from registration.models import InformationEvent
 
@@ -11,7 +12,15 @@ class SubscriberLoginForm(forms.Form):
 class EventParticipationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        enabled_events = InformationEvent.objects.filter(enabled=True)
+
+        current_date = kwargs['current_date'] if 'current_date' in kwargs else timezone.now()
+
+        # enabled_events = InformationEvent.objects.filter(enabled=True)
+        enabled_events = InformationEvent.objects.filter(
+            enabled=True,
+            event_date__gte=current_date
+        )
+
         for event in enabled_events:
             self.fields[f'event_{event.id}'] = forms.BooleanField(
                 label=event.to_html_table(),
