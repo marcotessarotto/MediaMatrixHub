@@ -37,9 +37,9 @@ class InformationEvent(models.Model):
     def to_html_table_email(self):
         """
         Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
-        without row IDs.
+        without row IDs. For use in email templates.
         """
-        html = format_html(
+        return format_html(
             '''
             <table class="table">
                 <tbody>
@@ -62,14 +62,13 @@ class InformationEvent(models.Model):
             description=self.description or 'N/A',
             enabled="Yes" if self.enabled else "No",
         )
-        return html
 
     def to_html_table(self):
         """
         Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
         without row IDs.
         """
-        html = format_html(
+        return format_html(
             '''
             <table class="table uniform-table">
                 <!--<thead>
@@ -99,7 +98,6 @@ class InformationEvent(models.Model):
             description=self.description or 'N/A',
             enabled="Yes" if self.enabled else "No",
         )
-        return html
 
 
 class Subscriber(models.Model):
