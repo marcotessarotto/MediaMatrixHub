@@ -20,6 +20,8 @@ def subscriber_login(request):
     # Check if the IP is private
     if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
         syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
+
+        syslog.syslog(syslog.LOG_ERR, str(request.META))
         return HttpResponse(status=403)
 
     if request.method == 'POST':

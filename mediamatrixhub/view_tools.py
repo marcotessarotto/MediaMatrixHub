@@ -4,7 +4,7 @@ import ipaddress
 _ip_cache = {}
 
 
-def is_private_ip(ip):
+def is_private_ip__(ip):
     def is_private_ip_store():
         result = ipaddress.ip_address(ip).is_private
         _ip_cache[ip] = result
@@ -28,3 +28,8 @@ def is_private_ip_0(ip):
     """Check if the given IP address is private."""
     return ipaddress.ip_address(ip).is_private
 
+def is_private_ip(ip):
+    result = ipaddress.ip_address(ip).is_private
+    return result
+
+# print(is_private_ip('10.10.10.10'))

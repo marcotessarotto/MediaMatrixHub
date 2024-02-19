@@ -41,7 +41,7 @@ class InformationEvent(models.Model):
                 <tbody>
                     <tr><td width="200px">Titolo Evento</td><td>{title}</td></tr>            
                     <tr><td>Descrizione</td><td>{description}</td></tr>                        
-                    <tr><td>Data Evento</td><td>{event_date} </td></tr>
+                    <tr><td>Data Evento</td><td>{event_date} {event_start_time}</td></tr>
                     <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>
                     <tr><td>Speaker</td><td>{speaker}</td></tr>
                     <tr><td>Nome Struttura</td><td>{structure_name}</td></tr>
@@ -78,7 +78,7 @@ class InformationEvent(models.Model):
                 <tbody>
                     <tr><td width="200px">Titolo Evento</td><td>{title}</td></tr>            
                     <tr><td>Descrizione</td><td>{description}</td></tr>                        
-                    <tr><td>Data Evento</td><td>{event_date} </td></tr>
+                    <tr><td>Data Evento</td><td>{event_date} {event_start_time}</td></tr>
                     <!--<tr><td>Ora Inizio</td><td>{event_start_time}</td></tr>-->
                     <!-- <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>-->
                     <tr><td>Speaker</td><td>{speaker}</td></tr>
