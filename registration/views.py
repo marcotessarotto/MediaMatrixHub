@@ -36,20 +36,48 @@ def manage_subscription(request):
     else:
         raise Http404('Utente non trovato')
 
+    # if request.method == 'POST':
+    #     form = EventParticipationForm(request.POST)
+    #     if form.is_valid():
+    #         # Assuming the user's subscriber information is available, e.g., through user profile
+    #         subscriber = Subscriber.objects.get(email=request.user.email)
+    #         for key, value in form.cleaned_data.items():
+    #             if value:  # Checkbox is checked
+    #                 event_id = key.split('_')[-1]
+    #                 event = InformationEvent.objects.get(id=event_id)
+    #                 EventParticipation.objects.create(event=event, subscriber=subscriber)
+    #         return redirect('success_page')  # Redirect to a new URL
+    # else:
+    #     form = EventParticipationForm()
+
     if request.method == 'POST':
         form = EventParticipationForm(request.POST)
         if form.is_valid():
-            # Assuming the user's subscriber information is available, e.g., through user profile
-            subscriber = Subscriber.objects.get(email=request.user.email)
             for key, value in form.cleaned_data.items():
                 if value:  # Checkbox is checked
                     event_id = key.split('_')[-1]
                     event = InformationEvent.objects.get(id=event_id)
-                    EventParticipation.objects.create(event=event, subscriber=subscriber)
-            return redirect('success_page')  # Redirect to a new URL
+                    # Check if the EventParticipation instance exists and update or create accordingly
+                    EventParticipation.objects.update_or_create(
+                        event=event, subscriber=subscriber,
+                        defaults={'event': event, 'subscriber': subscriber}
+                    )
+                else:
+                    # If the checkbox is not checked, delete the EventParticipation instance
+                    event_id = key.split('_')[-1]
+                    event = InformationEvent.objects.get(id=event_id)
+                    EventParticipation.objects.filter(event=event, subscriber=subscriber).delete()
+
+            messages.success(request, 'Iscrizione aggiornata con successo')
+            # return redirect('success_page')
     else:
         form = EventParticipationForm()
+        # Fetch existing participations for the subscriber to mark them in the form
+        existing_participations = EventParticipation.objects.filter(subscriber=subscriber)
+        for participation in existing_participations:
+            form.fields[f'event_{participation.event.id}'].initial = True
 
     # return render(request, 'events/event_participation.html', {'form': form})
+
 
     return render(request, 'subscribers/manage_subscription.html', {'subscriber': subscriber, 'form': form})

@@ -49,7 +49,7 @@ class EventParticipation(models.Model):
     subscriber = models.ForeignKey(Subscriber, on_delete=models.CASCADE, verbose_name=_("Subscriber"))
 
     def __str__(self):
-        return f"{self.person_name} {self.person_surname}"
+        return f"{self.event} {self.subscriber}"
 
     class Meta:
         verbose_name = _("Event Participation")
