@@ -74,7 +74,6 @@ class Command(BaseCommand):
 
             counter += 1
 
-
         print(f"Total subscribers created: {counter}")
 
         print()
