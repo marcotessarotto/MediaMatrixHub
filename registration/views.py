@@ -1,6 +1,5 @@
 import syslog
 
-from django.contrib.auth import login
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
