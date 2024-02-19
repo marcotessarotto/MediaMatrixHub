@@ -19,3 +19,5 @@ bokeh
 rdflib
 django-debug-toolbar
 celery[redis]
+django-ckeditor-5
+moviepy
