@@ -11,7 +11,16 @@ class Command(BaseCommand):
         # parser.add_argument("file_path1", type=str,)
         parser.add_argument("file_path2", type=str,)
 
+        # optional argument '--reset'
+        parser.add_argument("--reset", action="store_true", help="Reset the database before importing the data.")
+
     def handle(self, *args, **options):
+
+        # if the '--reset' option is provided, delete all the existing subscribers
+        if options["reset"]:
+            print("Deleting all the existing subscribers...")
+            Subscriber.objects.all().delete()
+            print("All the existing subscribers have been deleted.")
 
         # file_path1 = options["file_path1"]
         file_path2 = options["file_path2"]
