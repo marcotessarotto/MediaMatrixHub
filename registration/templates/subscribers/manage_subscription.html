@@ -3,6 +3,25 @@
 {% block title %}Iscrizioni alle pillole informative{% endblock %}
 
 
+{% block extra_css %}
+
+/* static/css/custom.css */
+.custom-checkbox .form-check-input {
+    width: 25px; /* or any size */
+    height: 25px; /* or any size */
+    cursor: pointer;
+}
+
+input[type="checkbox"][name^="event_"] {
+    transform: scale(5); /* Adjust the scaling factor as needed */
+    margin: 10px; /* Optional: adds some margin around the checkbox */
+    cursor: pointer; /* Optional: changes the cursor to a pointer on hover */
+}
+
+
+{% endblock extra_css %}
+
+
 {% block content %}
 
 
@@ -10,6 +29,22 @@
   <main id="main" class="main">
 
     <section class="section">
+
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+                <br>
+              <h2  align="center" >Gestisci qui le tue iscrizioni alle pillole informative</h2>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
       <div class="row">
         <div class="col-lg-12">
 
@@ -20,7 +55,7 @@
                 <br>
 
                 {% if messages %}
-                <ul class="messages alert alert-danger">
+                <ul class="messages alert alert-info">
                     {% for message in messages %}
                     <li class="{{ message.tags }}">{{ message }}</li>
                     {% endfor %}
@@ -34,13 +69,20 @@
                     {% csrf_token %}
                     <table>
                         {% for field in form %}
-                            <tr>
-                                <td>{{ field.label_tag }}</td>
-                                <td>{{ field }}</td>
+
+                            <tr >
+                                <td width="40%">{{ field.label_tag }}</td>
+                                <td>
+                                    <div>
+                                    {{ field }}
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
-                    <input type="submit" value="Submit">
+                    <br>
+                    <br>
+                    <input type="submit" value="Salva">
                 </form>
 
                 <br>

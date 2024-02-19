@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import format_html
 
 from django.utils.translation import gettext_lazy as _
 
@@ -28,6 +29,45 @@ class InformationEvent(models.Model):
     class Meta:
         verbose_name = _("Information Event")
         verbose_name_plural = _("Information Events")
+
+    def to_html_table(self):
+        """
+        Returns a Bootstrap-styled HTML table representation of the InformationEvent instance.
+        """
+        html = format_html(
+            '''
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Field</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><th scope="row">1</th><td>Data Evento</td><td>{event_date}</td></tr>
+                    <tr><th scope="row">2</th><td>Ora Inizio</td><td>{event_start_time}</td></tr>
+                    <tr><th scope="row">3</th><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>
+                    <tr><th scope="row">4</th><td>Speaker</td><td>{speaker}</td></tr>
+                    <tr><th scope="row">5</th><td>Nome Struttura</td><td>{structure_name}</td></tr>
+                    <tr><th scope="row">6</th><td>Matricola Struttura</td><td>{structure_matricola}</td></tr>
+                    <tr><th scope="row">7</th><td>Titolo Evento</td><td>{title}</td></tr>
+                    <tr><th scope="row">8</th><td>Descrizione</td><td>{description}</td></tr>
+                    <tr><th scope="row">9</th><td>Enabled</td><td>{enabled}</td></tr>
+                </tbody>
+            </table>
+            ''',
+            event_date=self.event_date,
+            event_start_time=self.event_start_time,
+            meeting_url=self.meeting_url,
+            speaker=self.speaker,
+            structure_name=self.structure_name or 'N/A',  # Handle blank fields
+            structure_matricola=self.structure_matricola or 'N/A',
+            title=self.title,
+            description=self.description or 'N/A',
+            enabled="Yes" if self.enabled else "No",
+        )
+        return html
 
 
 class Subscriber(models.Model):

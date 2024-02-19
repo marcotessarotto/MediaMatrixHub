@@ -14,6 +14,6 @@ class EventParticipationForm(forms.Form):
         enabled_events = InformationEvent.objects.filter(enabled=True)
         for event in enabled_events:
             self.fields[f'event_{event.id}'] = forms.BooleanField(
-                label=event.title,
+                label=event.to_html_table(),
                 required=False
             )

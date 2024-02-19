@@ -75,7 +75,7 @@ def manage_subscription(request):
                     event = InformationEvent.objects.get(id=event_id)
                     EventParticipation.objects.filter(event=event, subscriber=subscriber).delete()
 
-            messages.success(request, 'Iscrizione aggiornata con successo')
+            messages.success(request, 'Iscrizione alle pillole informative aggiornata con successo')
             # return redirect('success_page')
     else:
         form = EventParticipationForm()
