@@ -30,6 +30,37 @@ class InformationEvent(models.Model):
         verbose_name = _("Information Event")
         verbose_name_plural = _("Information Events")
 
+    def to_html_table_email(self):
+        """
+        Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
+        without row IDs.
+        """
+        html = format_html(
+            '''
+            <table class="table">
+                <tbody>
+                    <tr><td width="200px">Titolo Evento</td><td>{title}</td></tr>            
+                    <tr><td>Descrizione</td><td>{description}</td></tr>                        
+                    <tr><td>Data Evento</td><td>{event_date} </td></tr>
+                    <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>
+                    <tr><td>Speaker</td><td>{speaker}</td></tr>
+                    <tr><td>Nome Struttura</td><td>{structure_name}</td></tr>
+                </tbody>
+            </table>
+            ''',
+            event_date=self.event_date,
+            event_start_time=self.event_start_time,
+            meeting_url=self.meeting_url,
+            speaker=self.speaker,
+            structure_name=self.structure_name or 'N/A',  # Handle blank fields
+            structure_matricola=self.structure_matricola or 'N/A',
+            title=self.title,
+            description=self.description or 'N/A',
+            enabled="Yes" if self.enabled else "No",
+        )
+        return html
+
+
     def to_html_table(self):
         """
         Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
