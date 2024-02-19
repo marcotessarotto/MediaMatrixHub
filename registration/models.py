@@ -32,28 +32,28 @@ class InformationEvent(models.Model):
 
     def to_html_table(self):
         """
-        Returns a Bootstrap-styled HTML table representation of the InformationEvent instance.
+        Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
+        without row IDs.
         """
         html = format_html(
             '''
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
                         <th scope="col">Field</th>
                         <th scope="col">Value</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><th scope="row">1</th><td>Data Evento</td><td>{event_date}</td></tr>
-                    <tr><th scope="row">2</th><td>Ora Inizio</td><td>{event_start_time}</td></tr>
-                    <tr><th scope="row">3</th><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>
-                    <tr><th scope="row">4</th><td>Speaker</td><td>{speaker}</td></tr>
-                    <tr><th scope="row">5</th><td>Nome Struttura</td><td>{structure_name}</td></tr>
-                    <tr><th scope="row">6</th><td>Matricola Struttura</td><td>{structure_matricola}</td></tr>
-                    <tr><th scope="row">7</th><td>Titolo Evento</td><td>{title}</td></tr>
-                    <tr><th scope="row">8</th><td>Descrizione</td><td>{description}</td></tr>
-                    <tr><th scope="row">9</th><td>Enabled</td><td>{enabled}</td></tr>
+                    <tr><td>Data Evento</td><td>{event_date}</td></tr>
+                    <tr><td>Ora Inizio</td><td>{event_start_time}</td></tr>
+                    <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>
+                    <tr><td>Speaker</td><td>{speaker}</td></tr>
+                    <tr><td>Nome Struttura</td><td>{structure_name}</td></tr>
+                    <tr><td>Matricola Struttura</td><td>{structure_matricola}</td></tr>
+                    <tr><td>Titolo Evento</td><td>{title}</td></tr>
+                    <tr><td>Descrizione</td><td>{description}</td></tr>
+                    <tr><td>Enabled</td><td>{enabled}</td></tr>
                 </tbody>
             </table>
             ''',
