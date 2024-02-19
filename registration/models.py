@@ -37,19 +37,19 @@ class InformationEvent(models.Model):
         """
         html = format_html(
             '''
-            <table class="table">
-                <thead>
+            <table class="table uniform-table">
+                <!--<thead>
                     <tr>
                         <th scope="col">Field</th>
                         <th scope="col">Value</th>
                     </tr>
-                </thead>
+                </thead>-->
                 <tbody>
-                    <tr><td>Titolo Evento</td><td>{title}</td></tr>            
+                    <tr><td width="200px">Titolo Evento</td><td>{title}</td></tr>            
                     <tr><td>Descrizione</td><td>{description}</td></tr>                        
-                    <tr><td>Data Evento</td><td>{event_date}</td></tr>
-                    <tr><td>Ora Inizio</td><td>{event_start_time}</td></tr>
-                    <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>
+                    <tr><td>Data Evento</td><td>{event_date} </td></tr>
+                    <!--<tr><td>Ora Inizio</td><td>{event_start_time}</td></tr>-->
+                    <!-- <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>-->
                     <tr><td>Speaker</td><td>{speaker}</td></tr>
                     <tr><td>Nome Struttura</td><td>{structure_name}</td></tr>
                 </tbody>
