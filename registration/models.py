@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.utils.html import format_html
 
 from django.utils.translation import gettext_lazy as _
@@ -7,6 +8,9 @@ from django.utils.translation import gettext_lazy as _
 class EnabledEventManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(enabled=True).order_by('-event_date', '-event_start_time')
+
+    def with_participation_count(self):
+        return self.annotate(participation_count=Count('eventparticipation'))
 
 
 class InformationEvent(models.Model):
@@ -59,7 +63,6 @@ class InformationEvent(models.Model):
             enabled="Yes" if self.enabled else "No",
         )
         return html
-
 
     def to_html_table(self):
         """
@@ -126,7 +129,6 @@ class EventParticipation(models.Model):
 
 
 class EventLog(models.Model):
-
     EMAIL_SENT = "EMAIL_SENT"
     SUBSCRIPTION_SET = "SUBSCRIPTION_SET"
     SUBSCRIPTION_REMOVED = "SUBSCRIPTION_REMOVED"
