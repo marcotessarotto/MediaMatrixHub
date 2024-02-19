@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
+from mediamatrixhub.settings import DEBUG
 from mediamatrixhub.view_tools import is_private_ip
 from .forms import SubscriberLoginForm, EventParticipationForm
 from .models import Subscriber, InformationEvent, EventParticipation
@@ -15,7 +16,7 @@ def subscriber_login(request):
     # print(http_real_ip)
 
     # Check if the IP is private
-    if http_real_ip != '' and not is_private_ip(http_real_ip):
+    if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
         return HttpResponse(status=403)
 
     if request.method == 'POST':
@@ -46,7 +47,7 @@ def manage_subscription(request):
     # print(http_real_ip)
 
     # Check if the IP is private
-    if http_real_ip != '' and not is_private_ip(http_real_ip):
+    if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
         return HttpResponse(status=403)
 
     # check request.session['subscriber_id'] and retrieve the subscriber instance
