@@ -122,7 +122,7 @@ def manage_subscription(request):
                 #                  f'Grazie per la tua partecipazione.<br><br>'
 
                 message_body = f'Ciao {subscriber.surname},<br><br>' \
-                                 f'hai aggiornato con successo le tue iscrizioni alle pillole informative.<br><br>' \
+                                 f'hai aggiornato con successo le tue iscrizioni alle prossime pillole informative.<br><br>' \
                                  f'Ecco un riepilogo delle future pillole informative a cui ti sei iscritto:<br><br>' \
                                  f'{"<br><hr>".join([f"{subscription}" for subscription in subscriptions])}<br><br>' \
                                  f'Grazie per la tua partecipazione.<br><br>'
@@ -133,7 +133,7 @@ def manage_subscription(request):
                                  f'Al momento non sei iscritto ad alcuna futura pillola informativa.<br><br>' \
                                  f'Grazie per la tua partecipazione.<br><br>'
 
-            message_subject = f'{SUBJECT_EMAIL} Riepilogo iscrizioni pillole informative'
+            message_subject = f'{SUBJECT_EMAIL} Riepilogo iscrizioni alle prossime pillole informative'
 
             send_simple_html_email(
                 list_of_email_addresses=[subscriber.email],
