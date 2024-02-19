@@ -3,7 +3,15 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class EnabledEventManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(enabled=True).order_by('-event_date', '-event_start_time')
+
+
 class InformationEvent(models.Model):
+    objects = models.Manager()  # The default manager.
+    enabled_events = EnabledEventManager()  # Custom manager for enabled events.
+
     event_date = models.DateField(verbose_name=_("data evento"))
     event_start_time = models.TimeField(verbose_name=_("ora inizio"))
     meeting_url = models.URLField(verbose_name=_("URL per partecipare"), max_length=255)
