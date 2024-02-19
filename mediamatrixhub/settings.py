@@ -162,7 +162,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_ckeditor_5',
     'mediaelementjs',
-    'video_players',
     'core',
 ]
 
@@ -290,7 +289,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'it-it'
 
-TIME_ZONE = 'UTC+1'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
