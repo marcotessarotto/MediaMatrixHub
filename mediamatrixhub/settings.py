@@ -49,6 +49,12 @@ MEDIA_URL = '/media/'
 
 BASE_URL = env('BASE_URL')
 
+FROM_EMAIL = env('FROM_EMAIL')
+SUBJECT_EMAIL = env('SUBJECT_EMAIL')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+DEBUG_EMAIL = env('DEBUG_EMAIL')
+
 
 # CKEditor 5 settings
 
