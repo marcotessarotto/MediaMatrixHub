@@ -27,6 +27,9 @@ class InformationEvent(models.Model):
     description = models.TextField(verbose_name=_("Descrizione"), blank=True)
     enabled = models.BooleanField(verbose_name=_("Enabled"), default=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.title
 
