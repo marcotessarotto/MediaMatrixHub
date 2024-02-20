@@ -5,8 +5,19 @@ from registration.models import InformationEvent
 
 
 class SubscriberLoginForm(forms.Form):
-    matricola = forms.CharField(label='Matricola', max_length=255)
-    email = forms.EmailField(label='Email')
+    # matricola = forms.CharField(label='Matricola', max_length=255)
+    # email = forms.EmailField(label='Email regionale')
+
+    matricola = forms.CharField(
+        label='Matricola',
+        max_length=255,
+        widget=forms.TextInput(attrs={'size': '40'})  # Specify size for matricola field
+    )
+
+    email = forms.EmailField(
+        label='Email regionale',
+        widget=forms.EmailInput(attrs={'size': '40'})  # Here we specify the size
+    )
 
 
 class EventParticipationForm(forms.Form):
