@@ -141,6 +141,8 @@ def manage_subscription(request):
                 event_target=subscriber.email,
             )
 
+            return redirect('manage-subscription')
+
     else:
 
         current_date = timezone.now().date()
