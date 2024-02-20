@@ -11,9 +11,10 @@ class SubscriberLoginForm(forms.Form):
 
 class EventParticipationForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        # Pop 'current_date' from kwargs if it exists, otherwise use the current date
+        current_date = kwargs.pop('current_date', timezone.now().date())
 
-        current_date = kwargs['current_date'] if 'current_date' in kwargs else timezone.now()
+        super().__init__(*args, **kwargs)
 
         # enabled_events = InformationEvent.objects.filter(enabled=True)
         enabled_events = InformationEvent.objects.filter(
