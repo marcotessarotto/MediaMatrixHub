@@ -16,14 +16,11 @@ from .models import Subscriber, InformationEvent, EventParticipation, EventLog
 def subscriber_login(request):
     # get ip address from request META
     http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
-    # print(http_real_ip)
 
     # Check if the IP is private
     if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
         syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
-
-        # syslog.syslog(syslog.LOG_ERR, str(request.META))
-        return HttpResponse(status=403)
+        return render(request, 'show_message.html', {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
 
     if request.method == 'POST':
         form = SubscriberLoginForm(request.POST)
@@ -62,18 +59,19 @@ def subscriber_login(request):
 def manage_subscription(request):
     # get ip address from request META
     http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
-    # print(http_real_ip)
 
     # Check if the IP is private
     if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
-        return HttpResponse(status=403)
+        return render(request, 'show_message.html', {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
 
     # check request.session['subscriber_id'] and retrieve the subscriber instance
     subscriber_id = request.session.get('subscriber_id')
     if subscriber_id:
         subscriber = Subscriber.objects.get(id=subscriber_id)
     else:
-        raise Http404('Utente non trovato')
+        # send email to admin
+        # redirect to login page
+        return redirect('subscriber-login')
 
     if request.method == 'POST':
         form = EventParticipationForm(request.POST)
@@ -115,12 +113,6 @@ def manage_subscription(request):
 
             # invia email riassuntiva all'utente
             if subscriptions:
-                # message_body = f'Ciao {subscriber.surname},<br><br>' \
-                #                  f'hai aggiornato con successo le tue iscrizioni alle pillole informative.<br><br>' \
-                #                  f'Ecco un riepilogo delle pillole informative a cui ti sei iscritto:<br><br>' \
-                #                  f'<ul>{"".join([f"<li>{subscription}</li>" for subscription in subscriptions])}</ul><br><br>' \
-                #                  f'Grazie per la tua partecipazione.<br><br>'
-
                 message_body = f'Ciao {subscriber.surname},<br><br>' \
                                  f'hai aggiornato con successo le tue iscrizioni alle prossime pillole informative.<br><br>' \
                                  f'Ecco un riepilogo delle future pillole informative a cui ti sei iscritto:<br><br>' \
@@ -163,8 +155,6 @@ def manage_subscription(request):
         )
         for participation in existing_participations:
             form.fields[f'event_{participation.event.id}'].initial = True
-
-    # return render(request, 'events/event_participation.html', {'form': form})
 
     return render(request, 'subscribers/manage_subscription.html', {'subscriber': subscriber, 'form': form})
 

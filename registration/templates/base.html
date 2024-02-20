@@ -79,7 +79,7 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="/core/homepage" class="logo d-flex align-items-center">
+      <a href="" class="logo d-flex align-items-center">
         <img src="/static/assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">Iscrizione</span>
       </a>
@@ -107,15 +107,15 @@
 
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="url('homepage')">
+        <a class="nav-link collapsed" href="{% url 'manage-subscription' %}">
           <i class="bi bi-grid"></i>
-          <span>Iscrizione</span>
+          <span>Iscrizioni</span>
         </a>
       </li>
 
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="/registrazione/logout">
+        <a class="nav-link collapsed" href="{% url 'subscriber-logout' %}">
           <i class="bi bi-person"></i>
           <span>Esci</span>
         </a>

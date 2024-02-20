@@ -27,18 +27,9 @@
                 </ul>
                 {% endif %}
 
-                <h3>Form di registrazione alle pillole informative della Direzione Centrale lavoro, formazione, istruzione e famiglia</h3>
-
-                <p class="alert alert-info">Per accedere, inserisci il tuo numero di matricola e la tua email regionale.</p>
+                <p class="alert alert-info">{{ message }}</p>
 
 
-                <form method="post">
-                    {% csrf_token %}
-                    <table>
-                        {{ form.as_table }}
-                    </table>
-                    <button type="submit">Login</button>
-                </form>
                 <br>
 
             </div>
