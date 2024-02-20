@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models import Count
+from django.utils import formats
+from django.utils.formats import date_format
 from django.utils.html import format_html
 
 from django.utils.translation import gettext_lazy as _
@@ -42,6 +44,8 @@ class InformationEvent(models.Model):
         Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
         without row IDs. For use in email templates.
         """
+        # Format date as 'mercoledì 28 febbraio 2024'
+        formatted_event_date = formats.date_format(self.event_date, "l j F Y") if self.event_date else "N/A"
         return format_html(
             '''
             <table class="table">
@@ -55,7 +59,7 @@ class InformationEvent(models.Model):
                 </tbody>
             </table>
             ''',
-            event_date=self.event_date,
+            event_date=formatted_event_date,
             event_start_time=self.event_start_time,
             meeting_url=self.meeting_url,
             speaker=self.speaker,
@@ -71,6 +75,11 @@ class InformationEvent(models.Model):
         Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
         without row IDs.
         """
+        # formatted_event_date = date_format(self.event_date, "d/m/Y")  # Format date to Italian format DD/MM/YYYY
+
+        # Format date as 'mercoledì 28 febbraio 2024'
+        formatted_event_date = formats.date_format(self.event_date, "l j F Y") if self.event_date else "N/A"
+
         return format_html(
             '''
             <table class="table uniform-table">
@@ -91,7 +100,7 @@ class InformationEvent(models.Model):
                 </tbody>
             </table>
             ''',
-            event_date=self.event_date,
+            event_date=formatted_event_date,
             event_start_time=self.event_start_time,
             meeting_url=self.meeting_url,
             speaker=self.speaker,
