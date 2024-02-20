@@ -22,7 +22,7 @@ class SubscriberAdmin(admin.ModelAdmin):
 
 @admin.register(EventParticipation)
 class EventParticipationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'event', 'subscriber')
+    list_display = ('id', 'event', 'subscriber', 'created_at', )
     list_filter = ('event', 'subscriber')
     search_fields = ('event__title', 'subscriber__name', 'subscriber__surname')
 
