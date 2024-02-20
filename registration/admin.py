@@ -4,7 +4,7 @@ from .models import InformationEvent, Subscriber, EventParticipation, EventLog
 
 @admin.register(InformationEvent)
 class InformationEventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'speaker', 'event_date', 'event_start_time', 'enabled')
+    list_display = ('title', 'speaker', 'event_date', 'event_start_time', 'enabled', 'created_at',)
     list_filter = ('enabled', 'event_date', 'speaker')
     search_fields = ('title', 'description', 'speaker', 'structure_name')
     date_hierarchy = 'event_date'
