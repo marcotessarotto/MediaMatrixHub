@@ -13,13 +13,9 @@ class Command(BaseCommand):
     # parse parameters
     def add_arguments(self, parser):
         parser.add_argument('--send_email', action='store_true', help='Send email to subscribers')
-        # parser.add_argument('event_id', nargs='?', type=int, help='Event ID to list participation count for')
 
     def handle(self, *args, **options):
-
         send_email = options['send_email']
-
-        # print(f"send_email: {send_email}")
 
         # Fetch enabled events with participation count
         enabled_events_with_counts = InformationEvent.enabled_events.with_participation_count().order_by(
