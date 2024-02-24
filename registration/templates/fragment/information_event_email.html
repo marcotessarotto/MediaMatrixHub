@@ -2,7 +2,7 @@
     <tbody>
         <tr><td style="padding: 8px; border: 1px solid #ddd;">Titolo Evento</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event.title }}</td></tr>
         <tr><td style="padding: 8px; border: 1px solid #ddd;">Descrizione</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event.description|default:"N/A" }}</td></tr>
-        <tr><td style="padding: 8px; border: 1px solid #ddd;">Data Evento</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event_date }} {{ event.event_start_time }}</td></tr>
+        <tr><td style="padding: 8px; border: 1px solid #ddd;">Data Evento</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event_date }}, ore {{ event.event_start_time }}</td></tr>
         <tr><td style="padding: 8px; border: 1px solid #ddd;">URL per Partecipare</td><td style="padding: 8px; border: 1px solid #ddd;"><a href="{{ event.meeting_url }}">{{ event.meeting_url }}</a></td></tr>
         <tr><td style="padding: 8px; border: 1px solid #ddd;">Speaker</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event.speaker }}</td></tr>
         <tr><td style="padding: 8px; border: 1px solid #ddd;">Nome Struttura</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event.structure_name|default:"N/A" }}</td></tr>

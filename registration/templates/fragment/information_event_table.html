@@ -2,7 +2,7 @@
     <tbody>
         <tr><td width="200px">Titolo Evento</td><td>{{ event.title }}</td></tr>
         <tr><td>Descrizione</td><td>{{ event.description|default:"N/A" }}</td></tr>
-        <tr><td>Data Evento</td><td>{{ event_date }} {{ event.event_start_time }}</td></tr>
+        <tr><td>Data Evento</td><td>{{ event_date }}, ore {{ event.event_start_time }}</td></tr>
         <tr><td>Speaker</td><td>{{ event.speaker }}</td></tr>
         <tr><td>Nome Struttura</td><td>{{ event.structure_name|default:"N/A" }}</td></tr>
     </tbody>
