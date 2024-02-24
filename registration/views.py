@@ -127,6 +127,10 @@ def manage_subscription(request):
 
             message_subject = f'{SUBJECT_EMAIL} Riepilogo iscrizioni alle prossime pillole informative'
 
+            if DEBUG:
+                print(f"debug mode: fake sending email to {subscriber.email}")
+                print(f"message: {message_body}  (debug mode)")
+
             send_simple_html_email(
                 list_of_email_addresses=[subscriber.email],
                 subject=message_subject,

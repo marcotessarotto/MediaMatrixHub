@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 message_body = f'Ciao {subscriber.surname},<br><br>' \
                                f'Ti ricordiamo che il prossimo evento informativo si terrà il giorno {tomorrow_str}.<br><br>' \
                                f"Ecco un riepilogo dell'evento a cui ti sei iscritto:<br><br>" \
-                               f'{event.to_html_table_email()}<br><br>' \    
+                               f'{event.to_html_table_email()}<br><br>' \
                                f'Grazie per la tua partecipazione.<br><br><br>' \
                                f'Se vuoi modificare le tue iscrizioni alle pillole informative, vai a questo link: ' \
                                f'<a href="{REGISTRATION_URL}">{REGISTRATION_URL}</a><br><br>'
