@@ -167,6 +167,7 @@ class EventParticipation(models.Model):
 
 
 class EventLog(models.Model):
+    ERROR_SENDING_EMAIL = "ERROR_SENDING_EMAIL"
     EMAIL_SENT = "EMAIL_SENT"
     SUBSCRIPTION_SET = "SUBSCRIPTION_SET"
     SUBSCRIPTION_REMOVED = "SUBSCRIPTION_REMOVED"

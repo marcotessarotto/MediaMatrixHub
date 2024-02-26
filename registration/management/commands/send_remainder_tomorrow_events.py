@@ -61,6 +61,8 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING('No subscribers found for this event.'))
                 continue
 
+            counter = 0
+
             # self.stdout.write(self.style.SUCCESS('Subscribers for this event:'))
             for subscriber in subscribers_for_event:
                 self.stdout.write(f"Subscriber: {subscriber.name} {subscriber.surname}, {subscriber.email}")
@@ -77,22 +79,43 @@ class Command(BaseCommand):
                 message_subject = f'{SUBJECT_EMAIL} Promemoria per la prossima pillola informativa'
 
                 if not debug_mode:
-                    send_simple_html_email(
-                        list_of_email_addresses=[subscriber.email],
-                        subject=message_subject,
-                        message_body=message_body,
-                        list_of_bcc_email_addresses=[DEBUG_EMAIL],
-                    )
+                    try:
+                        send_simple_html_email(
+                            list_of_email_addresses=[subscriber.email],
+                            subject=message_subject,
+                            message_body=message_body,
+                            list_of_bcc_email_addresses=[DEBUG_EMAIL],
+                        )
 
-                    create_event_log(
-                        event_type=EventLog.REMAINDER_EMAIL_SENT,
-                        event_title=message_subject,
-                        event_data=f"subscriber: {subscriber} email: {subscriber.email} {message_body}",
-                        event_target=subscriber.email,
-                    )
-                    self.stdout.write(self.style.SUCCESS(f"Email sent to {subscriber.email}"))
+                        create_event_log(
+                            event_type=EventLog.REMAINDER_EMAIL_SENT,
+                            event_title=message_subject,
+                            event_data=f"subscriber: {subscriber} email: {subscriber.email} {message_body}",
+                            event_target=subscriber.email,
+                        )
+                        self.stdout.write(self.style.SUCCESS(f"Email sent to {subscriber.email}"))
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(f"Error sending email to {subscriber.email}: {e}"))
+
+                        create_event_log(EventLog.ERROR_SENDING_EMAIL,
+                                         f"Error sending email to {subscriber.email}",
+                                         f"Error sending email to {subscriber.email}: {e}",
+                                         subscriber.email)
                 else:
                     self.stdout.write(f"debug mode: fake sending email to {subscriber.email}")
                     self.stdout.write(f"message: {message_body}  (debug mode)")
+
+                counter += 1
+
+            self.stdout.write(self.style.SUCCESS(f"Email sent to {counter} subscribers for event {event.title}"))
+
+            message_subject = f'{SUBJECT_EMAIL} Resoconto invio email promemoria per la prossima pillola informativa'
+            message_body = f'Promemoria inviato a {counter} iscritti per l\'evento {event.title} del {tomorrow_str}.'
+
+            send_simple_html_email(
+                list_of_email_addresses=[DEBUG_EMAIL],
+                subject=message_subject,
+                message_body=message_body,
+            )
 
         self.stdout.write(self.style.SUCCESS('Done.'))
