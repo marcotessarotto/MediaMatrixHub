@@ -45,7 +45,6 @@ class InformationEvent(models.Model):
     objects = models.Manager()  # The default manager.
     enabled_events = EnabledEventManager()  # Custom manager for enabled events.
 
-
     EVENT_TYPE_CHOICES = [
         ('virtual', _("Virtuale")),
         ('physical', _("Fisico")),
@@ -54,6 +53,7 @@ class InformationEvent(models.Model):
     event_type = models.CharField(max_length=8, choices=EVENT_TYPE_CHOICES, default='virtual', verbose_name=_("Tipo di evento"))
     event_date = models.DateField(verbose_name=_("data evento"))
     event_start_time = models.TimeField(verbose_name=_("ora inizio"))
+    event_end_time = models.TimeField(verbose_name=_("ora fine"), blank=True, null=True)
     meeting_url = models.URLField(verbose_name=_("URL per partecipare"), max_length=255)
     speaker = models.CharField(verbose_name=_("Speaker"), max_length=255)
     structure_name = models.CharField(verbose_name=_("Nome struttura"), max_length=255, blank=True)
