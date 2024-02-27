@@ -8,15 +8,66 @@ from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import InformationEvent, Subscriber, EventParticipation, EventLog, Category
 
 
-@admin.register(InformationEvent)
+# @admin.register(InformationEvent)
+# class InformationEventAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'speaker', 'event_date', 'event_start_time', 'enabled', 'created_at',)
+#     list_filter = ('enabled', 'event_date', 'speaker')
+#     search_fields = ('title', 'description', 'speaker', 'structure_name')
+#     date_hierarchy = 'event_date'
+#     ordering = ('-event_date', '-event_start_time')
+#     fields = (
+#     'title', 'speaker', 'event_date', 'event_start_time', 'meeting_url', 'structure_name', 'description', 'enabled')
+
+
 class InformationEventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'speaker', 'event_date', 'event_start_time', 'enabled', 'created_at',)
-    list_filter = ('enabled', 'event_date', 'speaker')
+    list_display = ('title', 'event_type', 'event_date', 'event_start_time', 'speaker', 'enabled', 'status')
+    list_filter = ('enabled', 'event_type', 'status', 'event_date')
     search_fields = ('title', 'description', 'speaker', 'structure_name')
+    list_editable = ('enabled', 'status')
     date_hierarchy = 'event_date'
-    ordering = ('-event_date', '-event_start_time')
-    fields = (
-    'title', 'speaker', 'event_date', 'event_start_time', 'meeting_url', 'structure_name', 'description', 'enabled')
+    fieldsets = (
+        (_("Event Details"), {
+            'fields': (
+            'title', 'description', 'category', 'event_type', 'event_date', 'event_start_time', 'event_end_time',
+            'status')
+        }),
+        (_("Virtual Event Details"), {
+            'fields': ('meeting_url',),
+            'classes': ('collapse',),
+        }),
+        (_("Physical Event Details"), {
+            'fields': ('location',),
+            'classes': ('collapse',),
+        }),
+        (_("Additional Information"), {
+            'fields': (
+            'speaker', 'structure_name', 'structure_matricola', 'max_participants', 'registration_deadline', 'enabled',
+            'is_deleted', 'image', 'meta_title', 'meta_description', 'meta_keywords')
+        }),
+    )
+
+    def get_queryset(self, request):
+        """
+        Override to filter out soft-deleted events from the admin view.
+        """
+        qs = super().get_queryset(request)
+        return qs.filter(is_deleted=False)
+
+    def delete_model(self, request, obj):
+        """
+        Override the delete action to perform a soft delete.
+        """
+        obj.is_deleted = True
+        obj.save()
+
+    def delete_queryset(self, request, queryset):
+        """
+        Override the delete action to perform a soft delete on multiple objects.
+        """
+        queryset.update(is_deleted=True)
+
+
+admin.site.register(InformationEvent, InformationEventAdmin)
 
 
 @admin.register(Subscriber)
@@ -36,6 +87,7 @@ class EventParticipationAdmin(admin.ModelAdmin):
 
     def get_subscriber_email(self, obj):
         return obj.subscriber.email
+
     get_subscriber_email.admin_order_field = 'subscriber__email'  # Allows column order sorting
     get_subscriber_email.short_description = 'Subscriber Email'  # Renames column head
 
@@ -78,12 +130,10 @@ class EventParticipationAdmin(admin.ModelAdmin):
     export_as_excel.short_description = "Export Selected as Excel"
 
 
-
 @admin.register(EventLog)
 class EventLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'created_at', 'event_type', 'event_title', 'event_target', 'event_data', 'created_at')
-    list_filter = [ 'event_type']
-
+    list_filter = ['event_type']
 
 
 @admin.register(Category)

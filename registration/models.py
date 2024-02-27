@@ -45,6 +45,13 @@ class InformationEvent(models.Model):
     objects = models.Manager()  # The default manager.
     enabled_events = EnabledEventManager()  # Custom manager for enabled events.
 
+
+    EVENT_TYPE_CHOICES = [
+        ('virtual', _("Virtuale")),
+        ('physical', _("Fisico")),
+        ('hybrid', _("Ibrido"))
+    ]
+    event_type = models.CharField(max_length=8, choices=EVENT_TYPE_CHOICES, default='virtual', verbose_name=_("Tipo di evento"))
     event_date = models.DateField(verbose_name=_("data evento"))
     event_start_time = models.TimeField(verbose_name=_("ora inizio"))
     meeting_url = models.URLField(verbose_name=_("URL per partecipare"), max_length=255)
@@ -54,9 +61,28 @@ class InformationEvent(models.Model):
     title = models.CharField(verbose_name=_("Titolo evento"), max_length=255)
     description = models.TextField(verbose_name=_("Descrizione"), blank=True)
     enabled = models.BooleanField(verbose_name=_("Enabled"), default=True)
+    category = models.ForeignKey("Category", on_delete=models.SET_NULL, null=True, blank=True,
+                                 verbose_name=_("Categoria"))
+    location = models.CharField(max_length=255, verbose_name=_("Località"), blank=True, null=True,
+                                help_text=_("Required for physical and hybrid events."))
+    max_participants = models.IntegerField(verbose_name=_("Numero massimo partecipanti"), null=True, blank=True)
+    registration_deadline = models.DateField(verbose_name=_("Termine iscrizione"), null=True, blank=True)
+    STATUS_CHOICES = [
+        ('planned', _("Planned")),
+        ('ongoing', _("Ongoing")),
+        ('completed', _("Completed")),
+        ('cancelled', _("Cancelled")),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='planned', verbose_name=_("Stato evento"))
+    is_deleted = models.BooleanField(default=False, verbose_name=_("Cancellato"))
+    image = models.ImageField(upload_to='information_event_images/', blank=True, null=True, verbose_name=_("Immagine evento"))
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    meta_title = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Title"))
+    meta_description = models.TextField(blank=True, null=True, verbose_name=_("Meta Description"))
+    meta_keywords = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Keywords"))
 
     def __str__(self):
         return self.title
