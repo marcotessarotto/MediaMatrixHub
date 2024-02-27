@@ -25,7 +25,22 @@ class EnabledEventManager(models.Manager):
 
 class InformationEvent(models.Model):
     """
-    Model for InformationEvent, which represents an event that users can participate in.
+    Model for InformationEvent, representing an event that users can participate in.
+
+    Attributes:
+        event_date (Date): The date of the event.
+        event_start_time (Time): The start time of the event.
+        meeting_url (URL): The URL for participating in the event.
+        speaker (str): The speaker of the event.
+        structure_name (str, optional): The name of the structure associated with the event.
+        structure_matricola (str, optional): The matricola of the structure associated with the event.
+        title (str): The title of the event.
+        description (str, optional): The description of the event.
+        enabled (bool): Indicates if the event is enabled.
+
+    Methods:
+        to_html_table_email(): Returns a Bootstrap-styled HTML table representation of the InformationEvent instance for email templates.
+        to_html_table(): Returns a Bootstrap-styled HTML table representation of the InformationEvent instance for web pages.
     """
     objects = models.Manager()  # The default manager.
     enabled_events = EnabledEventManager()  # Custom manager for enabled events.
@@ -52,8 +67,17 @@ class InformationEvent(models.Model):
 
     def to_html_table_email(self):
         """
-        Returns a Bootstrap-styled HTML table representation of the InformationEvent instance.
-        For use in email templates.
+                Returns a Bootstrap-styled HTML table representation of the InformationEvent instance.
+                For use in email templates.
+
+                Returns:
+                    str: The HTML table representation of the InformationEvent instance.
+
+                Examples:
+                    >>> event = InformationEvent.objects.get(pk=1)
+                    >>> html_table = event.to_html_table_email()
+                    >>> print(html_table)
+                    <table>...</table>
         """
         # Format date as 'mercoledì 28 febbraio 2024'
         formatted_event_date = formats.date_format(self.event_date, "l j F Y") if self.event_date else "N/A"
@@ -64,34 +88,19 @@ class InformationEvent(models.Model):
         }
         return render_to_string('fragment/information_event_email.html', context)
 
-        # return format_html(
-        #     '''
-        #     <table class="table">
-        #         <tbody>
-        #             <tr><td width="200px">Titolo Evento</td><td>{title}</td></tr>
-        #             <tr><td>Descrizione</td><td>{description}</td></tr>
-        #             <tr><td>Data Evento</td><td>{event_date} {event_start_time}</td></tr>
-        #             <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>
-        #             <tr><td>Speaker</td><td>{speaker}</td></tr>
-        #             <tr><td>Nome Struttura</td><td>{structure_name}</td></tr>
-        #         </tbody>
-        #     </table>
-        #     ''',
-        #     event_date=formatted_event_date,
-        #     event_start_time=self.event_start_time,
-        #     meeting_url=self.meeting_url,
-        #     speaker=self.speaker,
-        #     structure_name=self.structure_name or 'N/A',  # Handle blank fields
-        #     structure_matricola=self.structure_matricola or 'N/A',
-        #     title=self.title,
-        #     description=self.description or 'N/A',
-        #     enabled="Yes" if self.enabled else "No",
-        # )
-
     def to_html_table(self):
         """
-        Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
-        to be used in web pages.
+                Returns a Bootstrap-styled HTML table representation of the InformationEvent instance
+                to be used in web pages.
+
+                Returns:
+                    str: The HTML table representation of the InformationEvent instance.
+
+                Examples:
+                    >>> event = InformationEvent.objects.get(pk=1)
+                    >>> html_table = event.to_html_table()
+                    >>> print(html_table)
+                    <table>...</table>
         """
         # formatted_event_date = date_format(self.event_date, "d/m/Y")  # Format date to Italian format DD/MM/YYYY
 
@@ -105,39 +114,20 @@ class InformationEvent(models.Model):
         html_content = render_to_string('fragment/information_event_table.html', context)
         return format_html(html_content)
 
-        # return format_html(
-        #     '''
-        #     <table class="table uniform-table">
-        #         <!--<thead>
-        #             <tr>
-        #                 <th scope="col">Field</th>
-        #                 <th scope="col">Value</th>
-        #             </tr>
-        #         </thead>-->
-        #         <tbody>
-        #             <tr><td width="200px">Titolo Evento</td><td>{title}</td></tr>
-        #             <tr><td>Descrizione</td><td>{description}</td></tr>
-        #             <tr><td>Data Evento</td><td>{event_date} {event_start_time}</td></tr>
-        #             <!--<tr><td>Ora Inizio</td><td>{event_start_time}</td></tr>-->
-        #             <!-- <tr><td>URL per Partecipare</td><td><a href="{meeting_url}">{meeting_url}</a></td></tr>-->
-        #             <tr><td>Speaker</td><td>{speaker}</td></tr>
-        #             <tr><td>Nome Struttura</td><td>{structure_name}</td></tr>
-        #         </tbody>
-        #     </table>
-        #     ''',
-        #     event_date=formatted_event_date,
-        #     event_start_time=self.event_start_time,
-        #     meeting_url=self.meeting_url,
-        #     speaker=self.speaker,
-        #     structure_name=self.structure_name or 'N/A',  # Handle blank fields
-        #     structure_matricola=self.structure_matricola or 'N/A',
-        #     title=self.title,
-        #     description=self.description or 'N/A',
-        #     enabled="Yes" if self.enabled else "No",
-        # )
-
 
 class Subscriber(models.Model):
+    """
+    Model for Subscriber, representing a subscriber with email, name, surname, and matricola.
+
+    Attributes:
+        email (str): The email of the subscriber.
+        name (str): The name of the subscriber.
+        surname (str): The surname of the subscriber.
+        matricola (str): The matricola of the subscriber.
+
+    Methods:
+        __str__(): Returns a string representation of the Subscriber instance.
+    """
     email = models.EmailField(verbose_name=_("Email"), max_length=255)
     name = models.CharField(verbose_name=_("Nome"), max_length=255)
     surname = models.CharField(verbose_name=_("Cognome"), max_length=255)
@@ -152,6 +142,16 @@ class Subscriber(models.Model):
 
 
 class EventParticipation(models.Model):
+    """
+    Model for EventParticipation, representing the participation of a subscriber in an event.
+
+    Attributes:
+        event (InformationEvent): The event in which the subscriber participates.
+        subscriber (Subscriber): The subscriber participating in the event.
+
+    Methods:
+        __str__(): Returns a string representation of the EventParticipation instance.
+    """
     event = models.ForeignKey(InformationEvent, on_delete=models.CASCADE, verbose_name=_("Evento"))
     subscriber = models.ForeignKey(Subscriber, on_delete=models.CASCADE, verbose_name=_("Subscriber"))
 
@@ -167,6 +167,23 @@ class EventParticipation(models.Model):
 
 
 class EventLog(models.Model):
+    """
+    Represents an event log entry.
+
+    Args:
+        event_type (str): The type of the event.
+        event_title (str): The title of the event.
+        event_data (str): The data associated with the event.
+        event_target (str, optional): The target of the event.
+
+    Returns:
+        str: A string representation of the EventLog.
+
+    Examples:
+        >>> event = EventLog(event_type="LOGIN", event_title="User Login", event_data="User 'john' logged in successfully")
+        >>> print(event)
+        EventLog #1  event_type=LOGIN event_target=None event_title=User Login 2022-01-01 12:00:00
+    """
     ERROR_SENDING_EMAIL = "ERROR_SENDING_EMAIL"
     EMAIL_SENT = "EMAIL_SENT"
     SUBSCRIPTION_SET = "SUBSCRIPTION_SET"
@@ -185,3 +202,26 @@ class EventLog(models.Model):
 
     def __str__(self):
         return f"EventLog #{self.id}  event_type={self.event_type} event_target={self.event_target} event_title={self.event_title} {self.created_at}"
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_("Nome"))
+    description = models.TextField(verbose_name=_("Descrizione"), blank=True)
+    slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name=_("Parent Category"))
+    is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
+    icon = models.ImageField(upload_to='category_icons/', blank=True, null=True, verbose_name=_("Icon"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"))
+    order = models.IntegerField(default=0, verbose_name=_("Order"))
+    meta_title = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Title"))
+    meta_description = models.TextField(blank=True, null=True, verbose_name=_("Meta Description"))
+    meta_keywords = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Keywords"))
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
+    def __str__(self):
+        return self.name
