@@ -37,7 +37,7 @@ class Command(BaseCommand):
             email_body = ""
             if enabled_events_with_counts:
                 self.stdout.write(self.style.SUCCESS('Enabled events with participation counts:'))
-                email_body += "<h1>Pillole informative future con conteggio iscritti</h1><br><br>"
+                email_body += "<h1>Pillole informative con conteggio iscritti</h1><br><br>"
                 for event in enabled_events_with_counts:
                     formatted_event_date = formats.date_format(event.event_date,
                                                                "l j F Y") if event.event_date else "N/A"
