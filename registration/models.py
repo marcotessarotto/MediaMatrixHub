@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import Count
 from django.template.loader import render_to_string
 from django.utils import formats
-from django.utils.formats import date_format
 from django.utils.html import format_html
 
 from django.utils.translation import gettext_lazy as _
@@ -61,7 +60,7 @@ class InformationEvent(models.Model):
     title = models.CharField(verbose_name=_("Titolo evento"), max_length=255)
     description = models.TextField(verbose_name=_("Descrizione"), blank=True)
     enabled = models.BooleanField(verbose_name=_("Enabled"), default=True)
-    category = models.ForeignKey("Category", on_delete=models.SET_NULL, null=True, blank=True,
+    category = models.ForeignKey("core.Category", on_delete=models.SET_NULL, null=True, blank=True,
                                  verbose_name=_("Categoria"))
     location = models.CharField(max_length=255, verbose_name=_("Località"), blank=True, null=True,
                                 help_text=_("Required for physical and hybrid events."))
@@ -230,24 +229,3 @@ class EventLog(models.Model):
         return f"EventLog #{self.id}  event_type={self.event_type} event_target={self.event_target} event_title={self.event_title} {self.created_at}"
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=255, verbose_name=_("Nome"))
-    description = models.TextField(verbose_name=_("Descrizione"), blank=True)
-    slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name=_("Parent Category"))
-    is_active = models.BooleanField(default=True, verbose_name=_("Is Active"))
-    icon = models.ImageField(upload_to='category_icons/', blank=True, null=True, verbose_name=_("Icon"))
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
-    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"))
-    order = models.IntegerField(default=0, verbose_name=_("Order"))
-    meta_title = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Title"))
-    meta_description = models.TextField(blank=True, null=True, verbose_name=_("Meta Description"))
-    meta_keywords = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Keywords"))
-
-    class Meta:
-        ordering = ['order', 'name']
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
-
-    def __str__(self):
-        return self.name

@@ -1,6 +1,7 @@
 import pytest
 from django.utils import timezone
-from registration.models import InformationEvent, Subscriber, EventParticipation, EventLog, Category
+from registration.models import InformationEvent, Subscriber, EventParticipation, EventLog
+from core.models import Category
 from django.db.models import Count
 
 
