@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from core.models import Category
 
 
-# Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'parent', 'is_active', 'created_at', 'order')
