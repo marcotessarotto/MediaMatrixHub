@@ -174,7 +174,8 @@
         <div class="row gy-4 justify-content-center">
           {% for item in videos_list %}
 
-          <div class="col-xl-3 col-lg-4 col-md-6">
+<!--          <div class="col-xl-3 col-lg-4 col-md-6">-->
+          <div class="col-xl-6 col-lg-8 col-md-6"> <!-- Adjusted column sizes here -->
             <div class="gallery-item h-100">
               {% if item.cover_image and not item.video_file %}
                 <img src="{{ item.cover_image.url }}" class="img-fluid" alt="{{ item.alt_text }}">
@@ -186,6 +187,7 @@
                          style="max-width:100%;"
                          poster="{{ item.cover_image.url }}"
                          preload="none"
+                         controlsList="nodownload"
                          controls playsinline webkit-playsinline>
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
@@ -197,6 +199,7 @@
                          style="max-width:100%;"
                          poster="{% url 'get_cover_image' ref_token=item.ref_token %}"
                          preload="none"
+                         controlsList="nodownload"
                          controls playsinline webkit-playsinline>
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
