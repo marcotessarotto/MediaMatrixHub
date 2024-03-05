@@ -185,15 +185,10 @@
                   </video>
                 </div>
               {% elif item.video_file %}
-                <!-- Placeholder for video without a specific cover image -->
-                <div class="bg-light d-flex justify-content-center align-items-center" style="height: 200px;">
-                  <div class="text-center">
-                    <i class="bi bi-play-circle" style="font-size: 48px; color: #007bff;"></i>
-                    <p class="mt-2">{{ item.title }}</p>
-                  </div>
-                </div>
-                <div class="media-wrapper" style="display:none;">
-                  <video id="player{{ forloop.counter }}_" width="100%" height="100%" style="max-width:100%;" preload="none" controls playsinline webkit-playsinline>
+                <div class="media-wrapper" >
+                  <video id="player{{ forloop.counter }}_" width="100%" height="100%" style="max-width:100%;"
+                         poster="{% url 'get_cover_image' ref_token=item.ref_token %}"
+                         preload="none" controls playsinline webkit-playsinline>
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                 </div>

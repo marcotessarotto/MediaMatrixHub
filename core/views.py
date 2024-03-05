@@ -1,8 +1,10 @@
-
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
+import io
+from django.http import HttpResponse
+from PIL import Image, ImageDraw, ImageFont
 
 from core.models import Category, Media, Video
 
@@ -57,3 +59,29 @@ class ShowHomeWithCategory(CreateView):
 class SearchHomeWithCategory(CreateView):
     def get(self, request, category_name, *args, **kwargs):
         raise Http404("This page does not exist")
+
+
+def get_cover_image(request, ref_token):
+    try:
+        # Retrieve the video instance by ref_token
+        video = Video.objects.get(ref_token=ref_token)
+        # Prepare the image
+        image = Image.new('RGB', (800, 100), color=(73, 109, 137))
+        d = ImageDraw.Draw(image)
+
+        # You might need to adjust the path to the font file
+        font_path = "/usr/local/share/fonts/DecimaUNICASEReg01.otf"
+        font = ImageFont.truetype(font_path, 35)
+
+        # Adding text to the image
+        d.text((10, 10), video.title, fill=(255, 255, 0), font=font)
+
+        # Save the image to a bytes buffer
+        buffer = io.BytesIO()
+        image.save(buffer, format='PNG')
+        buffer.seek(0)
+
+        # Serve the image
+        return HttpResponse(buffer, content_type='image/png')
+    except Video.DoesNotExist:
+        return HttpResponse('Video not found', status=404)

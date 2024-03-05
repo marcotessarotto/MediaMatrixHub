@@ -22,3 +22,4 @@ celery[redis]
 django-ckeditor-5
 moviepy
 pytest-django
+Pillow
