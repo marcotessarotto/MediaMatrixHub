@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Videoteca della DC lavoro, formazione, istruzione e famiglia</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{{ STATIC_URL }}/static/assets/img/favicon.png" rel="icon">
+  <link href="{{ STATIC_URL }}/static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{{ STATIC_URL }}/static/assets/template/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ STATIC_URL }}/static/assets/template/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+<!--  <link href="{{ STATIC_URL }}/static/assets/template/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">-->
+  <link href="{{ STATIC_URL }}/static/assets/template/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+<!--  <link href="{{ STATIC_URL }}/static/assets/template/vendor/aos/aos.css" rel="stylesheet">-->
+
+  <!-- Template Main CSS File -->
+<!--  <link href="{{ STATIC_URL }}/static/assets/template/assets/css/main-dark.css" rel="stylesheet">-->
+  <link href="{{ STATIC_URL }}/static/assets/template/css/main.css" rel="stylesheet">
+
+  <!-- media element -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/static/mediaelement/build/mediaelementplayer.css">
+
+    <style>
+
+        html, body {
+            overflow-x: hidden;
+        }
+
+        #container {
+            padding: 0 20px 50px;
+        }
+        .error {
+            color: red;
+        }
+        a {
+            word-wrap: break-word;
+        }
+
+        code {
+            font-size: 0.8em;
+        }
+
+        #player2-container .mejs__time-buffering, #player2-container .mejs__time-current, #player2-container .mejs__time-handle,
+        #player2-container .mejs__time-loaded, #player2-container .mejs__time-hovered, #player2-container .mejs__time-marker, #player2-container .mejs__time-total {
+            height: 2px;
+        }
+
+        #player2-container .mejs__time-total {
+            margin-top: 9px;
+        }
+        #player2-container .mejs__time-handle {
+            left: -5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffffff;
+            top: -5px;
+            cursor: pointer;
+            display: block;
+            position: absolute;
+            z-index: 2;
+            border: none;
+        }
+        #player2-container .mejs__time-handle-content {
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+        }
+
+        .details {
+            margin-bottom: 24px;
+        }
+
+        .players {
+            max-width: 800px;
+        }
+
+
+    </style>
+  <!-- media element -->
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+
+      <a href="{% url 'show-category-home' category_name=category_name %}" class="logo d-flex align-items-center  me-auto me-lg-0">
+        <img src="{{ STATIC_URL }}/static/assets/img/logo.png" alt="">
+<!--        <i class="bi"></i>-->
+        <h1>Videoteca</h1>
+      </a>
+
+    <!-- Search form with icon button -->
+    <!--<form class="d-flex" role="search" method="get" action="{% url 'search-category-home' category_name=category_name %}" >
+      <input class="form-control me-2" type="search" placeholder="Ricerca" aria-label="Search" name="query">
+      <button class="btn" type="submit" aria-label="Search">
+        <i class="bi bi-search"></i>
+      </button>
+    </form>-->
+
+
+      <nav id="navbar" class="navbar" hidden="true">
+        <ul>
+          <li><a href="">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li class="dropdown"><a href="#" class="active"><span>Gallery</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+            <ul>
+              <li><a href="gallery.html">Nature</a></li>
+              <li><a href="gallery.html">People</a></li>
+              <li><a href="gallery.html">Architecture</a></li>
+              <li><a href="gallery.html">Animals</a></li>
+              <li><a href="gallery.html">Sports</a></li>
+              <li><a href="gallery.html">Travel</a></li>
+              <li class="dropdown"><a href="#"><span>Sub Menu</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                <ul>
+                  <li><a href="#">Sub Menu 1</a></li>
+                  <li><a href="#">Sub Menu 2</a></li>
+                  <li><a href="#">Sub Menu 3</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav><!-- .navbar -->
+
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main" data-aos="fade" data-aos-delay="1500">
+
+    <!-- ======= End Page Header ======= -->
+    <div class="page-header d-flex align-items-center">
+      <div class="container position-relative">
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-6 text-center">
+<!--            {{ page_header }}-->
+            <h1>Categoria: {{ category_name.description }}</h1>
+
+<!--            <a class="cta-btn" href="contact.html">Green button</a>-->
+
+          </div>
+        </div>
+      </div>
+    </div><!-- End Page Header -->
+
+    <!-- ======= Gallery Section ======= -->
+
+    <!-- ======= Gallery Section ======= -->
+    <section id="gallery" class="gallery">
+      <div class="container-fluid">
+
+        <div class="row gy-4 justify-content-center">
+          {% for item in videos_list %}
+
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="gallery-item h-100">
+              {% if item.cover_image and not item.video_file %}
+                <img src="{{ item.cover_image.url }}" class="img-fluid" alt="{{ item.alt_text }}">
+              {% elif item.video_file and item.cover_image %}
+                <div class="media-wrapper">
+                  <video id="player{{ forloop.counter }}" width="100%" height="100%" style="max-width:100%;" poster="{{ item.cover_image.url }}" preload="none" controls playsinline webkit-playsinline>
+                    <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
+                  </video>
+                </div>
+              {% elif item.video_file %}
+                <!-- Placeholder for video without a specific cover image -->
+                <div class="bg-light d-flex justify-content-center align-items-center" style="height: 200px;">
+                  <div class="text-center">
+                    <i class="bi bi-play-circle" style="font-size: 48px; color: #007bff;"></i>
+                    <p class="mt-2">{{ item.title }}</p>
+                  </div>
+                </div>
+                <div class="media-wrapper" style="display:none;">
+                  <video id="player{{ forloop.counter }}_" width="100%" height="100%" style="max-width:100%;" preload="none" controls playsinline webkit-playsinline>
+                    <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
+                  </video>
+                </div>
+              {% else %}
+                <!-- Blue box with title if no image or video file is present -->
+                <div class="bg-primary text-white d-flex justify-content-center align-items-center" style="height: 200px;">
+                  {{ item.title }}
+                </div>
+              {% endif %}
+              <!-- <div class="gallery-links d-flex align-items-center justify-content-center">
+                <a href="{% if item.cover_image %}{{ item.cover_image.url }}{% elif item.video_file %}{{ item.video_file.url }}{% endif %}" title="{{ item.title }}" class="glightbox preview-link"><i class="bi bi-arrows-angle-expand"></i></a>
+                <a href="{{ item.detail_url }}" class="details-link"><i class="bi bi-link-45deg"></i></a>
+              </div> -->
+            </div>
+          </div><!-- End Gallery Item -->
+
+
+
+
+          {% empty %}
+            <p>Non ci sono video o documenti da mostrare.</p>
+          {% endfor %}
+        </div>
+
+
+
+      </div>
+
+
+
+
+    </section><!-- End Gallery Section -->
+
+
+
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="container">
+      <div class="credits">
+        Implementazione ICT <a href="mailto:marco.tessarotto@regione.fvg.it">Marco Tessarotto</a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!--  <div id="preloader">
+    <div class="line"></div>
+  </div>-->
+
+  <!-- Vendor JS Files -->
+  <script src="{{ STATIC_URL }}/static/assets/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ STATIC_URL }}/static/assets/template/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="{{ STATIC_URL }}/static/assets/template/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="{{ STATIC_URL }}/static/assets/template/vendor/aos/aos.js"></script>
+  <!--<script src="{{ STATIC_URL }}/static/assets/template/vendor/php-email-form/validate.js"></script>-->
+
+  <!-- Template Main JS File -->
+  <script src="{{ STATIC_URL }}/static/assets/template/js/main.js"></script>
+
+<!-- media element -->
+    <script src="{{ STATIC_URL }}/static/mediaelement/build/mediaelement-and-player.js"></script>
+    <script src="{{ STATIC_URL }}/static/mediaelement/build/renderers/dailymotion.js"></script>
+    <script src="{{ STATIC_URL }}/static/mediaelement/build/renderers/facebook.js"></script>
+    <script src="{{ STATIC_URL }}/static/mediaelement/build/renderers/soundcloud.js"></script>
+    <script src="{{ STATIC_URL }}/static/mediaelement/build/renderers/twitch.js"></script>
+    <script src="{{ STATIC_URL }}/static/mediaelement/build/renderers/vimeo.js"></script>
+    <script src="{{ STATIC_URL }}/static/mediaelement/build/lang/it.js"></script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+
+
+
+
+$(function() {
+    // Select all video elements or a specific class if they have one
+    $('video').each(function() {
+        // 'this' refers to the current video element in the loop
+        var video = this;
+
+        // Add event listener for the play event
+        video.addEventListener('play', function() {
+            console.log("Video is now playing");
+            // Request full screen when video plays
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.mozRequestFullScreen) { // Firefox
+                video.mozRequestFullScreen();
+            } else if (video.webkitRequestFullscreen) { // Chrome, Safari & Opera
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) { // IE/Edge
+                video.msRequestFullscreen();
+            }
+        }, false);
+    });
+});
+
+
+</script>
+
+
+<!-- media element -->
+</body>
+
+</html>

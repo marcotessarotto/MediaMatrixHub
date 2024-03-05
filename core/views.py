@@ -1,5 +1,10 @@
+
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import CreateView
 from django.http import HttpResponse
 from django.shortcuts import render
+
+from core.models import Category, Media, Video
 
 from mediamatrixhub.view_tools import is_private_ip
 
@@ -24,3 +29,26 @@ def proxy_django_auth(request):
         else:
             return HttpResponse(status=403)
 
+
+class ShowHomeWithCategory(CreateView):
+
+    def get(self, request, category_name, *args, **kwargs):
+
+        category = get_object_or_404(Category, name=category_name)
+
+        print(f"Category: {category}")
+
+        # Querying each concrete model separately
+        videos_list = Video.objects.filter(categories=category)
+        print(f"list of videos: {videos_list}")
+
+        context = {
+            'category_name': category,
+            'videos_list': videos_list,
+            'page_header': 'Category Home',
+        }
+
+        return render(request, 'core/gallery-v2.html', context)
+
+    def post(self, request, *args, **kwargs):
+        pass

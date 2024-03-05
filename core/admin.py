@@ -1,8 +1,76 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory
 
-from core.models import Category
 
+class PlaylistVideoInline(admin.TabularInline):
+    model = PlaylistVideo
+    extra = 1
+
+
+class TagInline(admin.TabularInline):
+    model = Video.tags.through
+    extra = 1
+
+
+class VideoCategoryInline(admin.TabularInline):
+    model = VideoCategory
+    extra = 1  # Specifies the number of blank forms the inline formset will display
+
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'display_categories', 'duration', 'enabled', 'structure', 'created_at',)
+    list_filter = ('enabled', 'structure', 'tags')
+    search_fields = ('title', 'description')
+    inlines = [TagInline, VideoCategoryInline]
+
+    def display_categories(self, obj):
+        """Display categories related to the video."""
+        categories = obj.categories.all()
+        return ', '.join([category.name for category in categories])
+    display_categories.short_description = "Categories"
+
+    # exclude = ('owner',)
+
+    # def save_model(self, request, obj, form, change):
+    #     if not obj.pk:  # Check if this is a new object being created
+    #         obj.owner = request.user  # Set the owner to the currently logged-in user
+    #     super().save_model(request, obj, form, change)
+
+
+@admin.register(VideoPill)
+class VideoPillAdmin(admin.ModelAdmin):
+    list_display = ('video', 'start_time', 'stop_time')
+    search_fields = ('video__title',)
+
+
+@admin.register(Playlist)
+class PlaylistAdmin(admin.ModelAdmin):
+    inlines = [PlaylistVideoInline]
+
+
+@admin.register(Structure)
+class StructureAdmin(admin.ModelAdmin):
+    list_display = ('name', 'structure_type', 'parent', 'referente')
+    list_filter = ('structure_type',)
+    search_fields = ('name', 'description')
+
+
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    list_display = ('name', 'surname', 'email')
+    search_fields = ('name', 'surname', 'email')
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('tag',)
+    search_fields = ('tag',)
+
+
+# Unregister the auto-generated through model admin if needed
+# admin.site.unregister(Video.tags.through)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
