@@ -23,7 +23,7 @@ from mediamatrixhub import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('core/', include('core.urls')),
+    path('core/', include('core.urls')),
     path('registrazione/', include('registration.urls')),
 
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),

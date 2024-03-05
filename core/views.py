@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 
 from core.models import Category, Media, Video
@@ -52,3 +52,8 @@ class ShowHomeWithCategory(CreateView):
 
     def post(self, request, *args, **kwargs):
         pass
+
+
+class SearchHomeWithCategory(CreateView):
+    def get(self, request, category_name, *args, **kwargs):
+        raise Http404("This page does not exist")
