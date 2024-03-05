@@ -180,15 +180,24 @@
                 <img src="{{ item.cover_image.url }}" class="img-fluid" alt="{{ item.alt_text }}">
               {% elif item.video_file and item.cover_image %}
                 <div class="media-wrapper">
-                  <video id="player{{ forloop.counter }}" width="100%" height="100%" style="max-width:100%;" poster="{{ item.cover_image.url }}" preload="none" controls playsinline webkit-playsinline>
+                  <video id="player{{ forloop.counter }}"
+                         width="100%"
+                         height="100%"
+                         style="max-width:100%;"
+                         poster="{{ item.cover_image.url }}"
+                         preload="none"
+                         controls playsinline webkit-playsinline>
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                 </div>
               {% elif item.video_file %}
                 <div class="media-wrapper" >
-                  <video id="player{{ forloop.counter }}_" width="100%" height="100%" style="max-width:100%;"
+                  <video id="player{{ forloop.counter }}_"
+                         width="100%" height="100%"
+                         style="max-width:100%;"
                          poster="{% url 'get_cover_image' ref_token=item.ref_token %}"
-                         preload="none" controls playsinline webkit-playsinline>
+                         preload="none"
+                         controls playsinline webkit-playsinline>
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                 </div>
@@ -198,15 +207,8 @@
                   {{ item.title }}
                 </div>
               {% endif %}
-              <!-- <div class="gallery-links d-flex align-items-center justify-content-center">
-                <a href="{% if item.cover_image %}{{ item.cover_image.url }}{% elif item.video_file %}{{ item.video_file.url }}{% endif %}" title="{{ item.title }}" class="glightbox preview-link"><i class="bi bi-arrows-angle-expand"></i></a>
-                <a href="{{ item.detail_url }}" class="details-link"><i class="bi bi-link-45deg"></i></a>
-              </div> -->
             </div>
           </div><!-- End Gallery Item -->
-
-
-
 
           {% empty %}
             <p>Non ci sono video o documenti da mostrare.</p>
