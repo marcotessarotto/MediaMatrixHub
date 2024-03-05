@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.utils import timezone
 
 from mediamatrixhub.email_utils import send_simple_html_email
-from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL
+from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA_URL
 from mediamatrixhub.view_tools import is_private_ip
 from .forms import SubscriberLoginForm, EventParticipationForm
 from .logic import create_event_log
@@ -20,7 +20,8 @@ def subscriber_login(request):
     # Check if the IP is private
     if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
         syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
-        return render(request, 'show_message.html', {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
+        return render(request, 'show_message.html', {'message': "403 Forbidden - accesso consentito solo da intranet"},
+                      status=403)
 
     if request.method == 'POST':
         form = SubscriberLoginForm(request.POST)
@@ -62,7 +63,8 @@ def manage_subscription(request):
 
     # Check if the IP is private
     if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
-        return render(request, 'show_message.html', {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
+        return render(request, 'show_message.html', {'message': "403 Forbidden - accesso consentito solo da intranet"},
+                      status=403)
 
     # check request.session['subscriber_id'] and retrieve the subscriber instance
     subscriber_id = request.session.get('subscriber_id')
@@ -72,6 +74,9 @@ def manage_subscription(request):
         # send email to admin
         # redirect to login page
         return redirect('subscriber-login')
+
+    additional_message = f'Puoi visualizzare le registrazioni delle precedenti pillole informative a questo indirizzo: ' \
+                         f'<a href="{VIDEOTECA_URL}" target="_blank">{VIDEOTECA_URL}</a>'
 
     if request.method == 'POST':
         form = EventParticipationForm(request.POST)
@@ -85,7 +90,8 @@ def manage_subscription(request):
                 if value:  # Checkbox is checked
                     # Check if the EventParticipation instance exists and update or create accordingly
                     EventParticipation.objects.update_or_create(
-                        event=event, subscriber=subscriber,
+                        event=event,
+                        subscriber=subscriber,
                         defaults={'event': event, 'subscriber': subscriber}
                     )
 
@@ -114,16 +120,18 @@ def manage_subscription(request):
             # invia email riassuntiva all'utente
             if subscriptions:
                 message_body = f'Ciao {subscriber.surname},<br><br>' \
-                                 f'hai aggiornato con successo le tue iscrizioni alle prossime pillole informative.<br><br>' \
-                                 f'Ecco un riepilogo delle future pillole informative a cui ti sei iscritto:<br><br>' \
-                                 f'{"<br><hr>".join([f"{subscription}" for subscription in subscriptions])}<br><br>' \
-                                 f'Grazie per la tua partecipazione.<br><br>'
+                               f'hai aggiornato con successo le tue iscrizioni alle prossime pillole informative.<br><br>' \
+                               f'Ecco un riepilogo delle future pillole informative a cui ti sei iscritto:<br><br>' \
+                               f'{"<br><hr>".join([f"{subscription}" for subscription in subscriptions])}<br><br>' \
+                               f"{additional_message}<br><br>" \
+                               f'Grazie per la tua partecipazione.<br><br>'
             else:
                 message_body = f'Ciao {subscriber.surname},<br><br>' \
-                                 f'hai aggiornato con successo le tue iscrizioni alle pillole informative.<br><br>' \
-                                 f'Ecco un riepilogo delle pillole informative a cui ti sei iscritto:<br><br>' \
-                                 f'Al momento non sei iscritto ad alcuna futura pillola informativa.<br><br>' \
-                                 f'Grazie per la tua partecipazione.<br><br>'
+                               f'hai aggiornato con successo le tue iscrizioni alle pillole informative.<br><br>' \
+                               f'Ecco un riepilogo delle pillole informative a cui ti sei iscritto:<br><br>' \
+                               f'Al momento non sei iscritto ad alcuna futura pillola informativa.<br><br>' \
+                               f"{additional_message}<br><br>" \
+                               f'Grazie per la tua partecipazione.<br><br>'
 
             message_subject = f'{SUBJECT_EMAIL} Riepilogo iscrizioni alle prossime pillole informative'
 
@@ -162,7 +170,13 @@ def manage_subscription(request):
         for participation in existing_participations:
             form.fields[f'event_{participation.event.id}'].initial = True
 
-    return render(request, 'subscribers/manage_subscription.html', {'subscriber': subscriber, 'form': form})
+    context = {
+        'subscriber': subscriber,
+        'form': form,
+        'additional_message': additional_message,
+    }
+
+    return render(request, 'subscribers/manage_subscription.html', context)
 
 
 def subscriber_logout(request):
