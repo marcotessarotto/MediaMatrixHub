@@ -19,9 +19,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.urls import path
 
+from core.views import proxy_django_auth
 from mediamatrixhub import settings
 
 urlpatterns = [
+    # path('proxy_django_auth/', proxy_django_auth, name='proxy_django_auth'),
     path('admin/', admin.site.urls),
     path('core/', include('core.urls')),
     path('registrazione/', include('registration.urls')),
