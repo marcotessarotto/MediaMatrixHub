@@ -1,0 +1,33 @@
+DB_NAME='database_name_media_matrix'
+DB_USER='dbusername'
+DB_PASSWORD='............'
+DB_HOST='localhost'
+DB_PORT=3306
+SECRET_KEY='django secret ...................'
+DEBUG=False
+ALLOWED_HOSTS=*
+EMAIL_HOST="localhost"
+EMAIL_PORT=25
+
+
+RECAPTCHA_PUBLIC_KEY='..............'
+RECAPTCHA_PRIVATE_KEY='................'
+
+
+NOTIFICATION_BCC_RECIPIENTS='bcc_recipient@.....'
+
+
+BASE_URL='https://base_url'
+VIDEOTECA_URL='https://base_url/core/c/category/'
+REGISTRATION_URL="https://base_url/registrazione/login/"
+
+
+REDIS_CACHE_URL='redis://localhost:6379/1'
+
+
+FROM_EMAIL='sender_email@.....'
+SUBJECT_EMAIL="[iscrizioni pillole informative]"
+DEBUG_EMAIL='debug_email@.....'
+
+MONITOR_EMAIL_ADDRESSES="admin@....,admin2@...."
+

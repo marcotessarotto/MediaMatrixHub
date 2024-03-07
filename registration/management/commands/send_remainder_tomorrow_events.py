@@ -10,7 +10,7 @@ from registration.models import InformationEvent, Subscriber, EventLog
 
 
 class Command(BaseCommand):
-    help = 'Lists enabled events with their participation counts'
+    help = 'Send remainder email to subscribers for tomorrow events.'
 
     # parse parameters
     def add_arguments(self, parser):
