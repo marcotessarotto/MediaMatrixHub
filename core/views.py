@@ -76,22 +76,30 @@ def get_cover_image(request, ref_token):
     try:
         # Retrieve the video instance by ref_token
         video = Video.objects.get(ref_token=ref_token)
+
+        width = video.width or 1920
+        height = video.height or 1080
+
+        font_size = height // 20
+
+        text_height = height // 4
+
         # Prepare the image
-        image = Image.new('RGB', (800, 100), color=(73, 109, 137))
+        image = Image.new('RGB', (width, height), color=(73, 109, 137))
         d = ImageDraw.Draw(image)
 
         # Check if the specified font path exists
         font_path = "/usr/local/share/fonts/DecimaUNICASEReg01.otf"
         if os.path.exists(font_path):
-            font = ImageFont.truetype(font_path, 35)
+            font = ImageFont.truetype(font_path, font_size)
         else:
             # Fallback to a standard font available on Debian/Ubuntu
             # Make sure the 'fonts-dejavu-core' package is installed
             standard_font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-            font = ImageFont.truetype(standard_font_path, 35)
+            font = ImageFont.truetype(standard_font_path, font_size)
 
         # Adding text to the image
-        d.text((10, 10), video.title, fill=(255, 255, 0), font=font)
+        d.text((10, text_height), video.title, fill=(255, 255, 0), font=font, align="center")
 
         # Save the image to a bytes buffer
         buffer = io.BytesIO()
