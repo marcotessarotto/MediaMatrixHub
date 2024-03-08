@@ -27,7 +27,7 @@ class VideoDocumentInline(admin.TabularInline):
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'display_categories', 'duration', 'enabled', 'structure', 'created_at',)
+    list_display = ('id', 'title', 'display_categories', 'duration', 'enabled', 'has_fulltext_search_data', 'structure', 'created_at',)
     list_filter = ('enabled', 'structure', 'tags')
     search_fields = ('title', 'description')
     inlines = [TagInline, VideoCategoryInline, VideoDocumentInline]
@@ -39,11 +39,6 @@ class VideoAdmin(admin.ModelAdmin):
     display_categories.short_description = "Categories"
 
     # exclude = ('owner',)
-
-    # def save_model(self, request, obj, form, change):
-    #     if not obj.pk:  # Check if this is a new object being created
-    #         obj.owner = request.user  # Set the owner to the currently logged-in user
-    #     super().save_model(request, obj, form, change)
 
 
 @admin.register(VideoPill)

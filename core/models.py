@@ -96,17 +96,40 @@ class Media(models.Model):
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
 
+    def has_fulltext_search_data(self):
+        """Check if the Video instance has fulltext_search_data."""
+        return bool(self.fulltext_search_data)
+
     class Meta:
         abstract = True
         # pass
 
 
 @receiver(post_save, sender='core.Video')
+def video_post_save(sender, instance, **kwargs):
+    # if created:
+    if (
+        instance.video_file
+        and not instance.duration
+        and not instance.stop_time
+        and kwargs.get('update_fields', None) != {'duration', 'stop_time'}
+    ):
+        instance.duration = get_video_duration(instance.video_file.path)
+        instance.stop_time = instance.duration
+        instance.save(update_fields=['duration', 'stop_time'])
+
+        print(f"Duration and stop_time updated for #{instance.id} {instance.title}")
+
+
+@receiver(post_save, sender='core.Video')
 def update_fulltext_search_data(sender, instance, **kwargs):
     # Check if transcription is available, the raw_transcription_file has been specified,
     # and we are not already updating the fulltext_search_data to prevent recursion
-    if (instance.is_transcription_available and instance.raw_transcription_file and
-            not kwargs.get('update_fields', None) == {'fulltext_search_data'}):
+    if (
+        instance.is_transcription_available
+        and instance.raw_transcription_file
+        and kwargs.get('update_fields', None) != {'fulltext_search_data'}
+    ):
         # Read the content from the file
         vtt_content = instance.raw_transcription_file.read().decode('utf-8')
 
@@ -124,7 +147,7 @@ def update_fulltext_search_data(sender, instance, **kwargs):
         # Reconnect the signal
         # post_save.connect(update_fulltext_search_data, sender=sender)
 
-        print(f"Fulltext search data updated for {instance.title}")
+        print(f"Fulltext search data updated for #{instance.id} {instance.title}")
 
 
 class Document(Media):
@@ -182,14 +205,6 @@ class Video(Media):
         defined in the VideoDocument model.
         """
         return VideoDocument.objects.filter(video=self).order_by('order').select_related('document')
-
-
-@receiver(post_save, sender=Video)
-def video_post_save(sender, instance, created, **kwargs):
-    if created:
-        instance.duration = get_video_duration(instance.video_file.path)
-        instance.stop_time = instance.duration
-        instance.save()
 
 
 class VideoPill(models.Model):
