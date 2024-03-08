@@ -1,3 +1,4 @@
+import os
 import syslog
 
 from django.shortcuts import render, get_object_or_404
@@ -79,9 +80,15 @@ def get_cover_image(request, ref_token):
         image = Image.new('RGB', (800, 100), color=(73, 109, 137))
         d = ImageDraw.Draw(image)
 
-        # You might need to adjust the path to the font file
+        # Check if the specified font path exists
         font_path = "/usr/local/share/fonts/DecimaUNICASEReg01.otf"
-        font = ImageFont.truetype(font_path, 35)
+        if os.path.exists(font_path):
+            font = ImageFont.truetype(font_path, 35)
+        else:
+            # Fallback to a standard font available on Debian/Ubuntu
+            # Make sure the 'fonts-dejavu-core' package is installed
+            standard_font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+            font = ImageFont.truetype(standard_font_path, 35)
 
         # Adding text to the image
         d.text((10, 10), video.title, fill=(255, 255, 0), font=font)

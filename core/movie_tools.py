@@ -10,6 +10,15 @@ def get_video_duration(video_path):
     return duration
 
 
+def get_video_resolution(video_path):
+    """
+    Return tuple containing video resolution (width, height) for the given video file.
+    """
+    with VideoFileClip(video_path) as video:
+        width, height = video.size
+    return width, height
+
+
 def extract_text_from_vtt(data: str) -> str:
     """
     Extracts the text from a VTT file, removing timestamps and UUIDs

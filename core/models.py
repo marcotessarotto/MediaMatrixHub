@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.translation import gettext_lazy as _
 
-from core.movie_tools import get_video_duration, extract_text_from_vtt
+from core.movie_tools import get_video_duration, extract_text_from_vtt, get_video_resolution
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -112,11 +112,18 @@ def video_post_save(sender, instance, **kwargs):
         instance.video_file
         and not instance.duration
         and not instance.stop_time
-        and kwargs.get('update_fields', None) != {'duration', 'stop_time'}
+        and kwargs.get('update_fields', None) != {'duration', 'stop_time', 'width', 'height'}
     ):
+        width, height = get_video_resolution(instance.video_file.path)
+        print(f"Resolution: {width, height}")
+        print(f"w: {width}, h: {height}")
+        print(f"type of width: {type(width)}")
+        instance.width = width
+        instance.height = height
+
         instance.duration = get_video_duration(instance.video_file.path)
         instance.stop_time = instance.duration
-        instance.save(update_fields=['duration', 'stop_time'])
+        instance.save(update_fields=['duration', 'stop_time', 'width', 'height'])
 
         print(f"Duration and stop_time updated for #{instance.id} {instance.title}")
 
@@ -177,6 +184,9 @@ class Video(Media):
     duration = models.DurationField(null=True, blank=True)
     start_time = models.DurationField(null=True, blank=True)
     stop_time = models.DurationField(null=True, blank=True)
+
+    width = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
 
     documents = models.ManyToManyField('Document', through='VideoDocument', blank=True)
 
