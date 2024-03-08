@@ -101,19 +101,41 @@ class Media(models.Model):
         # pass
 
 
-@receiver(post_save, sender=Media)
-def update_fulltext_search_data(sender, instance, **kwargs):
-    # Check if transcription is available and the raw_transcription_file has been specified
-    if instance.is_transcription_available and instance.raw_transcription_file:
-        # Read the content from the file
-        vtt_content = instance.raw_transcription_file.read().decode('utf-8')
+# @receiver(post_save, sender='core.Video')
+# def update_fulltext_search_data(sender, instance, **kwargs):
+#     # Check if transcription is available and the raw_transcription_file has been specified
+#     if instance.is_transcription_available and instance.raw_transcription_file:
+#         # Read the content from the file
+#         vtt_content = instance.raw_transcription_file.read().decode('utf-8')
+#
+#         # Process the content to extract text
+#         processed_text = extract_text_from_vtt(vtt_content)
+#
+#         # Save the processed text to fulltext_search_data
+#         instance.fulltext_search_data = processed_text
+#         instance.save()
+#
+#         print(f"Fulltext search data updated for {instance.title}")
 
-        # Process the content to extract text
-        processed_text = extract_text_from_vtt(vtt_content)
 
-        # Save the processed text to fulltext_search_data
-        instance.fulltext_search_data = processed_text
-        instance.save()
+class Document(Media):
+    categories = models.ManyToManyField('core.Category', through='DocumentCategory')
+    document_file = models.FileField(upload_to=calc_directory_path, )
+
+    def __str__(self):
+        return self.title
+
+
+class VideoDocument(models.Model):
+    """This model is used to associate documents to videos."""
+    video = models.ForeignKey('Video', on_delete=models.CASCADE)
+    document = models.ForeignKey('Document', on_delete=models.CASCADE)
+    description = models.TextField(blank=True, null=True)  # Optional description field
+    order = models.PositiveIntegerField(default=0)  # Field to specify the order
+
+    class Meta:
+        ordering = ['order']  # Orders the documents by the 'order' field
+        unique_together = ('video', 'document', 'order')  # Optional: ensures unique combinations
 
 
 class Video(Media):
@@ -123,6 +145,8 @@ class Video(Media):
     duration = models.DurationField(null=True, blank=True)
     start_time = models.DurationField(null=True, blank=True)
     stop_time = models.DurationField(null=True, blank=True)
+
+    documents = models.ManyToManyField('Document', through='VideoDocument', blank=True)
 
     def __str__(self):
         return self.title
@@ -140,6 +164,15 @@ class Video(Media):
         except Category.DoesNotExist:
             print("This media instance has no associated categories.")
             return None
+
+    def get_ordered_documents_through_videodocument(self):
+        """
+        Retrieves the VideoDocument instances associated with this video,
+        ordered by the 'order' field. This method allows access to the associated
+        documents along with the extra fields (like 'description' and 'order')
+        defined in the VideoDocument model.
+        """
+        return VideoDocument.objects.filter(video=self).order_by('order').select_related('document')
 
 
 @receiver(post_save, sender=Video)
@@ -207,6 +240,18 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class DocumentCategory(models.Model):
+    media = models.ForeignKey('core.Document', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.media.title} - {self.category.name} - Order {self.order}"
 
 
 class VideoCategory(models.Model):

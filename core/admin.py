@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory
+from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
+    Document, VideoDocument
 
 
 class PlaylistVideoInline(admin.TabularInline):
@@ -18,12 +19,18 @@ class VideoCategoryInline(admin.TabularInline):
     extra = 1  # Specifies the number of blank forms the inline formset will display
 
 
+class VideoDocumentInline(admin.TabularInline):
+    model = VideoDocument
+    extra = 1  # How many rows to show by default
+    # Specify any additional fields you want to include
+
+
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'display_categories', 'duration', 'enabled', 'structure', 'created_at',)
     list_filter = ('enabled', 'structure', 'tags')
     search_fields = ('title', 'description')
-    inlines = [TagInline, VideoCategoryInline]
+    inlines = [TagInline, VideoCategoryInline, VideoDocumentInline]
 
     def display_categories(self, obj):
         """Display categories related to the video."""
@@ -91,3 +98,11 @@ class CategoryAdmin(admin.ModelAdmin):
         form = super(CategoryAdmin, self).get_form(request, obj, **kwargs)
         # Custom form modifications can go here
         return form
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ('title', 'enabled', 'ref_token', 'cover_image')  # Customize as needed
+    search_fields = ['title', 'description']
+    list_filter = ('enabled', 'categories')
+
