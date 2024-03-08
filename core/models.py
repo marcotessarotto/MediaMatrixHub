@@ -101,21 +101,30 @@ class Media(models.Model):
         # pass
 
 
-# @receiver(post_save, sender='core.Video')
-# def update_fulltext_search_data(sender, instance, **kwargs):
-#     # Check if transcription is available and the raw_transcription_file has been specified
-#     if instance.is_transcription_available and instance.raw_transcription_file:
-#         # Read the content from the file
-#         vtt_content = instance.raw_transcription_file.read().decode('utf-8')
-#
-#         # Process the content to extract text
-#         processed_text = extract_text_from_vtt(vtt_content)
-#
-#         # Save the processed text to fulltext_search_data
-#         instance.fulltext_search_data = processed_text
-#         instance.save()
-#
-#         print(f"Fulltext search data updated for {instance.title}")
+@receiver(post_save, sender='core.Video')
+def update_fulltext_search_data(sender, instance, **kwargs):
+    # Check if transcription is available, the raw_transcription_file has been specified,
+    # and we are not already updating the fulltext_search_data to prevent recursion
+    if (instance.is_transcription_available and instance.raw_transcription_file and
+            not kwargs.get('update_fields', None) == {'fulltext_search_data'}):
+        # Read the content from the file
+        vtt_content = instance.raw_transcription_file.read().decode('utf-8')
+
+        # Process the content to extract text
+        processed_text = extract_text_from_vtt(vtt_content)
+
+        # Temporarily disconnect the signal to prevent recursion
+        # post_save.disconnect(update_fulltext_search_data, sender=sender)
+
+        # Save the processed text to fulltext_search_data using instance.save(update_fields=['fulltext_search_data'])
+        # This method only updates the specified fields, preventing the post_save signal from being triggered again.
+        instance.fulltext_search_data = processed_text
+        instance.save(update_fields=['fulltext_search_data'])
+
+        # Reconnect the signal
+        # post_save.connect(update_fulltext_search_data, sender=sender)
+
+        print(f"Fulltext search data updated for {instance.title}")
 
 
 class Document(Media):
