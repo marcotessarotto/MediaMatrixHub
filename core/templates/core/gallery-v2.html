@@ -192,8 +192,12 @@
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                   <div class="video-info mt-2">
-                    <p>{% trans "Publication Date" %}: {{ item.publication_date|date:"Y-m-d" }}</p>
+                    {% if item.publication_date %}
+                    <p>{% trans "Publication Date" %}: {{ item.publication_date|date:"SHORT_DATE_FORMAT" }}</p>
+                    {% endif %}
+                    {% if item.authors %}
                     <p>{% trans "Author(s)" %}: {{ item.authors }}</p>
+                    {% endif %}
                     <p>{% trans "Duration" %}: {{ item.duration }}</p>
                   </div>
                 </div>

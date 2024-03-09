@@ -316,6 +316,7 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
 
+# https://chat.openai.com/share/7990bc3a-3107-4db8-919e-e81831308118
 
 # sudo apt-get install gettext
 
