@@ -190,6 +190,11 @@
                          controls playsinline webkit-playsinline>
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
+                  <div class="video-info mt-2">
+                    <p>Publication Date: {{ item.publication_date|date:"Y-m-d" }}</p>
+                    <p>Author(s): {{ item.authors }}</p>
+                    <p>Duration: {{ item.duration }}</p>
+                  </div>
                 </div>
               {% else %}
                 <!-- Blue box with title if no image or video file is present -->
