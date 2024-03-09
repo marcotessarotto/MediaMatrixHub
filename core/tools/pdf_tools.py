@@ -1,5 +1,6 @@
 from pdf2image import convert_from_path
 import os
+import fitz  # PyMuPDF
 
 
 def generate_pdf_preview(pdf_path, output_folder, preview_name="preview.jpg", dpi=200):
@@ -32,3 +33,26 @@ def generate_pdf_preview(pdf_path, output_folder, preview_name="preview.jpg", dp
 # pdf_path = '/path/to/your/document.pdf'
 # output_folder = '/path/to/output/folder/'
 # generate_pdf_preview(pdf_path, output_folder)
+
+
+def extract_text_from_pdf(pdf_path):
+    # Open the PDF file
+    doc = fitz.open(pdf_path)
+
+    # Initialize an empty string for text
+    text = ""
+
+    # Loop through each page in the PDF
+    for page in doc:
+        # Extract text from the current page
+        text += page.get_text()
+
+    # Close the document
+    doc.close()
+
+    return text
+
+# Example usage
+# pdf_path = 'path/to/your/file.pdf'
+# extracted_text = extract_text_from_pdf(pdf_path)
+# print(extracted_text)
