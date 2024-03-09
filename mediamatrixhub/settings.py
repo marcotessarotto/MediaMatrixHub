@@ -185,6 +185,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'mediamatrixhub.urls'
@@ -285,8 +286,6 @@ LANGUAGE_CODE = 'it-it'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
-
 USE_TZ = True
 
 
@@ -302,3 +301,26 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 SESSION_COOKIE_AGE = 1209600*2  # 4 weeks, in seconds
 
+USE_I18N = True  # Enable Django's translation system
+USE_L10N = True  # Enable localized formatting of data
+
+# Languages you want to support in your application
+LANGUAGES = [
+    ('en', 'English'),
+    ('it', 'Italian'),
+    # Add more languages here
+]
+
+# Path where Django looks for translation files
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
+
+# sudo apt-get install gettext
+
+# to collect strings for translation:
+# django-admin makemessages -l it  # For Italian
+
+# then compile the translation files:
+# django-admin compilemessages

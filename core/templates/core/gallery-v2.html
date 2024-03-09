@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -156,7 +157,7 @@
         <div class="row d-flex justify-content-center">
           <div class="col-lg-6 text-center">
 <!--            {{ page_header }}-->
-            <h1>Categoria: {{ category_name.description }}</h1>
+            <h1>{% trans "Category" %}: {{ category_name.description }}</h1>
 
 <!--            <a class="cta-btn" href="contact.html">Green button</a>-->
 
@@ -191,9 +192,9 @@
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                   <div class="video-info mt-2">
-                    <p>Publication Date: {{ item.publication_date|date:"Y-m-d" }}</p>
-                    <p>Author(s): {{ item.authors }}</p>
-                    <p>Duration: {{ item.duration }}</p>
+                    <p>{% trans "Publication Date" %}: {{ item.publication_date|date:"Y-m-d" }}</p>
+                    <p>{% trans "Author(s)" %}: {{ item.authors }}</p>
+                    <p>{% trans "Duration" %}: {{ item.duration }}</p>
                   </div>
                 </div>
               {% else %}
