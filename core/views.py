@@ -41,11 +41,14 @@ class ShowHomeWithCategory(CreateView):
     def get(self, request, category_name, *args, **kwargs):
         http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
 
-        # Check if the IP is private
-        if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
-            syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
-            return render(request, 'core/show_generic_message.html',
-                          {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
+        if request.user.is_authenticated and request.user.is_superuser:
+            pass
+        else:
+            # Check if the IP is private
+            if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
+                syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
+                return render(request, 'core/show_generic_message.html',
+                              {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
 
         category = get_object_or_404(Category, name=category_name)
 
