@@ -186,7 +186,6 @@
                          height="100%"
                          style="max-width:100%;"
                          poster="{{ item.cover_image.url }}"
-                         poster="{% if item.cover_image %}{{ item.cover_image.url }}{% else %}{% url 'get_cover_image' ref_token=item.ref_token %}{% endif %}"
                          preload="none"
                          controlsList="nodownload"
                          controls playsinline webkit-playsinline>

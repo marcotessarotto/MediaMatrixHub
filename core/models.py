@@ -103,6 +103,12 @@ class Media(models.Model):
         abstract = True
         # pass
 
+    def is_video(self):
+        return False
+
+    def is_document(self):
+        return False
+
 
 @receiver(post_save, sender='core.Video')
 def video_post_save(sender, instance, **kwargs):
@@ -160,8 +166,21 @@ class Document(Media):
     categories = models.ManyToManyField('core.Category', through='DocumentCategory')
     document_file = models.FileField(upload_to=calc_directory_path, )
 
+    authors = models.TextField(blank=True, verbose_name=_("Authors"))
+    publication_date = models.DateField(null=True, blank=True, verbose_name=_("Publication Date"))
+    # version = models.CharField(max_length=255, blank=True, verbose_name=_("Version"))
+    # doi = models.CharField(max_length=255, blank=True, verbose_name=_("Document Identifier (DOI)"))
+    preview_image = models.ImageField(upload_to='document_previews/', blank=True, null=True,
+                                      verbose_name=_("Preview Image"))
+    # accessibility_info = models.TextField(blank=True, verbose_name=_("Accessibility Information"))
+    # file_checksum = models.CharField(max_length=255, blank=True, verbose_name=_("File Checksum"))
+    # Consider adding methods for preview generation, search optimization, and file integrity verification
+
     def __str__(self):
         return self.title
+
+    def is_document(self):
+        return True
 
 
 class VideoDocument(models.Model):
@@ -214,6 +233,9 @@ class Video(Media):
         defined in the VideoDocument model.
         """
         return VideoDocument.objects.filter(video=self).order_by('order').select_related('document')
+
+    def is_video(self):
+        return True
 
 
 class VideoPill(models.Model):
