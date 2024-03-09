@@ -6,10 +6,9 @@ from django.dispatch import receiver
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.translation import gettext_lazy as _
 
-from core.movie_tools import get_video_duration, extract_text_from_vtt, get_video_resolution
+from core.tools.movie_tools import get_video_duration, extract_text_from_vtt, get_video_resolution
 
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class Tag(models.Model):

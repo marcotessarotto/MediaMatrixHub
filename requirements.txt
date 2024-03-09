@@ -23,3 +23,4 @@ django-ckeditor-5
 moviepy
 pytest-django
 Pillow
+pdf2image
