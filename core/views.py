@@ -49,11 +49,11 @@ class ShowHomeWithCategory(CreateView):
 
         category = get_object_or_404(Category, name=category_name)
 
-        print(f"Category: {category}")
+        # print(f"Category: {category}")
 
         # Querying each concrete model separately
         videos_list = Video.objects.filter(categories=category).filter(enabled=True)
-        print(f"list of videos: {videos_list}")
+        # print(f"list of videos: {videos_list}")
 
         context = {
             'category_name': category,
