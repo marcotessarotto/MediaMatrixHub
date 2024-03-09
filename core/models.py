@@ -292,6 +292,10 @@ class Category(models.Model):
     meta_description = models.TextField(blank=True, null=True, verbose_name=_("Meta Description"))
     meta_keywords = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Keywords"))
 
+    def get_children_categories(self):
+        """Returns all child categories of this category."""
+        return self.children.all()
+
     class Meta:
         ordering = ['order', 'name']
         verbose_name = _("Category")
