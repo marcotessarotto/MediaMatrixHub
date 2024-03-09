@@ -69,13 +69,14 @@ class Media(models.Model):
     title = models.CharField(max_length=1024)
     description = CKEditor5Field('Text', blank=True, config_name='extends')
 
-    # categories = models.ManyToManyField('core.Category', through='MediaCategory')
+    authors = models.TextField(blank=True, null=True, verbose_name=_("Authors"))
 
     enabled = models.BooleanField(default=True)
     tags = models.ManyToManyField(Tag, blank=True)
     ref_token = models.UUIDField(default=uuid.uuid4)
     structure = models.ForeignKey(Structure, on_delete=models.CASCADE, blank=True, null=True)
 
+    # TODO: rename 'cover_image' to 'preview_image'
     cover_image = models.ImageField(upload_to=calc_directory_path, blank=True, null=True,
                                     verbose_name=_("Immagine di copertina"))
 
@@ -91,6 +92,8 @@ class Media(models.Model):
     transcription_type = models.CharField(max_length=100, choices=TRANSCRIPTION_TYPE_CHOICES, default="vtt",
                                           verbose_name=_("Tipo Trascrizione"))
     is_transcription_available = models.BooleanField(default=False)
+
+    publication_date = models.DateField(null=True, blank=True, verbose_name=_("Publication Date"))
 
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
@@ -166,12 +169,13 @@ class Document(Media):
     categories = models.ManyToManyField('core.Category', through='DocumentCategory')
     document_file = models.FileField(upload_to=calc_directory_path, )
 
-    authors = models.TextField(blank=True, verbose_name=_("Authors"))
-    publication_date = models.DateField(null=True, blank=True, verbose_name=_("Publication Date"))
+
+
+    # preview_image = models.ImageField(upload_to='document_previews/', blank=True, null=True,
+    #                                   verbose_name=_("Preview Image"))
+
     # version = models.CharField(max_length=255, blank=True, verbose_name=_("Version"))
     # doi = models.CharField(max_length=255, blank=True, verbose_name=_("Document Identifier (DOI)"))
-    preview_image = models.ImageField(upload_to='document_previews/', blank=True, null=True,
-                                      verbose_name=_("Preview Image"))
     # accessibility_info = models.TextField(blank=True, verbose_name=_("Accessibility Information"))
     # file_checksum = models.CharField(max_length=255, blank=True, verbose_name=_("File Checksum"))
     # Consider adding methods for preview generation, search optimization, and file integrity verification

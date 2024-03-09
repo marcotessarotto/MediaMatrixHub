@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
-    Document, VideoDocument
+    Document, VideoDocument, DocumentCategory
 
 
 class PlaylistVideoInline(admin.TabularInline):
@@ -95,9 +96,56 @@ class CategoryAdmin(admin.ModelAdmin):
         return form
 
 
+class DocumentCategoryInline(admin.TabularInline):
+    model = DocumentCategory
+    extra = 1  # Specifies the number of blank forms the inline formset will display
+
+
+class DocumentTagInline(admin.TabularInline):
+    model = Document.tags.through
+    extra = 1
+
+
+class CategoryListFilter(admin.SimpleListFilter):
+    title = 'category'  # Human-readable title which will be displayed in the right admin sidebar just above the filter options.
+    parameter_name = 'category'  # Parameter for the filter that will be used in the URL query.
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each tuple is the coded value for the option that will appear in the URL query.
+        The second element is the human-readable name for the option that will appear in the right sidebar.
+        """
+        categories = Category.objects.all()
+        return [(category.id, category.name) for category in categories]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value provided in the query string and retrievable via `self.value()`.
+        """
+        if self.value():
+            return queryset.filter(categories__id=self.value())
+        return queryset
+
+
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'enabled', 'ref_token', 'cover_image')  # Customize as needed
-    search_fields = ['title', 'description']
-    list_filter = ('enabled', 'categories')
+    list_display = ('title', 'enabled', 'ref_token', 'cover_image_display', 'document_file_link')
+    search_fields = ['title', 'description', 'document_file']
+    list_filter = ('enabled', CategoryListFilter)  # Use the class directly without quotes
+    inlines = [DocumentTagInline, DocumentCategoryInline]
+
+    def cover_image_display(self, obj):
+        if obj.cover_image:
+            return format_html('<img src="{}" style="height:50px;"/>', obj.cover_image.url)
+        return "No image"
+    cover_image_display.short_description = 'Cover Image'
+
+    def document_file_link(self, obj):
+        if obj.document_file:
+            return format_html('<a href="{}" target="_blank">Download</a>', obj.document_file.url)
+        return "No file"
+    document_file_link.short_description = 'Document File'
+
+
+
 
