@@ -38,3 +38,5 @@ class EventParticipationForm(forms.Form):
                 label=event.to_html_table(),
                 required=False
             )
+
+        self.number_of_events = len(enabled_events)

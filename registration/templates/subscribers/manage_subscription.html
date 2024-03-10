@@ -91,7 +91,7 @@ input[type="submit"]:hover {
                 </ul>
                 {% endif %}
 
-
+                {% if form.number_of_events > 0 %}
                 <form method="post">
                     {% csrf_token %}
                     <table>
@@ -114,11 +114,10 @@ input[type="submit"]:hover {
                     <br>
                     <br>
                     <input type="submit" value="Salva" style="display: block; margin-left: auto; margin-right: auto;">
-
-
-
-
                 </form>
+                {% else %}
+                <p><h2  align="center" >Al momento non ci sono pillole informative a cui iscriversi.</h2></p>
+                {% endif %}
 
                 <br>
 
@@ -142,55 +141,6 @@ input[type="submit"]:hover {
         </div>
       </div>
 
-<!--      <div class="row">-->
-<!--        <div class="col-lg-6">-->
-
-<!--          <div class="card">-->
-<!--            <div class="card-body">-->
-<!--              <h1 class="card-title">...</h1>-->
-
-<!--            </div>-->
-<!--          </div>-->
-
-<!--        </div>-->
-
-<!--        <div class="col-lg-6">-->
-
-<!--          <div class="card">-->
-<!--            <div class="card-body">-->
-<!--              <h1 class="card-title">...</h1>-->
-
-<!--            </div>-->
-<!--          </div>-->
-
-<!--        </div>-->
-<!--      </div>-->
-
-<!--
-      <div class="row">
-        <div class="col-lg-6">
-
-          <div class="card">
-            <div class="card-body">
-              <h1 class="card-title" align="center" >...</h1>
-              <p>&nbsp;</p>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="col-lg-6">
-
-          <div class="card">
-            <div class="card-body">
-              <h1 class="card-title" align="center">...</h1>
-              <p>&nbsp;</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      -->
     </section>
 
   </main><!-- End #main -->
