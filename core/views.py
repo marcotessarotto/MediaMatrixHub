@@ -76,7 +76,7 @@ class SearchHomeWithCategory(CreateView):
         raise Http404("This page does not exist")
 
 
-def get_cover_image(request, ref_token):
+def get_preview_image(request, ref_token):
     try:
         # Retrieve the video instance by ref_token
         video = Video.objects.get(ref_token=ref_token)

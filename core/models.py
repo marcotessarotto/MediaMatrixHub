@@ -76,9 +76,8 @@ class Media(models.Model):
     ref_token = models.UUIDField(default=uuid.uuid4)
     structure = models.ForeignKey(Structure, on_delete=models.CASCADE, blank=True, null=True)
 
-    # TODO: rename 'cover_image' to 'preview_image'
-    cover_image = models.ImageField(upload_to=calc_directory_path, blank=True, null=True,
-                                    verbose_name=_("Immagine di copertina"))
+    preview_image = models.ImageField(upload_to=calc_directory_path, blank=True, null=True,
+                                    verbose_name=_("Immagine di preview"))
 
     fulltext_search_data = models.TextField(blank=True, verbose_name=_("Dati per la ricerca fulltext"))
 

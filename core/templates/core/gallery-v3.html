@@ -177,15 +177,15 @@
 <!--          <div class="col-xl-3 col-lg-4 col-md-6">-->
           <div class="col-xl-6 col-lg-8 col-md-6"> <!-- Adjusted column sizes here -->
             <div class="gallery-item h-100">
-              {% if item.cover_image and not item.video_file %}
-                <img src="{{ item.cover_image.url }}" class="img-fluid" alt="{{ item.alt_text }}">
-              {% elif item.video_file and item.cover_image %}
+              {% if item.preview_image and not item.video_file %}
+                <img src="{{ item.preview_image.url }}" class="img-fluid" alt="{{ item.alt_text }}">
+              {% elif item.video_file and item.preview_image %}
                 <div class="media-wrapper">
                   <video id="player{{ forloop.counter }}"
                          width="100%"
                          height="100%"
                          style="max-width:100%;"
-                         poster="{{ item.cover_image.url }}"
+                         poster="{{ item.preview_image.url }}"
                          preload="none"
                          controlsList="nodownload"
                          controls playsinline webkit-playsinline>
@@ -197,7 +197,7 @@
                   <video id="player{{ forloop.counter }}_"
                          width="100%" height="100%"
                          style="max-width:100%;"
-                         poster="{% url 'get_cover_image' ref_token=item.ref_token %}"
+                         poster="{% url 'get_preview_image' ref_token=item.ref_token %}"
                          preload="none"
                          controlsList="nodownload"
                          controls playsinline webkit-playsinline>

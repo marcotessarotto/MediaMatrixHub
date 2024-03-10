@@ -129,16 +129,16 @@ class CategoryListFilter(admin.SimpleListFilter):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'enabled', 'ref_token', 'cover_image_display', 'document_file_link')
+    list_display = ('title', 'enabled', 'ref_token', 'preview_image_display', 'document_file_link')
     search_fields = ['title', 'description', 'document_file']
     list_filter = ('enabled', CategoryListFilter)  # Use the class directly without quotes
     inlines = [DocumentTagInline, DocumentCategoryInline]
 
-    def cover_image_display(self, obj):
-        if obj.cover_image:
-            return format_html('<img src="{}" style="height:50px;"/>', obj.cover_image.url)
+    def preview_image_display(self, obj):
+        if obj.preview_image:
+            return format_html('<img src="{}" style="height:50px;"/>', obj.preview_image.url)
         return "No image"
-    cover_image_display.short_description = 'Cover Image'
+    preview_image_display.short_description = 'Cover Image'
 
     def document_file_link(self, obj):
         if obj.document_file:
