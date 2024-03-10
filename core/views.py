@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 from PIL import Image, ImageDraw, ImageFont
 
 from core.models import Category, Media, Video
+from core.tools.stat_tools import process_http_request
 from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE
 
 from mediamatrixhub.view_tools import is_private_ip
@@ -52,6 +53,8 @@ class ShowHomeWithCategory(CreateView):
                 syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
                 return render(request, 'core/show_generic_message.html',
                               {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
+
+        process_http_request(request)
 
         category = get_object_or_404(Category, name=category_name)
 
@@ -128,5 +131,10 @@ def video_player_event(request):
     video = Video.objects.get(ref_token=ref_token)
     print(f"video_player_event - video: {video}")
 
+    # get real ip address from request META
+    http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
+
     # Process the video URL as needed
     return JsonResponse({'status': 'success', 'message': 'ref_token received'})
+
+
