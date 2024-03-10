@@ -3,6 +3,7 @@ import uuid
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.translation import gettext_lazy as _
 
@@ -363,3 +364,14 @@ class MessageLog(models.Model):
 
     def __str__(self):
         return f"MessageLog #{self.id} {self.created_at} "
+
+
+class VideoPlaybackEvent(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    ip_address = models.CharField(max_length=45)  # To accommodate both IPv4 and IPv6 addresses
+    timestamp = models.DateTimeField(default=timezone.now)
+    is_user_authenticated = models.BooleanField(default=False)
+    username = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"Playback event for {self.video} from IP {self.ip_address} at {self.timestamp}"

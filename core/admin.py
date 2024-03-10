@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
-    Document, VideoDocument, DocumentCategory, MessageLog
+    Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent
 
 
 class PlaylistVideoInline(admin.TabularInline):
@@ -155,3 +155,18 @@ class MessageLogAdmin(admin.ModelAdmin, ExportExcelMixin):
     list_filter = [ 'created_at', 'original_uri']
 
     actions = ["export_as_excel"]
+
+
+class VideoPlaybackEventAdmin(admin.ModelAdmin):
+    list_display = ('video', 'ip_address', 'timestamp', 'is_user_authenticated', 'username')
+    list_filter = ('is_user_authenticated', 'timestamp')
+    search_fields = ('ip_address', 'username')
+    date_hierarchy = 'timestamp'
+    readonly_fields = ('timestamp',)
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # Editing an existing object
+            return self.readonly_fields + ('video', 'ip_address', 'is_user_authenticated', 'username')
+        return self.readonly_fields
+
+admin.site.register(VideoPlaybackEvent, VideoPlaybackEventAdmin)

@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from PIL import Image, ImageDraw, ImageFont
 
-from core.models import Category, Media, Video
+from core.models import Category, Media, Video, VideoPlaybackEvent
 from core.tools.stat_tools import process_http_request
 from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE
 
@@ -133,6 +133,14 @@ def video_player_event(request):
 
     # get real ip address from request META
     http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
+
+    # Create a new VideoPlaybackEvent instance
+    VideoPlaybackEvent.objects.create(
+        video=video,
+        ip_address=http_real_ip,
+        is_user_authenticated=request.user.is_authenticated,
+        username=request.user.username if request.user.is_authenticated else None
+    )
 
     # Process the video URL as needed
     return JsonResponse({'status': 'success', 'message': 'ref_token received'})
