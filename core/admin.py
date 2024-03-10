@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+
+from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
-    Document, VideoDocument, DocumentCategory
+    Document, VideoDocument, DocumentCategory, MessageLog
 
 
 class PlaylistVideoInline(admin.TabularInline):
@@ -147,5 +149,9 @@ class DocumentAdmin(admin.ModelAdmin):
     document_file_link.short_description = 'Document File'
 
 
+@admin.register(MessageLog)
+class MessageLogAdmin(admin.ModelAdmin, ExportExcelMixin):
+    list_display = ('id', 'created_at', 'http_real_ip', 'original_uri')
+    list_filter = [ 'created_at', 'original_uri']
 
-
+    actions = ["export_as_excel"]

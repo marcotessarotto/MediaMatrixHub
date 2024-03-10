@@ -326,3 +326,40 @@ class VideoCategory(models.Model):
 
     def __str__(self):
         return f"{self.media.title} - {self.category.name} - Order {self.order}"
+
+
+class MessageLog(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    original_uri = models.CharField(max_length=2048, blank=True, default='-')  # Long URLs
+    http_referer = models.CharField(max_length=2048, blank=True, default='-')  # HTTP referer URL
+    http_user_agent = models.CharField(max_length=1024, blank=True, default='unknown')  # User agent
+    http_real_ip = models.GenericIPAddressField(blank=True, null=True, default='unknown')  # IP Address
+    http_cookie = models.CharField(max_length=1024, blank=True, default='-')  # Cookie
+
+    # valid = models.BooleanField(default=False)
+    # processed = models.BooleanField(default=False)
+
+    # message = models.ForeignKey(Message, on_delete=models.CASCADE, blank=True, null=True)
+
+    @classmethod
+    def create_new_message_log(cls, log_dict):
+        """
+        Create a new message log record with the given log dictionary.
+        :param log_dict: Dictionary containing log information
+        :return: MessageLog instance
+        """
+
+        message_log = cls(
+            original_uri=log_dict.get('original_uri', '-'),
+            http_referer=log_dict.get('http_referer', '-'),
+            http_user_agent=log_dict.get('http_user_agent', 'unknown'),
+            http_real_ip=log_dict.get('http_real_ip', 'unknown'),
+            http_cookie=log_dict.get('http_cookie', '-'),
+        )
+
+        message_log.save()
+        return message_log
+
+    def __str__(self):
+        return f"MessageLog #{self.id} {self.created_at} "
