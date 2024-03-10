@@ -388,7 +388,7 @@ class VideoCounter(models.Model):
         self.save(update_fields=['playback_event_counter'])
 
     @classmethod
-    def check_create_counter(video_id):
+    def check_create_counter(cls, video_id):
         """
         Check if a counter for the given video ID exists. If it doesn't, create a new counter.
         :param video_id: The ID of the video.
