@@ -213,7 +213,8 @@
                          poster="{% if item.preview_image %}{{ item.preview_image.url }}{% else %}{% url 'get_preview_image' ref_token=item.ref_token %}{% endif %}"
                          preload="none"
                          controlsList="nodownload"
-                         controls playsinline webkit-playsinline>
+                         controls playsinline webkit-playsinline
+                         data-ref-token="{{ item.ref_token }}">
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                   <div class="video-info mt-2">
@@ -313,14 +314,16 @@ $(function() {
             console.log("Video is now playing");
 
             // Extract the video file URL from the source element
-            var videoUrl = $(video).find('source').attr('src').split('?')[0]; // Remove any query parameters
+            // var videoUrl = $(video).find('source').attr('src').split('?')[0]; // Remove any query parameters
+            // Access the ref_token stored in the data-ref-token attribute
+            var refToken = $(video).data('ref-token');
 
             // Perform AJAX request to your Django view
             $.ajax({
                 url: '/core/video_player_event/', // Update this URL to your Django view that handles the AJAX request
                 type: 'POST',
                 data: {
-                    'video_url': videoUrl, // Pass the video URL as parameter
+                    'ref_token': refToken, // Pass the video URL as parameter
                 },
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken'), // Ensure CSRF token is included for Django's CSRF protection

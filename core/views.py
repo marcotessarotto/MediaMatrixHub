@@ -121,7 +121,12 @@ def get_preview_image(request, ref_token):
 
 @require_POST
 def video_player_event(request):
-    video_url = request.POST.get('video_url')
-    print(f"video_player_event - Video URL: {video_url}")
+    ref_token = request.POST.get('ref_token')
+    print(f"video_player_event - ref_token: {ref_token}")
+
+    # get Video instance from ref_token
+    video = Video.objects.get(ref_token=ref_token)
+    print(f"video_player_event - video: {video}")
+
     # Process the video URL as needed
-    return JsonResponse({'status': 'success', 'message': 'Video URL received'})
+    return JsonResponse({'status': 'success', 'message': 'ref_token received'})
