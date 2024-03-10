@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
-    Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent
+    Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent, VideoCounter
 
 
 class PlaylistVideoInline(admin.TabularInline):
@@ -170,3 +170,19 @@ class VideoPlaybackEventAdmin(admin.ModelAdmin):
         return self.readonly_fields
 
 admin.site.register(VideoPlaybackEvent, VideoPlaybackEventAdmin)
+
+
+class VideoCounterAdmin(admin.ModelAdmin):
+    list_display = ('video', 'playback_event_counter')
+    search_fields = ('video__id', 'video__title')  # Assuming your Video model has a 'title' field
+    readonly_fields = ('playback_event_counter',)
+
+    def has_add_permission(self, request):
+        # Optionally disable adding new entries through admin
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        # Optionally disable deleting entries through admin
+        return False
+
+admin.site.register(VideoCounter, VideoCounterAdmin)

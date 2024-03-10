@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from PIL import Image, ImageDraw, ImageFont
 
-from core.models import Category, Media, Video, VideoPlaybackEvent
+from core.models import Category, Media, Video, VideoPlaybackEvent, VideoCounter
 from core.tools.stat_tools import process_http_request
 from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE
 
@@ -141,6 +141,9 @@ def video_player_event(request):
         is_user_authenticated=request.user.is_authenticated,
         username=request.user.username if request.user.is_authenticated else None
     )
+
+    video_counter = VideoCounter.check_create_counter(video.id)
+    video_counter.inc_playback_event_counter()
 
     # Process the video URL as needed
     return JsonResponse({'status': 'success', 'message': 'ref_token received'})

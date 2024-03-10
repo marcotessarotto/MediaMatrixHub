@@ -173,11 +173,6 @@ class Document(Media):
     categories = models.ManyToManyField('core.Category', through='DocumentCategory')
     document_file = models.FileField(upload_to=calc_directory_path, )
 
-
-
-    # preview_image = models.ImageField(upload_to='document_previews/', blank=True, null=True,
-    #                                   verbose_name=_("Preview Image"))
-
     # version = models.CharField(max_length=255, blank=True, verbose_name=_("Version"))
     # doi = models.CharField(max_length=255, blank=True, verbose_name=_("Document Identifier (DOI)"))
     # accessibility_info = models.TextField(blank=True, verbose_name=_("Accessibility Information"))
@@ -379,3 +374,27 @@ class VideoPlaybackEvent(models.Model):
 
     def __str__(self):
         return f"Playback event for {self.video} from IP {self.ip_address} at {self.timestamp}"
+
+
+class VideoCounter(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    playback_event_counter = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Counter for {self.video} - playback_event_counter: {self.playback_event_counter}"
+
+    def inc_playback_event_counter(self):
+        self.playback_event_counter += 1
+        self.save(update_fields=['playback_event_counter'])
+
+    @classmethod
+    def check_create_counter(video_id):
+        """
+        Check if a counter for the given video ID exists. If it doesn't, create a new counter.
+        :param video_id: The ID of the video.
+        :return: VideoCounter instance
+        """
+        try:
+            return VideoCounter.objects.get(video_id=video_id)
+        except VideoCounter.DoesNotExist:
+            return VideoCounter.objects.create(video_id=video_id)
