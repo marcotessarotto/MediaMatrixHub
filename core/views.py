@@ -7,6 +7,9 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render
 import io
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from PIL import Image, ImageDraw, ImageFont
 
 from core.models import Category, Media, Video
@@ -114,3 +117,11 @@ def get_preview_image(request, ref_token):
         return HttpResponse(buffer, content_type='image/png')
     except Video.DoesNotExist:
         return HttpResponse('Video not found', status=404)
+
+
+@require_POST
+def video_player_event(request):
+    video_url = request.POST.get('video_url')
+    print(f"video_player_event - Video URL: {video_url}")
+    # Process the video URL as needed
+    return JsonResponse({'status': 'success', 'message': 'Video URL received'})
