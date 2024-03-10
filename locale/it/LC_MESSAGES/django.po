@@ -133,10 +133,8 @@ msgid "Categories"
 msgstr "Categorie"
 
 #: core/templates/core/gallery-v2.html:162
-#, fuzzy
-#| msgid "Categories"
 msgid "Subcategories"
-msgstr "Categorie"
+msgstr "Sottocategorie"
 
 #: core/templates/core/gallery-v2.html:167
 msgid "No subcategories available"
