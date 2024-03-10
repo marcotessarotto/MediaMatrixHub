@@ -122,6 +122,8 @@ def video_post_save(sender, instance, **kwargs):
         and not instance.stop_time
         and kwargs.get('update_fields', None) != {'duration', 'stop_time', 'width', 'height'}
     ):
+        print(f"Updating duration and stop_time for #{instance.id} {instance.title}")
+
         width, height = get_video_resolution(instance.video_file.path)
         print(f"Resolution: {width, height}")
         print(f"w: {width}, h: {height}")
@@ -145,6 +147,8 @@ def update_fulltext_search_data(sender, instance, **kwargs):
         and instance.raw_transcription_file
         and kwargs.get('update_fields', None) != {'fulltext_search_data'}
     ):
+        print(f"Updating fulltext search data for #{instance.id} {instance.title}")
+
         # Read the content from the file
         vtt_content = instance.raw_transcription_file.read().decode('utf-8')
 
