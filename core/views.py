@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from PIL import Image, ImageDraw, ImageFont
 
 from core.models import Category, Media, Video
-from mediamatrixhub.settings import DEBUG
+from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE
 
 from mediamatrixhub.view_tools import is_private_ip
 
@@ -62,6 +62,7 @@ class ShowHomeWithCategory(CreateView):
             'category_name': category,
             'videos_list': videos_list,
             'page_header': 'Category Home',
+            'APPLICATION_TITLE': APPLICATION_TITLE,
         }
 
         return render(request, 'core/gallery-v2.html', context)
