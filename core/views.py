@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from core.models import Category, Media, Video, VideoPlaybackEvent, VideoCounter
 from core.tools.stat_tools import process_http_request
-from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE
+from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE, TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT
 
 from mediamatrixhub.view_tools import is_private_ip
 
@@ -69,6 +69,8 @@ class ShowHomeWithCategory(CreateView):
             'videos_list': videos_list,
             'page_header': 'Category Home',
             'APPLICATION_TITLE': APPLICATION_TITLE,
+            'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,
+            'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
         }
 
         return render(request, 'core/gallery-v2.html', context)

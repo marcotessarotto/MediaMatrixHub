@@ -32,3 +32,8 @@ DEBUG_EMAIL='debug_email@.....'
 MONITOR_EMAIL_ADDRESSES="admin@....,admin2@...."
 
 APPLICATION_TITLE='Media Matrix Hub'
+
+TECHNICAL_CONTACT_EMAIL='tech_contact@.....'
+TECHNICAL_CONTACT='tech_contact_name'
+
+```
