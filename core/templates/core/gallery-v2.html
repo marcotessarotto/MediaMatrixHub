@@ -197,6 +197,25 @@
     <section id="gallery" class="gallery">
       <div class="container-fluid">
 
+          <!-- PDF Viewer Modal -->
+          <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-labelledby="pdfViewerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="pdfViewerModalLabel">PDF Document</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- PDF will be loaded inside this iframe -->
+                  <iframe id="pdfFrame" src="" width="100%" height="500px"></iframe>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         <div class="row gy-4 justify-content-center">
           {% for item in videos_list %}
 
@@ -218,6 +237,9 @@
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                   <div class="video-info mt-2">
+                    {% if item.description %}
+                    <p>{% trans "Description" %}: {{ item.description|safe }}</p>
+                    {% endif %}
                     {% if item.publication_date %}
                     <p>{% trans "Publication Date" %}: {{ item.publication_date|date:"SHORT_DATE_FORMAT" }}</p>
                     {% endif %}
@@ -225,6 +247,25 @@
                     <p>{% trans "Author(s)" %}: {{ item.authors }}</p>
                     {% endif %}
                     <p>{% trans "Duration" %}: {{ item.duration }}</p>
+                    {% with documents=item.documents.all %}
+                    {% if documents %}
+                    <p><h3>{% trans "Documents associated to the video" %}</h3></p>
+                    {% for doc in item.documents.all %}
+
+                    <p>
+                      <button type="button"
+                              class="btn btn-primary view-pdf-button"
+                              data-bs-toggle="modal"
+                              data-bs-target="#pdfViewerModal"
+                              data-pdf-url="{{ doc.document_file.url }}">
+                        View PDF #{{ forloop.counter }} "{{ doc.title}}"
+                      </button>
+                    </p>
+
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
                   </div>
                 </div>
               {% else %}
@@ -351,6 +392,24 @@ $(function() {
             }
         }, false);
     });
+
+
+
+  document.querySelectorAll('.view-pdf-button').forEach(button => {
+    button.addEventListener('click', function() {
+      var pdfUrl = this.getAttribute('data-pdf-url'); // Get the PDF URL
+      var modalIframe = document.querySelector('#pdfViewerModal iframe');
+      modalIframe.src = pdfUrl; // Set the iframe src to the PDF URL
+    });
+  });
+
+  // Optional: Clear the iframe src when the modal is closed to stop the PDF from displaying
+  $('#pdfViewerModal').on('hidden.bs.modal', function (e) {
+    var modalIframe = document.querySelector('#pdfViewerModal iframe');
+    modalIframe.src = ''; // Clear the iframe source
+  });
+
+
 });
 
 // Function to get the CSRF token
@@ -369,6 +428,9 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
 
 
 </script>

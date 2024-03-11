@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-11 10:57+0100\n"
+"POT-Creation-Date: 2024-03-11 18:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Tipo Trascrizione"
 msgstr ""
 
-#: core/models.py:96 core/templates/core/gallery-v2.html:222
+#: core/models.py:96 core/templates/core/gallery-v2.html:244
 msgid "Publication Date"
 msgstr "Data di pubblicazione"
 
@@ -74,61 +74,61 @@ msgstr ""
 msgid "Updated at"
 msgstr ""
 
-#: core/models.py:280 registration/models.py:157
+#: core/models.py:283 registration/models.py:157
 msgid "Nome"
 msgstr ""
 
-#: core/models.py:281 registration/models.py:61
+#: core/models.py:284 registration/models.py:61
 msgid "Descrizione"
 msgstr ""
 
-#: core/models.py:282
+#: core/models.py:285
 msgid "Slug"
 msgstr ""
 
-#: core/models.py:284
+#: core/models.py:287
 msgid "Parent Category"
 msgstr ""
 
-#: core/models.py:285
+#: core/models.py:288
 msgid "Is Active"
 msgstr ""
 
-#: core/models.py:286
+#: core/models.py:289
 msgid "Icon"
 msgstr ""
 
-#: core/models.py:287
+#: core/models.py:290
 msgid "Created At"
 msgstr ""
 
-#: core/models.py:288
+#: core/models.py:291
 msgid "Updated At"
 msgstr ""
 
-#: core/models.py:289
+#: core/models.py:292
 #: venv/lib/python3.11/site-packages/django/forms/formsets.py:484
 #: venv/lib/python3.11/site-packages/django/forms/formsets.py:491
 msgid "Order"
 msgstr ""
 
-#: core/models.py:290 registration/models.py:82
+#: core/models.py:293 registration/models.py:82
 msgid "Meta Title"
 msgstr ""
 
-#: core/models.py:291 registration/models.py:83
+#: core/models.py:294 registration/models.py:83
 msgid "Meta Description"
 msgstr ""
 
-#: core/models.py:292 registration/models.py:84
+#: core/models.py:295 registration/models.py:84
 msgid "Meta Keywords"
 msgstr ""
 
-#: core/models.py:300 core/templates/core/gallery-v2.html:171
+#: core/models.py:303 core/templates/core/gallery-v2.html:171
 msgid "Category"
 msgstr "Categoria"
 
-#: core/models.py:301
+#: core/models.py:304
 msgid "Categories"
 msgstr "Categorie"
 
@@ -140,14 +140,24 @@ msgstr "Sottocategorie"
 msgid "No subcategories available"
 msgstr "Nessuna sottocategoria disponibile"
 
-#: core/templates/core/gallery-v2.html:225
+#: core/templates/core/gallery-v2.html:241
+#, fuzzy
+#| msgid "Duration"
+msgid "Description"
+msgstr "Durata"
+
+#: core/templates/core/gallery-v2.html:247
 msgid "Author(s)"
 msgstr "Autore(i)"
 
-#: core/templates/core/gallery-v2.html:227
+#: core/templates/core/gallery-v2.html:249
 #: venv/lib/python3.11/site-packages/django/db/models/fields/__init__.py:1857
 msgid "Duration"
 msgstr "Durata"
+
+#: core/templates/core/gallery-v2.html:252
+msgid "Documents associated to the video"
+msgstr "Documenti associati al video"
 
 #: registration/admin.py:28
 msgid "Event Details"

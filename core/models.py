@@ -68,7 +68,7 @@ def calc_directory_path(instance, filename):
 
 class Media(models.Model):
     title = models.CharField(max_length=1024)
-    description = CKEditor5Field('Text', blank=True, config_name='extends')
+    description = CKEditor5Field('description', blank=True, config_name='extends')
 
     authors = models.TextField(blank=True, null=True, verbose_name=_("Authors"))
 
@@ -184,6 +184,9 @@ class Document(Media):
 
     def is_document(self):
         return True
+
+    def is_pdf(self):
+        return self.document_file.name.endswith('.pdf')
 
 
 class VideoDocument(models.Model):

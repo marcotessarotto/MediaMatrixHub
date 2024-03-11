@@ -330,3 +330,6 @@ LOCALE_PATHS = [
 
 # then compile the translation files:
 # django-admin compilemessages
+
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
