@@ -112,14 +112,14 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid d-flex align-items-center justify-content-between">
 
-      <a href="{% url 'show-category-home' category_name=category_name %}" class="logo d-flex align-items-center  me-auto me-lg-0">
+      <a href="{% url 'show-category-home' category_slug=category.slug %}" class="logo d-flex align-items-center  me-auto me-lg-0">
         <img src="{{ STATIC_URL }}/static/assets/img/logo.png" alt="">
 <!--        <i class="bi"></i>-->
         <h1>Videoteca</h1>
       </a>
 
     <!-- Search form with icon button -->
-    <!--<form class="d-flex" role="search" method="get" action="{% url 'search-category-home' category_name=category_name %}" >
+    <!--<form class="d-flex" role="search" method="get" action="{% url 'search-category-home' category_slug=category.slug %}" >
       <input class="form-control me-2" type="search" placeholder="Ricerca" aria-label="Search" name="query">
       <button class="btn" type="submit" aria-label="Search">
         <i class="bi bi-search"></i>

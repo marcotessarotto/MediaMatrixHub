@@ -42,12 +42,10 @@ def proxy_django_auth(request):
 
 class ShowHomeWithCategory(CreateView):
 
-    def get(self, request, category_name, *args, **kwargs):
+    def get(self, request, category_slug, *args, **kwargs):
         http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
 
-        if request.user.is_authenticated and request.user.is_superuser:
-            pass
-        else:
+        if not request.user.is_authenticated or not request.user.is_superuser:
             # Check if the IP is private
             if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
                 syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
@@ -56,16 +54,17 @@ class ShowHomeWithCategory(CreateView):
 
         process_http_request(request)
 
-        category = get_object_or_404(Category, name=category_name)
+        category = get_object_or_404(Category, slug=category_slug)
 
         # print(f"Category: {category}")
+        # print(f"Category slug: {category_slug}")
 
         # Querying each concrete model separately
         videos_list = Video.objects.filter(categories=category).filter(enabled=True)
         # print(f"list of videos: {videos_list}")
 
         context = {
-            'category_name': category,
+            'category': category,
             'videos_list': videos_list,
             'page_header': 'Category Home',
             'APPLICATION_TITLE': APPLICATION_TITLE,
@@ -80,7 +79,7 @@ class ShowHomeWithCategory(CreateView):
 
 
 class SearchHomeWithCategory(CreateView):
-    def get(self, request, category_name, *args, **kwargs):
+    def get(self, request, category_slug, *args, **kwargs):
         raise Http404("This page does not exist")
 
 
