@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.utils import timezone
 
 from mediamatrixhub.email_utils import send_simple_html_email
-from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA_URL
+from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA_URL, APPLICATION_TITLE, \
+    TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT
 from mediamatrixhub.view_tools import is_private_ip
 from .forms import SubscriberLoginForm, EventParticipationForm
 from .logic import create_event_log
@@ -174,6 +175,9 @@ def manage_subscription(request):
         'subscriber': subscriber,
         'form': form,
         'additional_message': additional_message,
+        'APPLICATION_TITLE': APPLICATION_TITLE,
+        'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,
+        'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
     }
 
     return render(request, 'subscribers/manage_subscription.html', context)
