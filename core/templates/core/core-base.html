@@ -195,6 +195,7 @@
 
 <script>
 
+
 $(function() {
     // Select all video elements or a specific class if they have one
     $('video').each(function() {
@@ -206,6 +207,33 @@ $(function() {
         // Add event listener for the play event
         video.addEventListener('play', function() {
             console.log("Video is now playing");
+
+            // Extract the video file URL from the source element
+            // var videoUrl = $(video).find('source').attr('src').split('?')[0]; // Remove any query parameters
+            // Access the ref_token stored in the data-ref-token attribute
+            var refToken = $(video).data('ref-token');
+
+            // Perform AJAX request to your Django view
+            $.ajax({
+                url: '/core/video_player_event/',
+                type: 'POST',
+                data: {
+                    'ref_token': refToken, // Pass the video URL as parameter
+                },
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'), // Ensure CSRF token is included for Django's CSRF protection
+                },
+                success: function(response) {
+                    console.log('AJAX request successful');
+                    // Handle success response
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed: ' + error);
+                    // Handle error
+                }
+            });
+
+
             // Request full screen when video plays
             if (video.requestFullscreen) {
                 video.requestFullscreen();
@@ -219,6 +247,23 @@ $(function() {
         }, false);
     });
 });
+
+// Function to get the CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
 
 </script>
