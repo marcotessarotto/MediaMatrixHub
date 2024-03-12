@@ -172,7 +172,7 @@ msgstr "Mostra PDF"
 
 #: registration/admin.py:28
 msgid "Event Details"
-msgstr ""
+msgstr "Dettagli evento"
 
 #: registration/admin.py:33
 msgid "Virtual Event Details"
@@ -288,11 +288,11 @@ msgstr ""
 
 #: registration/models.py:90
 msgid "Information Event"
-msgstr ""
+msgstr "Evento Informativo"
 
 #: registration/models.py:91
 msgid "Information Events"
-msgstr ""
+msgstr "Eventi Informativi"
 
 #: registration/models.py:156
 msgid "Email"
