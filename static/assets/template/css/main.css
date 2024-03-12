@@ -90,7 +90,7 @@ h6 {
 # Page Header
 --------------------------------------------------------------*/
 .page-header {
-  padding: 120px 0 60px 0;
+  padding: 120px 0 0px 0;
   min-height: 30vh;
   position: relative;
 }
@@ -599,7 +599,7 @@ h6 {
 # Pricing Section
 --------------------------------------------------------------*/
 .gallery {
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 .gallery .gallery-item {
