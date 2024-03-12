@@ -1282,3 +1282,21 @@ h1, h2, h3, h4, h5, h6 {
   .mobile-nav-hide {
       color: #000000;
   }
+
+
+/* Custom CSS to reduce spacing */
+.modal-content {
+  margin-bottom: 0; /* Reduces space below the modal */
+}
+
+/* Adjust spacing around the modal for smaller screens if necessary */
+@media (max-width: 768px) {
+  .modal-content {
+    margin-bottom: 0;
+  }
+}
+
+/* Reduces space above the gallery items */
+.row.gy-4.justify-content-center {
+  margin-top: 0; /* Adjust this value as needed */
+}

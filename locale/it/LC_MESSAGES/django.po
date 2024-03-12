@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-12 10:42+0100\n"
+"POT-Creation-Date: 2024-03-12 10:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,6 +169,10 @@ msgstr "Documenti associati al video"
 #: core/templates/core/gallery-v2.html:262
 msgid "View PDF"
 msgstr "Mostra PDF"
+
+#: core/templates/core/gallery-v2.html:282
+msgid "There are no videos or documents to show."
+msgstr "Non ci sono video o documenti da mostrare."
 
 #: registration/admin.py:28
 msgid "Event Details"
