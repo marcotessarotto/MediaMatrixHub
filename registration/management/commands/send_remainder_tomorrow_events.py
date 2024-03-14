@@ -4,7 +4,7 @@ from django.core.management import BaseCommand
 from django.template.loader import render_to_string
 from django.utils import timezone, formats
 
-from mediamatrixhub.email_utils import send_simple_html_email, my_send_email
+from mediamatrixhub.email_utils import my_send_email
 from mediamatrixhub.settings import REGISTRATION_URL, SUBJECT_EMAIL, DEBUG_EMAIL, TECHNICAL_CONTACT_EMAIL, \
     TECHNICAL_CONTACT, VIDEOTECA_URL, FROM_EMAIL, EMAIL_HOST
 from registration.logic import create_event_log
@@ -87,12 +87,6 @@ class Command(BaseCommand):
 
                 if not debug_mode:
                     try:
-                        # send_simple_html_email(
-                        #     list_of_email_addresses=[subscriber.email],
-                        #     subject=message_subject,
-                        #     message_body=message_body,
-                        #     list_of_bcc_email_addresses=[DEBUG_EMAIL],
-                        # )
 
                         my_send_email(
                             FROM_EMAIL,
@@ -128,12 +122,6 @@ class Command(BaseCommand):
 
             message_subject = f'{SUBJECT_EMAIL} Resoconto invio email promemoria per la prossima pillola informativa'
             message_body = f'Promemoria inviato a {counter} iscritti per l\'evento {event.title} del {tomorrow_str}.'
-
-            # send_simple_html_email(
-            #     list_of_email_addresses=[DEBUG_EMAIL],
-            #     subject=message_subject,
-            #     message_body=message_body,
-            # )
 
             my_send_email(
                 FROM_EMAIL,

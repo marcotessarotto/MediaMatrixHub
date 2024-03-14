@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 
-from mediamatrixhub.email_utils import send_simple_html_email, my_send_email
+from mediamatrixhub.email_utils import my_send_email
 from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA_URL, APPLICATION_TITLE, \
     TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT, FROM_EMAIL, EMAIL_HOST
 from mediamatrixhub.view_tools import is_private_ip
@@ -140,23 +140,16 @@ def manage_subscription(request):
             if DEBUG:
                 print(f"debug mode: fake sending email to {subscriber.email}")
                 print(f"message: {message_body}  (debug mode)")
-
-            # send_simple_html_email(
-            #     list_of_email_addresses=[subscriber.email],
-            #     subject=message_subject,
-            #     message_body=message_body,
-            #     list_of_bcc_email_addresses=[DEBUG_EMAIL],
-            # )
-
-            my_send_email(
-                FROM_EMAIL,
-                [subscriber.email],
-                message_subject,
-                message_body,
-                bcc_addresses=[DEBUG_EMAIL],
-                attachments=None,
-                email_host=EMAIL_HOST
-            )
+            else:
+                my_send_email(
+                    FROM_EMAIL,
+                    [subscriber.email],
+                    message_subject,
+                    message_body,
+                    bcc_addresses=[DEBUG_EMAIL],
+                    attachments=None,
+                    email_host=EMAIL_HOST
+                )
 
             create_event_log(
                 event_type=EventLog.EMAIL_SENT,
