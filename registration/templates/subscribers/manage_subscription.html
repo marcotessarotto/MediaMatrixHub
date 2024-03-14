@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static i18n %}
 
 {% block title %}Iscrizioni alle pillole informative{% endblock %}
 {% block logo_title %}Iscrizione pillole informative{% endblock %}
@@ -133,7 +134,8 @@ input[type="submit"]:hover {
           <div class="card">
             <div class="card-body">
                 <br>
-                <p>Per supporto tecnico informatico sul sistema di gestione delle iscrizioni, contattare <a href="mailto:{{ TECHNICAL_CONTACT_EMAIL }}">{{ TECHNICAL_CONTACT }}</a></p>
+                <p>{% trans 'For technical IT support on the enrollment management system, contact' %}
+                    <a href="mailto:{{ TECHNICAL_CONTACT_EMAIL }}">{{ TECHNICAL_CONTACT }}</a></p>
 
             </div>
           </div>
