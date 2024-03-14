@@ -1,10 +1,12 @@
 from datetime import timedelta
 
 from django.core.management import BaseCommand
+from django.template.loader import render_to_string
 from django.utils import timezone, formats
 
 from mediamatrixhub.email_utils import send_simple_html_email
-from mediamatrixhub.settings import REGISTRATION_URL, SUBJECT_EMAIL, DEBUG_EMAIL
+from mediamatrixhub.settings import REGISTRATION_URL, SUBJECT_EMAIL, DEBUG_EMAIL, TECHNICAL_CONTACT_EMAIL, \
+    TECHNICAL_CONTACT, VIDEOTECA_URL
 from registration.logic import create_event_log
 from registration.models import InformationEvent, Subscriber, EventLog
 
@@ -23,7 +25,8 @@ class Command(BaseCommand):
 
         number_of_days = 1
         days = options['days']
-        if days and days >= 0:
+
+        if days is not None and days >= 0:
             self.stdout.write(self.style.SUCCESS(f'Looking ahead {days} days'))
             number_of_days = days
         else:
@@ -67,14 +70,18 @@ class Command(BaseCommand):
             for subscriber in subscribers_for_event:
                 self.stdout.write(f"Subscriber: {subscriber.name} {subscriber.surname}, {subscriber.email}")
 
-                # send email to subscriber
-                message_body = f'Ciao {subscriber.surname},<br><br>' \
-                               f'Ti ricordiamo che il prossimo evento informativo si terrà il giorno {tomorrow_str}.<br><br>' \
-                               f"Ecco un riepilogo dell'evento a cui ti sei iscritto:<br><br>" \
-                               f'{event.to_html_table_email()}<br><br>' \
-                               f'Grazie per la tua partecipazione.<br><br><br>' \
-                               f'Se vuoi modificare le tue iscrizioni alle pillole informative, vai a questo link: ' \
-                               f'<a href="{REGISTRATION_URL}">{REGISTRATION_URL}</a><br><br>'
+                context = {
+                    'subscriber': subscriber,
+                    'event': event,
+                    'event_html_table': event.to_html_table_email(),
+                    'APPLICATION_TITLE': 'Media Matrix Hub',
+                    'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,
+                    'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
+                    'REGISTRATION_URL': REGISTRATION_URL,
+                    'VIDEOTECA_URL': VIDEOTECA_URL,
+                }
+
+                message_body = render_to_string('fragment/information_event_send_remainder_it.html', context)
 
                 message_subject = f'{SUBJECT_EMAIL} Promemoria per la prossima pillola informativa'
 
@@ -103,7 +110,7 @@ class Command(BaseCommand):
                                          subscriber.email)
                 else:
                     self.stdout.write(f"debug mode: fake sending email to {subscriber.email}")
-                    # self.stdout.write(f"message: {message_body}  (debug mode)")
+                    self.stdout.write(f"message: {message_body}  (debug mode)")
 
                 counter += 1
 

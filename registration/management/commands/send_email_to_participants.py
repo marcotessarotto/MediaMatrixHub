@@ -109,7 +109,7 @@ class Command(BaseCommand):
                                          subscriber.email)
                 else:
                     self.stdout.write(f"debug mode: fake sending email to {subscriber.email}")
-                    # self.stdout.write(f"message: {message_body}  (debug mode)")
+                    self.stdout.write(f"message: {message_body}  (debug mode)")
 
                 counter += 1
 

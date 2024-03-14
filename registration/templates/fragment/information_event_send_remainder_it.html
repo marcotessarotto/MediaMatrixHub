@@ -1,0 +1,16 @@
+    <p>Ciao {{ subscriber.surname }},</p>
+
+    <p>Ti ricordiamo che il prossimo evento informativo si terrà il giorno {{ tomorrow_str }}.</p>
+
+    <p>Ecco un riepilogo dell'evento a cui ti sei iscritto:</p>
+
+    {{ event_html_table|safe }}
+
+    <p>Grazie per la tua partecipazione.</p>
+
+    <p>Se vuoi modificare le tue iscrizioni alle pillole informative, vai a questo link:
+    <a href="{{ REGISTRATION_URL }}">{{ REGISTRATION_URL }}</a><br><br>
+
+    Puoi visualizzare le registrazioni delle precedenti pillole informative a questo indirizzo:
+    <a href="{{VIDEOTECA_URL}}" target="_blank">{{VIDEOTECA_URL}}</a><br><br>
+    </p>
