@@ -170,7 +170,10 @@ def manage_subscription(request):
             event__event_date__gte=current_date
         )
         for participation in existing_participations:
-            form.fields[f'event_{participation.event.id}'].initial = True
+            try:
+                form.fields[f'event_{participation.event.id}'].initial = True
+            except KeyError:
+                pass
 
     context = {
         'subscriber': subscriber,
