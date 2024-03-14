@@ -1,10 +1,12 @@
 from datetime import timedelta
 
 from django.core.management import BaseCommand
+from django.template.loader import render_to_string
 from django.utils import timezone, formats
 
 from mediamatrixhub.email_utils import send_simple_html_email
-from mediamatrixhub.settings import REGISTRATION_URL, SUBJECT_EMAIL, DEBUG_EMAIL, VIDEOTECA_URL
+from mediamatrixhub.settings import REGISTRATION_URL, SUBJECT_EMAIL, DEBUG_EMAIL, VIDEOTECA_URL, \
+    TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT
 from registration.logic import create_event_log
 from registration.models import InformationEvent, Subscriber, EventLog
 
@@ -67,14 +69,18 @@ class Command(BaseCommand):
             for subscriber in subscribers_for_event:
                 self.stdout.write(f"Subscriber: {subscriber.name} {subscriber.surname}, {subscriber.email}")
 
-                # send email to subscriber
-                message_body = f'Buongiorno {subscriber.surname},<br><br>' \
-                               f'<b>si comunica che la “Pillola” su ammortizzatori sociali prevista per oggi è rinviata a data da destinarsi.<br>' \
-                               f"La nuova data dell'evento vi sarà comunicata quanto prima.</b><br><br><br>" \
-                               f'Se vuoi modificare le tue iscrizioni alle pillole informative, vai a questo link: ' \
-                               f'<a href="{REGISTRATION_URL}">{REGISTRATION_URL}</a><br><br>' \
-                               f'Puoi visualizzare le registrazioni delle precedenti pillole informative a questo indirizzo: ' \
-                               f'<a href="{VIDEOTECA_URL}" target="_blank">{VIDEOTECA_URL}</a>'
+                # use template 'fragment\information_event_postonement.html' to generate message body:
+                context = {
+                    'subscriber': subscriber,
+                    'event': event,
+                    'APPLICATION_TITLE': 'Media Matrix Hub',
+                    'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,
+                    'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
+                    'REGISTRATION_URL': REGISTRATION_URL,
+                    'VIDEOTECA_URL': VIDEOTECA_URL,
+                }
+
+                message_body = render_to_string('fragment/information_event_postponement_it.html', context)
 
                 message_subject = f'{SUBJECT_EMAIL} Rinvio pillola informativa'
 

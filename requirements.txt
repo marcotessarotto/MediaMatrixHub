@@ -25,3 +25,4 @@ pytest-django
 Pillow
 pdf2image
 pymupdf
+colorama

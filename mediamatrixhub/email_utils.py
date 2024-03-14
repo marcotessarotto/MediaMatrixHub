@@ -9,6 +9,8 @@ import syslog
 # Here are the email package modules we'll need
 from email.message import EmailMessage
 
+from colorama import Fore
+
 from mediamatrixhub.settings import DEBUG, FROM_EMAIL, EMAIL_HOST, DEBUG_EMAIL
 
 
@@ -16,7 +18,7 @@ def send_simple_email(list_of_email_addresses, subject, message_body):
     #  https://docs.python.org/3/library/email.examples.html
 
     if DEBUG:
-        print("send_simple_email: DEBUG is set, skipping")
+        print(f"{Fore.YELLOW}send_simple_email: DEBUG is set, skipping{Fore.RESET}")
 
     msg = EmailMessage()
     msg['Subject'] = subject
@@ -47,7 +49,7 @@ def send_simple_html_email(list_of_email_addresses,
     """
 
     if DEBUG:
-        print("send_simple_html_email: DEBUG is set, skipping")
+        print(f"{Fore.YELLOW}send_simple_html_email: DEBUG is set, skipping{Fore.RESET}")
         return
 
     from email.mime.multipart import MIMEMultipart
