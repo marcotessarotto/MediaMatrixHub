@@ -176,8 +176,13 @@ class InformationEvent(models.Model):
 
         # Generate UID based on event details to ensure uniqueness
         uid = f"{self.ref_token}@{INTERNET_DOMAIN}"
-        
-        ics_description = self.description.replace("\n", "\\n")
+
+        if self.event_type == "virtual":
+            ics_description = f"{self.description}\\n\\nMeeting URL: {self.meeting_url}".replace("\n", "\\n")
+        else:
+            ics_description = self.description.replace("\n", "\\n")
+
+        ics_location = f"Online Meeting: {self.meeting_url}" if self.event_type == "virtual" else self.location
 
         # Prepare .ics content
         ics_content = f"""BEGIN:VCALENDAR
@@ -190,7 +195,7 @@ DTSTART:{dt_start_utc}
 DTEND:{dt_end_utc}
 SUMMARY:{self.title}
 DESCRIPTION:{ics_description}
-LOCATION:{self.location or "N/A"}
+LOCATION:{ics_location or "N/A"}
 URL:{self.meeting_url}
 END:VEVENT
 END:VCALENDAR
