@@ -189,14 +189,17 @@ class VideoPlaybackEventAdmin(admin.ModelAdmin):
         # Perform your aggregation query here
         counts = VideoPlaybackEvent.objects.values('video', 'ip_address').annotate(total=Count('id')).order_by('video')
 
+        query1 = VideoPlaybackEvent.get_count_distinct_ip_addresses_for_each_video().all()
+        # print("query1: ", query1)
 
+        query2 = VideoPlaybackEvent.get_count_events_for_each_video()
+        # print("query2: ", query2)
 
-        # now, for each video, we want to count the number of unique IP addresses
-        # we can then add this count to the counts dictionary
-        # for count in counts:
-        #     count['unique_ips'] = VideoPlaybackEvent.objects.filter(video=count['video']).values('ip_address').distinct().count()
-
-        context = {'counts': counts}
+        context = {
+            'counts': counts,
+            'query1': query1,
+            'query2': query2
+                   }
         return render(request, 'admin/video_ip_counts.html', context)
 
     actions = ["video_ip_counts"]

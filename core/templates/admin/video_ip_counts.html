@@ -4,6 +4,48 @@
 
 {% block content %}
 <div id="content-main">
+    <h1>count of distinct IP addresses for each video</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Video</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in query1 %}
+            <tr>
+                <td>{{ item.video_title }}</td>
+                <td>{{ item.distinct_ip_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br><br>
+    <hr>
+
+    <h1>count of events for each video</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Video</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in query2 %}
+            <tr>
+                <td>{{ item.video__title }}</td>
+                <td>{{ item.event_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br><br>
+    <hr>
+
     <h1>Video Playback Counts</h1>
     <table>
         <thead>

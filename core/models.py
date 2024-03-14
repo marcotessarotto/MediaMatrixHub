@@ -379,31 +379,22 @@ class VideoPlaybackEvent(models.Model):
     def __str__(self):
         return f"Playback event for {self.video} from IP {self.ip_address} at {self.timestamp}"
 
-    def get_count_distinct_ip_addresses_for_each_video(self):
-        # Query to count distinct IP addresses for each video, including video title
-        video_ip_counts = VideoPlaybackEvent.objects \
+    @classmethod
+    def get_count_distinct_ip_addresses_for_each_video(cls):
+        """Class method to count distinct IP addresses for each video, including video title."""
+        return cls.objects \
             .annotate(video_title=F('video__title')) \
             .values('video_title') \
             .annotate(distinct_ip_count=Count('ip_address', distinct=True)) \
             .order_by('video_title')
 
-        return video_ip_counts
-
-    def get_count_events_for_each_video(self):
-        # Query to count events for each video, including video title
-        video_event_counts = VideoPlaybackEvent.objects \
-            .annotate(video_title=F('video__title')) \
-            .values('video_title') \
+    @classmethod
+    def get_count_events_for_each_video(cls):
+        """Class method to count events for each video, including video title."""
+        return cls.objects \
+            .values('video__title') \
             .annotate(event_count=Count('id')) \
-            .order_by('video_title')
-
-        # # Query to count instances of VideoPlaybackEvent grouped by video title
-        # video_event_counts = VideoPlaybackEvent.objects \
-        #     .values('video__title') \
-        #     .annotate(event_count=Count('id')) \
-        #     .order_by('video__title')
-
-        return video_event_counts
+            .order_by('video__title')
 
 
 class VideoCounter(models.Model):
