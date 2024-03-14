@@ -2,8 +2,8 @@ from django.core.management.base import BaseCommand
 from django.db.models import Count
 from django.utils import formats, timezone
 
-from mediamatrixhub.email_utils import send_simple_html_email
-from mediamatrixhub.settings import SUBJECT_EMAIL, MONITOR_EMAIL_ADDRESSES
+from mediamatrixhub.email_utils import send_simple_html_email, my_send_email
+from mediamatrixhub.settings import SUBJECT_EMAIL, MONITOR_EMAIL_ADDRESSES, FROM_EMAIL, EMAIL_HOST
 from registration.models import InformationEvent
 
 
@@ -60,10 +60,20 @@ class Command(BaseCommand):
             subject = f'{SUBJECT_EMAIL} Monitoraggio iscrizioni a pillole informative'
 
             # Call the function to send the email
-            send_simple_html_email(
+            # send_simple_html_email(
+            #     list_of_email_addresses,
+            #     subject,
+            #     email_body,
+            # )
+
+            my_send_email(
+                FROM_EMAIL,
                 list_of_email_addresses,
                 subject,
                 email_body,
+                bcc_addresses=None,
+                attachments=None,
+                email_host=EMAIL_HOST
             )
 
             self.stdout.write(self.style.SUCCESS('Email sent successfully.'))
