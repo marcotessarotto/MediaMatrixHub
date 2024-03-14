@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="it">
 
@@ -83,7 +83,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <a href="" class="logo d-flex align-items-center">
         <img src="/static/assets/img/logo.png" alt="">
-        <span class="d-none d-lg-block">Iscrizione pillole informative</span>
+        <span class="d-none d-lg-block">{% block logo_title %}Base template{% endblock %}</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -111,7 +111,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'manage-subscription' %}">
           <i class="bi bi-grid"></i>
-          <span>Iscrizioni</span>
+          <span>{% trans 'Registrations' %}</span>
         </a>
       </li>
 
@@ -119,7 +119,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'subscriber-logout' %}">
           <i class="bi bi-person"></i>
-          <span>Esci</span>
+          <span>{% trans 'Logout' %}</span>
         </a>
       </li>
 
