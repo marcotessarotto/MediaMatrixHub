@@ -149,6 +149,15 @@ class InformationEvent(models.Model):
         html_content = render_to_string('fragment/information_event_table.html', context)
         return format_html(html_content)
 
+    def generate_ics_file_name(self):
+        """
+        Generates the file name for the .ics file to be downloaded.
+
+        Returns:
+            str: The file name for the .ics file.
+        """
+        return f"{self.title.replace(' ', '_')}_{self.event_date.strftime('%Y%m%d')}_{self.event_start_time.strftime('%H%M')}.ics"
+
     def generate_ics_content(self):
         """
         Generates the content of an .ics file for importing the event into calendar applications.

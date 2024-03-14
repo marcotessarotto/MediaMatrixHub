@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 
-from mediamatrixhub.email_utils import my_send_email
+from mediamatrixhub.email_utils import my_send_email, MyTemporaryFile
 from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA_URL, APPLICATION_TITLE, \
     TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT, FROM_EMAIL, EMAIL_HOST
 from mediamatrixhub.view_tools import is_private_ip
@@ -84,6 +84,7 @@ def manage_subscription(request):
         form = EventParticipationForm(request.POST)
         if form.is_valid():
             subscriptions = []
+            attachments = []
 
             for key, value in form.cleaned_data.items():
                 event_id = key.split('_')[-1]
@@ -105,6 +106,9 @@ def manage_subscription(request):
                     )
 
                     subscriptions.append(event.to_html_table_email())
+
+                    attachments.append(MyTemporaryFile(event.generate_ics_file_name(), event.generate_ics_content()))
+
                 else:
                     EventParticipation.objects.filter(event=event, subscriber=subscriber).delete()
 
@@ -147,7 +151,7 @@ def manage_subscription(request):
                     message_subject,
                     message_body,
                     bcc_addresses=[DEBUG_EMAIL],
-                    attachments=None,
+                    attachments=attachments,
                     email_host=EMAIL_HOST
                 )
 
