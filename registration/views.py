@@ -191,12 +191,15 @@ def subscriber_logout(request):
 
 
 def download_ics_file(request, ref_token):
+
+    print(f"download_ics_file: ref_token: {ref_token}")
+
     try:
         # Ensure that ref_token is a valid UUID
-        ref_token_uuid = uuid.UUID(ref_token)
-        event = InformationEvent.objects.get(ref_token=ref_token_uuid)
-    except (ValueError, InformationEvent.DoesNotExist):
-        raise Http404("Event does not exist")
+        # ref_token_uuid = uuid.UUID(ref_token)
+        event = InformationEvent.objects.get(ref_token=ref_token)
+    except (ValueError, InformationEvent.DoesNotExist) as e:
+        raise Http404("Event does not exist") from e
 
     ics_content = event.generate_ics_content()
     response = HttpResponse(ics_content, content_type='text/calendar')

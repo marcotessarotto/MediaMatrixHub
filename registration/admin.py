@@ -28,6 +28,7 @@ class InformationEventAdmin(admin.ModelAdmin):
         (_("Event Details"), {
             'fields': (
             'title', 'description', 'category', 'event_type', 'event_date', 'event_start_time', 'event_end_time',
+            'ref_token',
             'status')
         }),
         (_("Virtual Event Details"), {

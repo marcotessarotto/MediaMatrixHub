@@ -6,5 +6,13 @@
         <tr><td style="padding: 8px; border: 1px solid #ddd;">URL per Partecipare</td><td style="padding: 8px; border: 1px solid #ddd;"><a href="{{ event.meeting_url }}">{{ event.meeting_url }}</a></td></tr>
         <tr><td style="padding: 8px; border: 1px solid #ddd;">Speaker</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event.speaker }}</td></tr>
         <tr><td style="padding: 8px; border: 1px solid #ddd;">Nome Struttura</td><td style="padding: 8px; border: 1px solid #ddd;">{{ event.structure_name|default:"N/A" }}</td></tr>
+
+        <tr>
+        <td colspan="2" style="padding:8px; border:1px solid #ddd; text-align:center">
+            <a href="{{BASE_URL}}{% url 'download_ics_event' event.ref_token %}">
+                Scarica evento per il calendario
+            </a> <!-- style="display:inline-block; text-decoration:none; background-color:blue; color:white; padding:10px 20px; border-radius:5px; font-weight:bold;" -->
+        </td>
+        </tr>
     </tbody>
 </table>

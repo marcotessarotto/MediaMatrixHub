@@ -1,6 +1,7 @@
 import uuid
 import datetime
 
+import pytz
 from django.db import models
 from django.db.models import Count
 from django.template.loader import render_to_string
@@ -10,7 +11,7 @@ from django.utils import timezone
 
 from django.utils.translation import gettext_lazy as _
 
-from mediamatrixhub.settings import PRODID, INTERNET_DOMAIN
+from mediamatrixhub.settings import PRODID, INTERNET_DOMAIN, BASE_URL
 
 
 class InformationEventQuerySet(models.QuerySet):
@@ -117,6 +118,7 @@ class InformationEvent(models.Model):
 
         context = {
             'event': self,
+            'BASE_URL': BASE_URL,
             'event_date': formatted_event_date,
         }
         return render_to_string('fragment/information_event_email.html', context)
@@ -169,8 +171,8 @@ class InformationEvent(models.Model):
             return ""
 
         # Convert to UTC
-        dt_start_utc = dt_start.astimezone(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-        dt_end_utc = dt_end.astimezone(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+        dt_start_utc = dt_start.astimezone(pytz.utc).strftime('%Y%m%dT%H%M%SZ')
+        dt_end_utc = dt_end.astimezone(pytz.utc).strftime('%Y%m%dT%H%M%SZ')
 
         # Generate UID based on event details to ensure uniqueness
         uid = f"{self.ref_token}@{INTERNET_DOMAIN}"
@@ -183,7 +185,7 @@ VERSION:2.0
 PRODID:-{PRODID}
 BEGIN:VEVENT
 UID:{uid}
-DTSTAMP:{timezone.now().astimezone(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}
+DTSTAMP:{timezone.now().astimezone(pytz.utc).strftime('%Y%m%dT%H%M%SZ')}
 DTSTART:{dt_start_utc}
 DTEND:{dt_end_utc}
 SUMMARY:{self.title}
