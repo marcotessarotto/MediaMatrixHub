@@ -31,35 +31,6 @@ class MyTemporaryFile:
         return self.content
 
 
-def send_email_with_attachment(file_name_list, list_of_email_addresses, subject):
-    # Create the container email message.
-    msg = EmailMessage()
-    msg['Subject'] = subject
-    msg['From'] = FROM_EMAIL
-    msg['To'] = ', '.join(list_of_email_addresses)
-    msg.preamble = 'You will not see this in a MIME-aware mail reader.\n'
-
-    # Open the files in binary mode and figure out the MIME type
-    for file in file_name_list:
-        ctype, encoding = mimetypes.guess_type(file)
-        if ctype is None or encoding is not None:
-            # If we cannot guess the type or if it's encoded (compressed), use a generic bag-of-bits type.
-            ctype = 'application/octet-stream'
-        maintype, subtype = ctype.split('/', 1)
-
-        with open(file, 'rb') as fp:
-            data = fp.read()
-
-        file_name = os.path.basename(file)
-        msg.add_attachment(data, maintype=maintype, subtype=subtype, filename=file_name)
-
-    # Send the email via SMTP server:
-    with smtplib.SMTP(EMAIL_HOST) as s:
-        # Uncomment and set up login if your SMTP server requires authentication
-        # s.login(SENDER_EMAIL, APP_PASSWORD)
-        s.send_message(msg)
-
-
 def my_send_email(from_email, to_addresses, subject, body, cc_addresses=None, bcc_addresses=None, attachments=None, email_host=None):
     """
     Send an email with HTML body and optional attachments.
