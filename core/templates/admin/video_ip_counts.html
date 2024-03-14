@@ -1,0 +1,27 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Video Playback Counts{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>Video Playback Counts</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Video</th>
+                <th>IP Address</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for count in counts %}
+            <tr>
+                <td>{{ count.video }}</td>
+                <td>{{ count.ip_address }}</td>
+                <td>{{ count.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

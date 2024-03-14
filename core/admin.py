@@ -1,6 +1,10 @@
 from django.contrib import admin
+from django.shortcuts import render
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Count
+from django.http import HttpResponseRedirect
+from django.urls import path
 
 from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
@@ -172,6 +176,33 @@ class VideoPlaybackEventAdmin(admin.ModelAdmin):
         if obj:  # Editing an existing object
             return self.readonly_fields + ('video', 'ip_address', 'is_user_authenticated', 'username')
         return self.readonly_fields
+
+    # Custom admin URL for displaying counts
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('video-ip-counts/', self.admin_site.admin_view(self.video_ip_counts)),
+        ]
+        return my_urls + urls
+
+    def video_ip_counts(self, request, queryset):
+        # Perform your aggregation query here
+        counts = VideoPlaybackEvent.objects.values('video', 'ip_address').annotate(total=Count('id')).order_by('video')
+
+        # now, for each video, we want to count the number of unique IP addresses
+        # we can then add this count to the counts dictionary
+        # for count in counts:
+        #     count['unique_ips'] = VideoPlaybackEvent.objects.filter(video=count['video']).values('ip_address').distinct().count()
+
+        context = {'counts': counts}
+        return render(request, 'admin/video_ip_counts.html', context)
+
+        # Implement your custom response here
+        # This could be a simple HttpResponse, a rendered template, or a redirect
+        # For simplicity, let's assume you redirect to a custom template or another placeholder
+        # return HttpResponseRedirect("/admin/path-to-custom-view/")
+
+    actions = ["video_ip_counts"]
 
 
 admin.site.register(VideoPlaybackEvent, VideoPlaybackEventAdmin)
