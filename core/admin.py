@@ -30,7 +30,8 @@ class VideoDocumentInline(admin.TabularInline):
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'display_categories', 'duration', 'enabled', 'has_fulltext_search_data', 'structure', 'created_at',)
+    list_display = (
+    'id', 'title', 'display_categories', 'duration', 'enabled', 'has_fulltext_search_data', 'structure', 'created_at',)
     list_filter = ('enabled', 'structure', 'tags')
     search_fields = ('title', 'description')
     inlines = [TagInline, VideoCategoryInline, VideoDocumentInline]
@@ -39,6 +40,7 @@ class VideoAdmin(admin.ModelAdmin):
         """Display categories related to the video."""
         categories = obj.categories.all()
         return ', '.join([category.name for category in categories])
+
     display_categories.short_description = "Categories"
 
     # exclude = ('owner',)
@@ -140,19 +142,21 @@ class DocumentAdmin(admin.ModelAdmin):
         if obj.preview_image:
             return format_html('<img src="{}" style="height:50px;"/>', obj.preview_image.url)
         return "No image"
+
     preview_image_display.short_description = 'Cover Image'
 
     def document_file_link(self, obj):
         if obj.document_file:
             return format_html('<a href="{}" target="_blank">Download</a>', obj.document_file.url)
         return "No file"
+
     document_file_link.short_description = 'Document File'
 
 
 @admin.register(MessageLog)
 class MessageLogAdmin(admin.ModelAdmin, ExportExcelMixin):
     list_display = ('id', 'created_at', 'http_real_ip', 'original_uri')
-    list_filter = [ 'created_at', 'original_uri']
+    list_filter = ['created_at', 'original_uri']
 
     actions = ["export_as_excel"]
 
@@ -169,6 +173,7 @@ class VideoPlaybackEventAdmin(admin.ModelAdmin):
             return self.readonly_fields + ('video', 'ip_address', 'is_user_authenticated', 'username')
         return self.readonly_fields
 
+
 admin.site.register(VideoPlaybackEvent, VideoPlaybackEventAdmin)
 
 
@@ -184,5 +189,6 @@ class VideoCounterAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         # Optionally disable deleting entries through admin
         return False
+
 
 admin.site.register(VideoCounter, VideoCounterAdmin)
