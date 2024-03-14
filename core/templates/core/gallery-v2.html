@@ -170,17 +170,26 @@
       <div class="col-lg-6 text-center">
         <h1>{% trans "Category" %}: {{ category.name }}</h1>
         <!-- List children categories -->
-        {% with children=category_name.get_children_categories %}
+        {% with children=category.get_children_categories %}
           {% if children %}
-          <div class="children-categories">
-            <h1>{% trans "Subcategories" %}</h1>
-            <ul>
+          <div class="children-categories mt-4">
+            <h2>{% trans "Subcategories" %}</h2>
+            <div class="row">
               {% for child in children %}
-                <li><a href="{% url 'show-category-home' child.name %}">{{ child.name }}</a></li>
+                <!-- Each child category is displayed as a colored box -->
+                <div class="col">
+                  <div class="card">
+                    <div class="card-body bg-primary text-white">
+                      <a href="{% url 'show-category-home' child.name %}" class="stretched-link text-white">{{ child.name }}</a>
+                    </div>
+                  </div>
+                </div>
               {% empty %}
-                <li>{% trans "No subcategories available" %}</li>
+                <div class="col">
+                  <li>{% trans "No subcategories available" %}</li>
+                </div>
               {% endfor %}
-            </ul>
+            </div>
           </div>
           {% endif %}
         {% endwith %}
@@ -188,6 +197,7 @@
     </div>
   </div>
 </div><!-- End Page Header -->
+
 
 
     <!-- ======= Gallery Section ======= -->
