@@ -1,4 +1,5 @@
 import syslog
+import uuid
 
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
@@ -187,3 +188,17 @@ def subscriber_logout(request):
     request.session['subscriber_id'] = None
 
     return redirect('subscriber-login')
+
+
+def download_ics_file(request, ref_token):
+    try:
+        # Ensure that ref_token is a valid UUID
+        ref_token_uuid = uuid.UUID(ref_token)
+        event = InformationEvent.objects.get(ref_token=ref_token_uuid)
+    except (ValueError, InformationEvent.DoesNotExist):
+        raise Http404("Event does not exist")
+
+    ics_content = event.generate_ics_content()
+    response = HttpResponse(ics_content, content_type='text/calendar')
+    response['Content-Disposition'] = f'attachment; filename="event_{event.ref_token}.ics"'
+    return response

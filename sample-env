@@ -26,7 +26,7 @@ REDIS_CACHE_URL='redis://localhost:6379/1'
 
 
 FROM_EMAIL='sender_email@.....'
-SUBJECT_EMAIL="[iscrizioni pillole informative]"
+SUBJECT_EMAIL="[information events subscription]"
 DEBUG_EMAIL='debug_email@.....'
 
 MONITOR_EMAIL_ADDRESSES="admin@....,admin2@...."
@@ -36,4 +36,8 @@ APPLICATION_TITLE='Media Matrix Hub'
 TECHNICAL_CONTACT_EMAIL='tech_contact@.....'
 TECHNICAL_CONTACT='tech_contact_name'
 
-```
+PRODUCT_NAME="Media Matrix Hub"
+
+PRODID="//Your Company//Your Product//EN"
+
+INTERNET_DOMAIN="yourdomain.com"

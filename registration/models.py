@@ -1,10 +1,16 @@
+import uuid
+import datetime
+
 from django.db import models
 from django.db.models import Count
 from django.template.loader import render_to_string
 from django.utils import formats
 from django.utils.html import format_html
+from django.utils import timezone
 
 from django.utils.translation import gettext_lazy as _
+
+from mediamatrixhub.settings import PRODID, INTERNET_DOMAIN
 
 
 class InformationEventQuerySet(models.QuerySet):
@@ -83,6 +89,8 @@ class InformationEvent(models.Model):
     meta_description = models.TextField(blank=True, null=True, verbose_name=_("Meta Description"))
     meta_keywords = models.CharField(max_length=255, blank=True, null=True, verbose_name=_("Meta Keywords"))
 
+    ref_token = models.UUIDField(default=uuid.uuid4)
+
     def __str__(self):
         return self.title
 
@@ -138,6 +146,54 @@ class InformationEvent(models.Model):
         }
         html_content = render_to_string('fragment/information_event_table.html', context)
         return format_html(html_content)
+
+    def generate_ics_content(self):
+        """
+        Generates the content of an .ics file for importing the event into calendar applications.
+
+        Returns:
+            str: The .ics file content as a string.
+        """
+        # Format start and end times into the required format
+        if self.event_date and self.event_start_time:
+            # Combine date and time for start
+            dt_start = datetime.datetime.combine(self.event_date, self.event_start_time)
+            # Assuming event_end_time is available and combining it with event_date
+            if self.event_end_time:
+                dt_end = datetime.datetime.combine(self.event_date, self.event_end_time)
+            else:
+                # Assuming a default duration of 1 hour if end time is not provided
+                dt_end = dt_start + datetime.timedelta(hours=1)
+        else:
+            # Return an empty string or handle the case where date/time is not available
+            return ""
+
+        # Convert to UTC
+        dt_start_utc = dt_start.astimezone(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+        dt_end_utc = dt_end.astimezone(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+
+        # Generate UID based on event details to ensure uniqueness
+        uid = f"{self.ref_token}@{INTERNET_DOMAIN}"
+        
+        ics_description = self.description.replace("\n", "\\n")
+
+        # Prepare .ics content
+        ics_content = f"""BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-{PRODID}
+BEGIN:VEVENT
+UID:{uid}
+DTSTAMP:{timezone.now().astimezone(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}
+DTSTART:{dt_start_utc}
+DTEND:{dt_end_utc}
+SUMMARY:{self.title}
+DESCRIPTION:{ics_description}
+LOCATION:{self.location or "N/A"}
+URL:{self.meeting_url}
+END:VEVENT
+END:VCALENDAR
+"""
+        return ics_content
 
 
 class Subscriber(models.Model):
