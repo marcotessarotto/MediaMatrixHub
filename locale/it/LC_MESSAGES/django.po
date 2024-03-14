@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-14 11:02+0100\n"
+"POT-Creation-Date: 2024-03-14 11:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -338,9 +338,14 @@ msgstr "Iscrizioni"
 msgid "Logout"
 msgstr "Esci"
 
+#: registration/templates/subscribers/manage_subscription.html:120
+msgid "At the moment there are no information events to sign up for."
+msgstr "Al momento non ci sono pillole informative a cui iscriversi."
+
 #: registration/templates/subscribers/manage_subscription.html:137
 msgid "For technical IT support on the enrollment management system, contact"
 msgstr "Per supporto tecnico informatico sul sistema di gestione delle iscrizioni, contattare "
+
 
 #: venv/lib/python3.11/site-packages/_pytest/config/argparsing.py:500
 #, python-format
