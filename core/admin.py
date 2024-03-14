@@ -197,11 +197,6 @@ class VideoPlaybackEventAdmin(admin.ModelAdmin):
         context = {'counts': counts}
         return render(request, 'admin/video_ip_counts.html', context)
 
-        # Implement your custom response here
-        # This could be a simple HttpResponse, a rendered template, or a redirect
-        # For simplicity, let's assume you redirect to a custom template or another placeholder
-        # return HttpResponseRedirect("/admin/path-to-custom-view/")
-
     actions = ["video_ip_counts"]
 
 
