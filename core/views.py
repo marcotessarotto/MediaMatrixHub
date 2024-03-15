@@ -83,6 +83,23 @@ class SearchHomeWithCategory(CreateView):
         raise Http404("This page does not exist")
 
 
+class ShowCategories(CreateView):
+    def get(self, request, *args, **kwargs):
+
+        # get all the categories without parent
+        categories = Category.objects.filter(parent=None)
+
+        context = {
+            'categories': categories,
+            'page_header': 'Categories',
+            'APPLICATION_TITLE': APPLICATION_TITLE,
+            'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,
+            'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
+        }
+
+        return render(request, 'core/categories.html', context)
+
+
 def get_preview_image(request, ref_token):
     try:
         # Retrieve the video instance by ref_token
