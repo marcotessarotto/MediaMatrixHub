@@ -8,7 +8,7 @@ from .models import InformationEvent, Subscriber, EventParticipation, EventLog
 
 
 class InformationEventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'event_type', 'event_date', 'event_start_time', 'speaker', 'enabled', 'status')
+    list_display = ('title', 'event_type', 'event_date', 'event_start_time', 'speaker', 'enabled', 'ref_token', 'status')
     list_filter = ('enabled', 'event_type', 'status', 'event_date')
     search_fields = ('title', 'description', 'speaker', 'structure_name')
     list_editable = ('enabled', 'status')
