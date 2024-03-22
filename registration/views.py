@@ -56,7 +56,15 @@ def subscriber_login(request):
 
     else:
         form = SubscriberLoginForm()
-    return render(request, 'subscribers/login.html', {'form': form})
+
+    context = {
+        'APPLICATION_TITLE': APPLICATION_TITLE,
+        'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,
+        'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
+        'form': form,
+    }
+
+    return render(request, 'subscribers/login.html', context)
 
 
 def manage_subscription(request):
