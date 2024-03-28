@@ -168,13 +168,19 @@
   <div class="container position-relative">
     <div class="row d-flex justify-content-center">
       <div class="col-lg-6 text-center">
-        <h1>{% trans "Category" %}: {{ category.name }}</h1>
+        <!-- Breadcrumb for navigating to the parent category -->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-center">
+            {% if category.parent %}
+            <li class="breadcrumb-item">
+              <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">{{ category.parent.name }}</a>
+            </li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+          </ol>
+        </nav>
 
-        {% if category.parent %}
-        <p class="text-white-50" style="font-size: 1.2em;">
-            <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">{{ category.parent.name }}</a>
-        </p>
-        {% endif %}
+        <h1>{% trans "Category" %}: {{ category.name }}</h1>
 
         <!-- List children categories -->
         {% with children=category.get_children_categories %}
@@ -183,7 +189,6 @@
             <h2>{% trans "Subcategories" %}</h2>
             <div class="row">
               {% for child in children %}
-                <!-- Each child category is displayed as a colored box. Columns are now flex containers. -->
                 <div class="col d-flex">
                   <div class="card w-100 h-100">
                     <div class="card-body bg-primary text-white d-flex align-items-center justify-content-center">
@@ -204,6 +209,7 @@
     </div>
   </div>
 </div><!-- End Page Header -->
+
 
 
 
