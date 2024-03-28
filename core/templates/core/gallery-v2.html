@@ -168,19 +168,27 @@
   <div class="container position-relative">
     <div class="row d-flex justify-content-center">
       <div class="col-lg-6 text-center">
-        <!-- Breadcrumb for navigating to the parent category -->
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb justify-content-center">
-            {% if category.parent %}
-            <li class="breadcrumb-item">
-              <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">{{ category.parent.name }}</a>
-            </li>
-            {% endif %}
-            <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
-          </ol>
-        </nav>
-
-        <h1>{% trans "Category" %}: {{ category.name }}</h1>
+        <!-- Revised breadcrumb with h1 tag ensuring it stays on one line -->
+        <h1 class="breadcrumb-heading">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-0">
+              {% if category.parent %}
+              <li class="breadcrumb-item">
+                <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">
+                  {{ category.parent.name }}
+                </a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                {{ category.name }}
+              </li>
+              {% else %}
+              <li class="breadcrumb-item active" aria-current="page">
+                {% trans "Category" %}: {{ category.name }}
+              </li>
+              {% endif %}
+            </ol>
+          </nav>
+        </h1>
 
         <!-- List children categories -->
         {% with children=category.get_children_categories %}
@@ -209,6 +217,7 @@
     </div>
   </div>
 </div><!-- End Page Header -->
+
 
 
 
