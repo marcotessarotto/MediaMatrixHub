@@ -171,8 +171,7 @@
         <h1>{% trans "Category" %}: {{ category.name }}</h1>
 
         {% if category.parent %}
-        <p
-            class="text-white-50" style="font-size: 1.2em;">
+        <p class="text-white-50" style="font-size: 1.2em;">
             <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">{{ category.parent.name }}</a>
         </p>
         {% endif %}
@@ -184,10 +183,10 @@
             <h2>{% trans "Subcategories" %}</h2>
             <div class="row">
               {% for child in children %}
-                <!-- Each child category is displayed as a colored box -->
-                <div class="col">
-                  <div class="card">
-                    <div class="card-body bg-primary text-white">
+                <!-- Each child category is displayed as a colored box. Columns are now flex containers. -->
+                <div class="col d-flex">
+                  <div class="card w-100 h-100">
+                    <div class="card-body bg-primary text-white d-flex align-items-center justify-content-center">
                       <a href="{% url 'show-category-home' child.slug %}" class="stretched-link text-white">{{ child.name }}</a>
                     </div>
                   </div>
@@ -205,6 +204,7 @@
     </div>
   </div>
 </div><!-- End Page Header -->
+
 
 
 
