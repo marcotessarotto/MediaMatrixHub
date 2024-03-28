@@ -168,27 +168,26 @@
   <div class="container position-relative">
     <div class="row d-flex justify-content-center">
       <div class="col-lg-6 text-center">
-        <!-- Revised breadcrumb with h1 tag ensuring it stays on one line -->
-        <h1 class="breadcrumb-heading">
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center mb-0">
-              {% if category.parent %}
-              <li class="breadcrumb-item">
-                <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">
-                  {{ category.parent.name }}
-                </a>
-              </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                {{ category.name }}
-              </li>
-              {% else %}
-              <li class="breadcrumb-item active" aria-current="page">
-                {% trans "Category" %}: {{ category.name }}
-              </li>
-              {% endif %}
-            </ol>
-          </nav>
+        <!-- Parent category (if present) displayed above in h2 style -->
+        {% if category.parent %}
+        <h2 class="parent-category-heading">
+          <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">
+            {% trans "Upper level" %}: {{ category.parent.name }}
+          </a>
+        </h2>
+        {% endif %}
+
+        <!-- Current category name larger, displayed in h1 -->
+        <h1 class="current-category-heading">
+          {% trans "Category" %}: {{ category.name }}
         </h1>
+
+        <!-- Optional category description -->
+        {% if category.description %}
+        <p class="category-description">
+          {{ category.description }}
+        </p>
+        {% endif %}
 
         <!-- List children categories -->
         {% with children=category.get_children_categories %}
@@ -217,6 +216,7 @@
     </div>
   </div>
 </div><!-- End Page Header -->
+
 
 
 
