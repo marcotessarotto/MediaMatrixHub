@@ -186,7 +186,7 @@
           <span class="description-icon" style="vertical-align: middle;">
             {% include 'include/_info_icon.html' %}
           </span>
-          <span class="description-text" style="vertical-align: middle;">{{ category.description }}</span>
+          <div class="description-text">{{ category.description|safe }}</div>
         </div>
         {% endif %}
 

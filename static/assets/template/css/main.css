@@ -1317,3 +1317,24 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.2rem; /* Readable text size */
   margin-top: 0.5rem;
 }
+
+.category-description-box {
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 8px; /* Rounded corners for the box */
+  background-color: #f9f9f9; /* Light background */
+  display: inline-flex; /* Keep icon and text aligned */
+  align-items: center; /* Center items vertically */
+  padding: 10px;
+  gap: 10px; /* Space between icon and text */
+}
+
+.description-icon {
+  display: flex;
+}
+
+.description-text {
+  flex: 1; /* Ensure text takes up remaining space */
+  line-height: 1; /* Adjust the line height to reduce space between lines */
+  text-align: left; /* Align text vertically */
+  vertical-align: middle;
+}
