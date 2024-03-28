@@ -297,7 +297,7 @@ class Category(models.Model):
 
     def get_children_categories(self):
         """Returns all child categories of this category."""
-        return self.children.all()
+        return self.children.all().order_by('order')
 
     class Meta:
         ordering = ['order', 'name']

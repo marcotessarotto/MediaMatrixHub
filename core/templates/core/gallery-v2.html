@@ -169,6 +169,14 @@
     <div class="row d-flex justify-content-center">
       <div class="col-lg-6 text-center">
         <h1>{% trans "Category" %}: {{ category.name }}</h1>
+
+        {% if category.parent %}
+        <p
+            class="text-white-50" style="font-size: 1.2em;">
+            <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">{{ category.parent.name }}</a>
+        </p>
+        {% endif %}
+
         <!-- List children categories -->
         {% with children=category.get_children_categories %}
           {% if children %}
@@ -180,7 +188,7 @@
                 <div class="col">
                   <div class="card">
                     <div class="card-body bg-primary text-white">
-                      <a href="{% url 'show-category-home' child.name %}" class="stretched-link text-white">{{ child.name }}</a>
+                      <a href="{% url 'show-category-home' child.slug %}" class="stretched-link text-white">{{ child.name }}</a>
                     </div>
                   </div>
                 </div>

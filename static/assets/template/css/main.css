@@ -96,10 +96,11 @@ h6 {
 }
 
 .page-header h2 {
-  font-size: 56px;
+  /*font-size: 56px;*/
+  font-size: 1.5em;
   font-weight: 500;
   color: #fff;
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
 }
 
 @media (max-width: 768px) {
