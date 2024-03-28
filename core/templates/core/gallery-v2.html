@@ -291,7 +291,7 @@
                               data-bs-toggle="modal"
                               data-bs-target="#pdfViewerModal"
                               data-pdf-url="{{ doc.document_file.url }}">
-                        {% trans "View PDF" %} <!--#{{ forloop.counter }}--> "{{ doc.title}}"
+                        {% trans "View PDF" %}: {{ doc.title}}
                       </button>
                     </p>
 
