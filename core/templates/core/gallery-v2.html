@@ -168,25 +168,26 @@
   <div class="container position-relative">
     <div class="row d-flex justify-content-center">
       <div class="col-lg-6 text-center">
-        <!-- Parent category (if present) displayed above in h2 style -->
         {% if category.parent %}
         <h2 class="parent-category-heading">
           <a href="{% url 'show-category-home' category_slug=category.parent.slug %}">
-            {% trans "Upper level" %}: {{ category.parent.name }}
+            {{ category.parent.name }}
           </a>
         </h2>
         {% endif %}
 
-        <!-- Current category name larger, displayed in h1 -->
         <h1 class="current-category-heading">
           {% trans "Category" %}: {{ category.name }}
         </h1>
 
-        <!-- Optional category description -->
         {% if category.description %}
-        <p class="category-description">
-          {{ category.description }}
-        </p>
+        <!-- Description box with an icon -->
+        <div class="category-description-box p-3 mt-3">
+          <span class="description-icon" style="vertical-align: middle;">
+            {% include 'include/_info_icon.html' %}
+          </span>
+          <span class="description-text" style="vertical-align: middle;">{{ category.description }}</span>
+        </div>
         {% endif %}
 
         <!-- List children categories -->
@@ -216,6 +217,7 @@
     </div>
   </div>
 </div><!-- End Page Header -->
+
 
 
 
