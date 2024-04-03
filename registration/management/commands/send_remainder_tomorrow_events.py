@@ -79,6 +79,7 @@ class Command(BaseCommand):
                     'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
                     'REGISTRATION_URL': REGISTRATION_URL,
                     'VIDEOTECA_URL': VIDEOTECA_URL,
+                    'tomorrow_str': tomorrow_str,
                 }
 
                 message_body = render_to_string('fragment/information_event_send_remainder_it.html', context)
