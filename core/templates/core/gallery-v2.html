@@ -273,6 +273,14 @@
                     {% if item.description %}
                     <p>{% trans "Description" %}: {{ item.description|safe }}</p>
                     {% endif %}
+                    {% if item.has_tags %}
+                    <p>
+                    <span style="font-size: 32px;">&#x1F3F7;</span>
+                      {% for tag in item.tags.all %}
+                        <span class="badge bg-secondary">{{ tag.tag }}</span>
+                      {% endfor %}
+                    </p>
+                    {% endif %}
                     {% if item.publication_date %}
                     <p>{% trans "Publication Date" %}: {{ item.publication_date|date:"SHORT_DATE_FORMAT" }}</p>
                     {% endif %}
@@ -314,6 +322,54 @@
             <p>{% trans "There are no videos or documents to show." %}</p>
           {% endfor %}
         </div>
+
+
+        {% if documents_list %}
+
+        <hr>
+
+        <div class="row gy-4 justify-content-center">
+          {% for item in documents_list %}
+
+<!--          <div class="col-xl-3 col-lg-4 col-md-6">-->
+          <div class="col-xl-6 col-lg-8 col-md-6"> <!-- Adjusted column sizes here -->
+            <div class="gallery-item h-100">
+<!--                <img src="{  item.preview_image.url }" class="img-fluid" alt="{ item.alt_text }">-->
+                <div class="media-wrapper">
+                  <div class="video-info mt-2">
+                    {% if item.description %}
+                    <p>{% trans "Description" %}: {{ item.description|safe }}</p>
+                    {% endif %}
+                    {% if item.has_tags %}
+                    <span style="font-size: 32px;">&#x1F3F7;</span>
+                    <p>
+                      {% for tag in item.tags.all %}
+                        <span class="badge bg-secondary">{{ tag.tag }}</span>
+                      {% endfor %}
+                    </p>
+                    {% endif %}
+                    {% if item.publication_date %}
+                    <p>{% trans "Publication Date" %}: {{ item.publication_date|date:"SHORT_DATE_FORMAT" }}</p>
+                    {% endif %}
+                    {% if item.authors %}
+                    <p>{% trans "Author(s)" %}: {{ item.authors }}</p>
+                    {% endif %}
+                    <p>{% trans "Duration" %}: {{ item.duration }}</p>
+
+                    {% endwith %}
+
+                  </div>
+                </div>
+
+            </div>
+          </div><!-- End Gallery Item -->
+
+          {% empty %}
+            <p>{% trans "There are no videos or documents to show." %}</p>
+          {% endfor %}
+        </div>
+
+        {% endif %}
 
 
 

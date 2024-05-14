@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from PIL import Image, ImageDraw, ImageFont
 
-from core.models import Category, Media, Video, VideoPlaybackEvent, VideoCounter
+from core.models import Category, Media, Video, VideoPlaybackEvent, VideoCounter, get_category_documents
 from core.tools.stat_tools import process_http_request
 from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE, TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT
 
@@ -66,6 +66,7 @@ class ShowHomeWithCategory(CreateView):
         context = {
             'category': category,
             'videos_list': videos_list,
+            'documents_list': get_category_documents(category),
             'page_header': 'Category Home',
             'APPLICATION_TITLE': APPLICATION_TITLE,
             'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,

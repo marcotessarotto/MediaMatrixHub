@@ -137,7 +137,7 @@ class CategoryListFilter(admin.SimpleListFilter):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'enabled', 'ref_token', 'preview_image_display', 'document_file_link')
+    list_display = ('title', 'enabled', 'ref_token', 'display_categories', 'preview_image_display', 'document_file_link')
     search_fields = ['title', 'description', 'document_file']
     list_filter = ('enabled', CategoryListFilter)  # Use the class directly without quotes
     inlines = [DocumentTagInline, DocumentCategoryInline]
@@ -155,6 +155,13 @@ class DocumentAdmin(admin.ModelAdmin):
         return "No file"
 
     document_file_link.short_description = 'Document File'
+
+    def display_categories(self, obj):
+        """Display categories related to the document."""
+        categories = obj.categories.all()
+        return ', '.join([category.name for category in categories])
+
+    display_categories.short_description = "Categories"
 
 
 @admin.register(MessageLog)

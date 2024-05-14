@@ -81,6 +81,8 @@ class Media(models.Model):
     preview_image = models.ImageField(upload_to=calc_directory_path, blank=True, null=True,
                                     verbose_name=_("Immagine di preview"))
 
+    # extracted_frames =
+
     fulltext_search_data = models.TextField(blank=True, verbose_name=_("Dati per la ricerca fulltext"))
 
     raw_transcription_file = models.FileField(upload_to=calc_directory_path, null=True, blank=True,
@@ -112,6 +114,9 @@ class Media(models.Model):
 
     def is_document(self):
         return False
+
+    def has_tags(self):
+        return self.tags.exists()
 
 
 @receiver(post_save, sender='core.Video')
@@ -419,3 +424,37 @@ class VideoCounter(models.Model):
             return VideoCounter.objects.get(video_id=video_id)
         except VideoCounter.DoesNotExist:
             return VideoCounter.objects.create(video_id=video_id)
+
+
+def get_category_name_documents(category_name: str):
+    """
+    Returns all Documents belonging to a certain category that are not associated with any Video.
+
+    Args:
+        category_name (str): The name of the category.
+
+    Returns:
+        QuerySet: A queryset of Documents that are in the specified category and not associated with any Video.
+    """
+    return Document.objects.filter(
+        categories__name=category_name
+    ).exclude(
+        videodocument__isnull=False
+    )
+
+
+def get_category_documents(category: Category):
+    """
+    Returns all Documents belonging to a certain category that are not associated with any Video.
+
+    Args:
+        category (Category): The Category instance.
+
+    Returns:
+        QuerySet: A queryset of Documents that are in the specified category and not associated with any Video.
+    """
+    return Document.objects.filter(
+        categories=category
+    ).exclude(
+        videodocument__isnull=False
+    )
