@@ -1,6 +1,7 @@
 import time
 import uuid
 
+from django.core.files.base import ContentFile
 from django.db.models import F, Count
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -8,9 +9,17 @@ from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.translation import gettext_lazy as _
 
+from core.image_tools import resize_image_if_needed
 from core.tools.movie_tools import get_video_duration, extract_text_from_vtt, get_video_resolution
 
 from django.db import models
+
+from PIL import Image
+from pdf2image import convert_from_path
+import io
+import os
+
+from mediamatrixhub.settings import MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT
 
 
 class Tag(models.Model):
@@ -193,6 +202,44 @@ class Document(Media):
 
     def is_pdf(self):
         return self.document_file.name.endswith('.pdf')
+
+
+    def generate_pdf_preview(self):
+        """
+        Generates a preview image for a PDF document.
+        """
+        try:
+            # Convert the first page of the PDF to an image
+            pages = convert_from_path(self.document_file.path, first_page=1, last_page=1)
+            if pages:
+                first_page_image = pages[0]
+
+                # Check and resize if necessary
+                first_page_image = resize_image_if_needed(first_page_image)
+
+                # Save the image to a temporary location
+                temp_image = io.BytesIO()
+                first_page_image.save(temp_image, format='JPEG')
+                temp_image.seek(0)
+
+                # Save the image to the preview_image field
+                self.preview_image.save(
+                    os.path.splitext(self.document_file.name)[0] + '_preview.jpg',
+                    ContentFile(temp_image.read()),
+                    save=False
+                )
+        except Exception as e:
+            print(f"Error generating PDF preview: {e}")
+
+
+@receiver(post_save, sender=Document)
+def generate_preview_image(sender, instance, created, **kwargs):
+    """
+    Signal handler to generate a preview image for the Document instance if it's a PDF and no preview_image is defined.
+    """
+    if not instance.preview_image and instance.is_pdf():
+        instance.generate_pdf_preview()
+        instance.save()
 
 
 class VideoDocument(models.Model):

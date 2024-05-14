@@ -336,6 +336,11 @@
             <div class="gallery-item h-100">
 <!--                <img src="{  item.preview_image.url }" class="img-fluid" alt="{ item.alt_text }">-->
                 <div class="media-wrapper">
+
+                  {% if item.preview_image %}
+                  <img src="{{ item.preview_image.url }}" class="img-fluid" alt="{ item.alt_text }">
+                  {% endif %}
+
                   <div class="video-info mt-2">
                     {% if item.description %}
                     <p>{% trans "Description" %}: {{ item.description|safe }}</p>
@@ -356,7 +361,6 @@
                     {% endif %}
                     <p>{% trans "Duration" %}: {{ item.duration }}</p>
 
-                    {% endwith %}
 
                   </div>
                 </div>
