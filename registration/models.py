@@ -28,6 +28,10 @@ class EnabledEventManager(models.Manager):
         # Ensure it operates on the current queryset
         return self.get_queryset().annotate(participation_count=Count('eventparticipation'))
 
+    # return the last event
+    def last_event(self):
+        return self.get_queryset().first()
+
 
 class InformationEvent(models.Model):
     """
