@@ -226,7 +226,7 @@ class VideoCounterAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         # Optionally disable deleting entries through admin
-        return False
+        return True
 
 
 admin.site.register(VideoCounter, VideoCounterAdmin)
