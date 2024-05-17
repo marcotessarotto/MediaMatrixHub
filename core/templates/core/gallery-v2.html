@@ -302,6 +302,9 @@
                         {% trans "View PDF" %}: {{ doc.title}}
                       </button>
                     </p>
+                    {% if doc.description %}
+                      <p>{{ doc.description|safe }}</p>
+                    {% endif %}
 
                     {% endfor %}
                     {% endif %}
