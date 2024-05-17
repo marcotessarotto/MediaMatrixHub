@@ -2,8 +2,9 @@ import time
 import uuid
 
 from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.db.models import F, Count
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
@@ -88,7 +89,7 @@ class Media(models.Model):
     structure = models.ForeignKey(Structure, on_delete=models.CASCADE, blank=True, null=True)
 
     preview_image = models.ImageField(upload_to=calc_directory_path, blank=True, null=True,
-                                    verbose_name=_("Immagine di preview"))
+                                      verbose_name=_("Immagine di preview"))
 
     # extracted_frames =
 
@@ -132,10 +133,10 @@ class Media(models.Model):
 def video_post_save(sender, instance, **kwargs):
     # if created:
     if (
-        instance.video_file
-        and not instance.duration
-        and not instance.stop_time
-        and kwargs.get('update_fields', None) != {'duration', 'stop_time', 'width', 'height'}
+            instance.video_file
+            and not instance.duration
+            and not instance.stop_time
+            and kwargs.get('update_fields', None) != {'duration', 'stop_time', 'width', 'height'}
     ):
         print(f"Updating duration and stop_time for #{instance.id} {instance.title}")
 
@@ -158,9 +159,9 @@ def update_fulltext_search_data(sender, instance, **kwargs):
     # Check if transcription is available, the raw_transcription_file has been specified,
     # and we are not already updating the fulltext_search_data to prevent recursion
     if (
-        instance.is_transcription_available
-        and instance.raw_transcription_file
-        and kwargs.get('update_fields', None) != {'fulltext_search_data'}
+            instance.is_transcription_available
+            and instance.raw_transcription_file
+            and kwargs.get('update_fields', None) != {'fulltext_search_data'}
     ):
         print(f"Updating fulltext search data for #{instance.id} {instance.title}")
 
@@ -203,7 +204,6 @@ class Document(Media):
     def is_pdf(self):
         return self.document_file.name.endswith('.pdf')
 
-
     def generate_pdf_preview(self):
         """
         Generates a preview image for a PDF document.
@@ -240,6 +240,14 @@ def generate_preview_image(sender, instance, created, **kwargs):
     if not instance.preview_image and instance.is_pdf():
         instance.generate_pdf_preview()
         instance.save()
+
+
+# Signal to delete the associated document_file when a Document instance is deleted
+@receiver(post_delete, sender=Document)
+def delete_document_file(sender, instance, **kwargs):
+    if instance.document_file:
+        if default_storage.exists(instance.document_file.path):
+            default_storage.delete(instance.document_file.path)
 
 
 class VideoDocument(models.Model):
@@ -295,6 +303,13 @@ class Video(Media):
 
     def is_video(self):
         return True
+
+
+@receiver(post_delete, sender=Video)
+def delete_video_file(sender, instance, **kwargs):
+    if instance.video_file:
+        if default_storage.exists(instance.video_file.path):
+            default_storage.delete(instance.video_file.path)
 
 
 class VideoPill(models.Model):
