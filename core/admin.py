@@ -16,6 +16,20 @@ class PlaylistVideoInline(admin.TabularInline):
     extra = 1
 
 
+class TagListFilter(admin.SimpleListFilter):
+    title = _('tags')
+    parameter_name = 'tags'
+
+    def lookups(self, request, model_admin):
+        tags = Tag.objects.all()
+        return [(tag.id, tag.tag) for tag in tags]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(tags__id=self.value())
+        return queryset
+
+
 class TagInline(admin.TabularInline):
     model = Video.tags.through
     extra = 1
@@ -35,8 +49,9 @@ class VideoDocumentInline(admin.TabularInline):
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = (
-    'id', 'title', 'display_categories', 'duration', 'enabled', 'has_fulltext_search_data', 'structure', 'created_at',)
-    list_filter = ('enabled', 'structure', 'tags')
+        'id', 'title', 'display_categories', 'duration', 'enabled', 'has_fulltext_search_data', 'structure', 'created_at',
+    )
+    list_filter = ('enabled', 'structure', TagListFilter)  # Use custom tag filter
     search_fields = ('title', 'description')
     inlines = [TagInline, VideoCategoryInline, VideoDocumentInline]
 
@@ -46,8 +61,6 @@ class VideoAdmin(admin.ModelAdmin):
         return ', '.join([category.name for category in categories])
 
     display_categories.short_description = "Categories"
-
-    # exclude = ('owner',)
 
 
 @admin.register(VideoPill)

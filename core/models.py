@@ -254,7 +254,7 @@ class VideoDocument(models.Model):
     """This model is used to associate documents to videos."""
     video = models.ForeignKey('Video', on_delete=models.CASCADE)
     document = models.ForeignKey('Document', on_delete=models.CASCADE)
-    description = models.TextField(blank=True, null=True)  # Optional description field
+    # description = models.TextField(blank=True, null=True)  # Optional description field
     order = models.PositiveIntegerField(default=0)  # Field to specify the order
 
     class Meta:
