@@ -270,6 +270,7 @@
                     <source src="{{ item.video_file.url }}?raw=true" type="video/mp4">
                   </video>
                   <div class="video-info mt-2">
+                    <br>
                     {% if item.description %}
                     <p>{% trans "Description" %}: {{ item.description|safe }}</p>
                     {% endif %}
@@ -322,7 +323,10 @@
           </div><!-- End Gallery Item -->
 
           {% empty %}
+          {% if documents_list %}
+          {% else %}
             <p>{% trans "There are no videos or documents to show." %}</p>
+          {% endif %}
           {% endfor %}
         </div>
 
@@ -345,6 +349,7 @@
                   {% endif %}
 
                   <div class="video-info mt-2">
+                    <br>
                     {% if item.description %}
                     <p>{% trans "Description" %}: {{ item.description|safe }}</p>
                     {% endif %}
