@@ -332,8 +332,9 @@
 
 
         {% if documents_list %}
-
-        <hr>
+          {% if videos_list %}
+          <hr>
+          {% endif %}
 
         <div class="row gy-4 justify-content-center">
           {% for item in documents_list %}
@@ -345,11 +346,11 @@
                 <div class="media-wrapper">
 
                   {% if item.preview_image %}
-                  <img src="{{ item.preview_image.url }}" class="img-fluid" alt="{ item.alt_text }">
+                  <img src="{{ item.preview_image.url }}" class="img-fluid view-pdf-button" alt="{{ item.alt_text }}" data-pdf-url="{{ item.document_file.url }}">
                   {% endif %}
 
                   <div class="video-info mt-2">
-                    <br>
+                    <br><br>
                     {% if item.description %}
                     <p>{% trans "Description" %}: {{ item.description|safe }}</p>
                     {% endif %}
@@ -439,9 +440,8 @@
 <script>
 
 
+  document.addEventListener('DOMContentLoaded', function() {
 
-
-$(function() {
     // Select all video elements or a specific class if they have one
     $('video').each(function() {
         // 'this' refers to the current video element in the loop
@@ -492,21 +492,26 @@ $(function() {
         }, false);
     });
 
-
-
-  document.querySelectorAll('.view-pdf-button').forEach(button => {
-    button.addEventListener('click', function() {
-      var pdfUrl = this.getAttribute('data-pdf-url'); // Get the PDF URL
-      var modalIframe = document.querySelector('#pdfViewerModal iframe');
-      modalIframe.src = pdfUrl; // Set the iframe src to the PDF URL
+    document.querySelectorAll('.view-pdf-button').forEach(button => {
+      button.addEventListener('click', function() {
+        var pdfUrl = this.getAttribute('data-pdf-url'); // Get the PDF URL
+        var modalIframe = document.querySelector('#pdfViewerModal iframe');
+        modalIframe.src = pdfUrl; // Set the iframe src to the PDF URL
+        var pdfViewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
+        pdfViewerModal.show(); // Show the modal
+      });
     });
+
+
+    // Optional: Clear the iframe src when the modal is closed to stop the PDF from displaying
+    $('#pdfViewerModal').on('hidden.bs.modal', function (e) {
+      var modalIframe = document.querySelector('#pdfViewerModal iframe');
+      modalIframe.src = ''; // Clear the iframe source
+    });
+
   });
 
-  // Optional: Clear the iframe src when the modal is closed to stop the PDF from displaying
-  $('#pdfViewerModal').on('hidden.bs.modal', function (e) {
-    var modalIframe = document.querySelector('#pdfViewerModal iframe');
-    modalIframe.src = ''; // Clear the iframe source
-  });
+$(function() {
 
 
 });
