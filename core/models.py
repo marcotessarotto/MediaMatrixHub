@@ -121,6 +121,10 @@ class Media(models.Model):
     # list of automated preview images
     automatic_preview_images = models.ManyToManyField(AutomaticPreviewImage, blank=True)
 
+    # Field to select cover image
+    cover_image = models.ForeignKey(AutomaticPreviewImage, related_name='cover_for_media', on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("Cover Image"),
+                                    related_query_name='cover_image')
+
     fulltext_search_data = models.TextField(blank=True, verbose_name=_("Dati per la ricerca fulltext"))
 
     raw_transcription_file = models.FileField(upload_to=calc_directory_path, null=True, blank=True,
@@ -160,6 +164,9 @@ class Media(models.Model):
 class Document(Media):
     categories = models.ManyToManyField('core.Category', through='DocumentCategory')
     document_file = models.FileField(upload_to=calc_directory_path, )
+
+    cover_image = models.ForeignKey(AutomaticPreviewImage, related_name='cover_for_document', on_delete=models.SET_NULL,
+                                    blank=True, null=True, verbose_name=_("Cover Image"))
 
     # version = models.CharField(max_length=255, blank=True, verbose_name=_("Version"))
     # doi = models.CharField(max_length=255, blank=True, verbose_name=_("Document Identifier (DOI)"))
@@ -232,6 +239,9 @@ class Video(Media):
     height = models.IntegerField(null=True, blank=True)
 
     documents = models.ManyToManyField('Document', through='VideoDocument', blank=True)
+
+    cover_image = models.ForeignKey(AutomaticPreviewImage, related_name='cover_for_video', on_delete=models.SET_NULL,
+                                    blank=True, null=True, verbose_name=_("Cover Image"))
 
     def __str__(self):
         return self.title
