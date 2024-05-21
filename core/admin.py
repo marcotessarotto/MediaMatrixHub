@@ -148,11 +148,29 @@ class CategoryListFilter(admin.SimpleListFilter):
         return queryset
 
 
+class IsAssociatedWithVideoFilter(admin.SimpleListFilter):
+    title = 'is associated with video'
+    parameter_name = 'is_associated_with_video'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'yes':
+            return queryset.filter(video__isnull=False)
+        if self.value() == 'no':
+            return queryset.filter(video__isnull=True)
+        return queryset
+
+
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'enabled', 'ref_token', 'display_categories', 'preview_image_display', 'document_file_link')
+    list_display = ('title', 'enabled', 'ref_token', 'is_associated_with_video', 'display_categories', 'preview_image_display', 'document_file_link')
     search_fields = ['title', 'description', 'document_file']
-    list_filter = ('enabled', CategoryListFilter)  # Use the class directly without quotes
+    list_filter = ('enabled', CategoryListFilter, IsAssociatedWithVideoFilter)  # Use the class directly without quotes
     inlines = [DocumentCategoryInline]
 
     def preview_image_display(self, obj):

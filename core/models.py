@@ -231,6 +231,10 @@ class Document(Media):
         except Exception as e:
             print(f"Error generating PDF preview: {e}")
 
+    # is the instance a document associated to a Video instance?
+    def is_associated_with_video(self):
+        return self.videodocument_set.exists()
+
 
 @receiver(post_save, sender=Document)
 def generate_preview_image(sender, instance, created, **kwargs):
