@@ -9,7 +9,6 @@ from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.translation import gettext_lazy as _
 
 from core.image_tools import resize_image_if_needed
-from core.tools.movie_tools import get_video_duration, extract_text_from_vtt, get_video_resolution
 
 from django.db import models
 
@@ -17,8 +16,6 @@ from PIL import Image
 from pdf2image import convert_from_path
 import io
 import os
-
-from mediamatrixhub.settings import MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT
 
 
 class Tag(models.Model):
