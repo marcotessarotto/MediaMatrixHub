@@ -8,7 +8,7 @@ from django.urls import path
 
 from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
-    Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent, VideoCounter
+    Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent, VideoCounter, AutomaticPreviewImage
 
 
 class PlaylistVideoInline(admin.TabularInline):
@@ -261,3 +261,18 @@ class VideoCounterAdmin(admin.ModelAdmin):
 
 
 admin.site.register(VideoCounter, VideoCounterAdmin)
+
+
+@admin.register(AutomaticPreviewImage)
+class AutomaticPreviewImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'image_tag', 'created_at', 'updated_at')
+    readonly_fields = ('image_tag',)
+    search_fields = ('id',)
+    list_filter = ('created_at', 'updated_at')
+
+    def image_tag(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="height:50px;"/>', obj.image.url)
+        return "No image"
+
+    image_tag.short_description = 'Preview Image'

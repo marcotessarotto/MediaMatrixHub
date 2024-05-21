@@ -1,8 +1,13 @@
+import PIL
+import io
+
+from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from moviepy.editor import VideoFileClip
 
-from core.models import Document, Video
+from core.models import Document, Video, AutomaticPreviewImage
 from core.tools.movie_tools import get_video_resolution, get_video_duration, extract_text_from_vtt
 
 
@@ -83,4 +88,31 @@ def delete_video_file(sender, instance, **kwargs):
         if default_storage.exists(instance.video_file.path):
             default_storage.delete(instance.video_file.path)
 
+
+def extract_frame(video_path, t):
+    with VideoFileClip(video_path) as video:
+        frame = video.get_frame(t)
+        frame_image = PIL.Image.fromarray(frame)
+        temp_image = io.BytesIO()
+        frame_image.save(temp_image, format='JPEG')
+        temp_image.seek(0)
+        return ContentFile(temp_image.read(), name=f"frame_{t}.jpg")
+
+
+@receiver(post_save, sender=Video)
+def generate_preview_images(sender, instance, created, **kwargs):
+    # if created and ...
+    if instance.video_file and not instance.automatic_preview_images.exists():
+        video_path = instance.video_file.path
+        times = [5, 10, 15]
+        for t in times:
+            try:
+                frame_file = extract_frame(video_path, t)
+                preview_image = AutomaticPreviewImage()
+                preview_image.image.save(frame_file.name, frame_file)
+                preview_image.save()
+                instance.automatic_preview_images.add(preview_image)
+            except Exception as e:
+                print(f"Error extracting frame at {t} seconds: {e}")
+        instance.save()
 
