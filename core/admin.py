@@ -53,7 +53,7 @@ class VideoAdmin(admin.ModelAdmin):
     )
     list_filter = ('enabled', 'structure', TagListFilter)  # Use custom tag filter
     search_fields = ('title', 'description')
-    inlines = [TagInline, VideoCategoryInline, VideoDocumentInline]
+    inlines = [VideoCategoryInline, VideoDocumentInline]
 
     def display_categories(self, obj):
         """Display categories related to the video."""
@@ -153,7 +153,7 @@ class DocumentAdmin(admin.ModelAdmin):
     list_display = ('title', 'enabled', 'ref_token', 'display_categories', 'preview_image_display', 'document_file_link')
     search_fields = ['title', 'description', 'document_file']
     list_filter = ('enabled', CategoryListFilter)  # Use the class directly without quotes
-    inlines = [DocumentTagInline, DocumentCategoryInline]
+    inlines = [DocumentCategoryInline]
 
     def preview_image_display(self, obj):
         if obj.preview_image:
