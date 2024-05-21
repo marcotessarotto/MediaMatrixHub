@@ -1,11 +1,9 @@
 import time
 import uuid
 
+import PIL
 from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.db.models import F, Count
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
 from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.translation import gettext_lazy as _
@@ -77,6 +75,39 @@ def calc_directory_path(instance, filename):
     return f"{now_ms}/{filename}"
 
 
+# define new class AutomaticPreviewImage
+class AutomaticPreviewImage(models.Model):
+    image = models.ImageField(upload_to=calc_directory_path, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"AutomaticPreviewImage {self.id} - Created at {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+
+    def save(self, *args, **kwargs):
+        if not self.image:
+            return
+
+        # Open the image
+        image = PIL.Image.open(self.image)
+
+        # Resize the image if necessary
+        image = resize_image_if_needed(image)
+
+        # Save the image
+        temp_image = io.BytesIO()
+        image.save(temp_image, format='JPEG')
+        temp_image.seek(0)
+
+        self.image.save(
+            os.path.basename(self.image.name),
+            ContentFile(temp_image.read()),
+            save=False
+        )
+
+        super().save(*args, **kwargs)
+
+
 class Media(models.Model):
     title = models.CharField(max_length=1024)
     description = CKEditor5Field('description', blank=True, config_name='extends')
@@ -90,8 +121,8 @@ class Media(models.Model):
 
     preview_image = models.ImageField(upload_to=calc_directory_path, blank=True, null=True,
                                       verbose_name=_("Immagine di preview"))
-
-    # extracted_frames =
+    # list of automated preview images
+    automatic_preview_images = models.ManyToManyField(AutomaticPreviewImage, blank=True)
 
     fulltext_search_data = models.TextField(blank=True, verbose_name=_("Dati per la ricerca fulltext"))
 
@@ -127,62 +158,6 @@ class Media(models.Model):
 
     def has_tags(self):
         return self.tags.exists()
-
-
-@receiver(post_save, sender='core.Video')
-def video_post_save(sender, instance, **kwargs):
-    # if created:
-    if (
-            instance.video_file
-            and not instance.duration
-            and not instance.stop_time
-            and kwargs.get('update_fields', None) != {'duration', 'stop_time', 'width', 'height'}
-    ):
-        print(f"Updating duration and stop_time for #{instance.id} {instance.title}")
-
-        width, height = get_video_resolution(instance.video_file.path)
-        print(f"Resolution: {width, height}")
-        print(f"w: {width}, h: {height}")
-        print(f"type of width: {type(width)}")
-        instance.width = width
-        instance.height = height
-
-        instance.duration = get_video_duration(instance.video_file.path)
-        instance.stop_time = instance.duration
-        instance.save(update_fields=['duration', 'stop_time', 'width', 'height'])
-
-        print(f"Duration and stop_time updated for #{instance.id} {instance.title}")
-
-
-@receiver(post_save, sender='core.Video')
-def update_fulltext_search_data(sender, instance, **kwargs):
-    # Check if transcription is available, the raw_transcription_file has been specified,
-    # and we are not already updating the fulltext_search_data to prevent recursion
-    if (
-            instance.is_transcription_available
-            and instance.raw_transcription_file
-            and kwargs.get('update_fields', None) != {'fulltext_search_data'}
-    ):
-        print(f"Updating fulltext search data for #{instance.id} {instance.title}")
-
-        # Read the content from the file
-        vtt_content = instance.raw_transcription_file.read().decode('utf-8')
-
-        # Process the content to extract text
-        processed_text = extract_text_from_vtt(vtt_content)
-
-        # Temporarily disconnect the signal to prevent recursion
-        # post_save.disconnect(update_fulltext_search_data, sender=sender)
-
-        # Save the processed text to fulltext_search_data using instance.save(update_fields=['fulltext_search_data'])
-        # This method only updates the specified fields, preventing the post_save signal from being triggered again.
-        instance.fulltext_search_data = processed_text
-        instance.save(update_fields=['fulltext_search_data'])
-
-        # Reconnect the signal
-        # post_save.connect(update_fulltext_search_data, sender=sender)
-
-        print(f"Fulltext search data updated for #{instance.id} {instance.title}")
 
 
 class Document(Media):
@@ -234,24 +209,6 @@ class Document(Media):
     # is the instance a document associated to a Video instance?
     def is_associated_with_video(self):
         return self.videodocument_set.exists()
-
-
-@receiver(post_save, sender=Document)
-def generate_preview_image(sender, instance, created, **kwargs):
-    """
-    Signal handler to generate a preview image for the Document instance if it's a PDF and no preview_image is defined.
-    """
-    if not instance.preview_image and instance.is_pdf():
-        instance.generate_pdf_preview()
-        instance.save()
-
-
-# Signal to delete the associated document_file when a Document instance is deleted
-@receiver(post_delete, sender=Document)
-def delete_document_file(sender, instance, **kwargs):
-    if instance.document_file:
-        if default_storage.exists(instance.document_file.path):
-            default_storage.delete(instance.document_file.path)
 
 
 class VideoDocument(models.Model):
@@ -307,13 +264,6 @@ class Video(Media):
 
     def is_video(self):
         return True
-
-
-@receiver(post_delete, sender=Video)
-def delete_video_file(sender, instance, **kwargs):
-    if instance.video_file:
-        if default_storage.exists(instance.video_file.path):
-            default_storage.delete(instance.video_file.path)
 
 
 class VideoPill(models.Model):
