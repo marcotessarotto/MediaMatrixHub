@@ -3,7 +3,7 @@ import io
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, m2m_changed
 from django.dispatch import receiver
 from moviepy.editor import VideoFileClip
 
@@ -89,6 +89,11 @@ def delete_video_file(sender, instance, **kwargs):
             default_storage.delete(instance.video_file.path)
 
 
+def delete_automatic_preview_images(sender, instance, **kwargs):
+    for preview_image in instance.automatic_preview_images.all():
+        preview_image.delete()
+
+
 def extract_frame(video_path, t):
     with VideoFileClip(video_path) as video:
         frame = video.get_frame(t)
@@ -99,20 +104,66 @@ def extract_frame(video_path, t):
         return ContentFile(temp_image.read(), name=f"frame_{t}.jpg")
 
 
-@receiver(post_save, sender=Video)
-def generate_preview_images(sender, instance, created, **kwargs):
-    # if created and ...
-    if instance.video_file and not instance.automatic_preview_images.exists():
-        video_path = instance.video_file.path
-        times = [5, 10, 15]
-        for t in times:
-            try:
-                frame_file = extract_frame(video_path, t)
-                preview_image = AutomaticPreviewImage()
-                preview_image.image.save(frame_file.name, frame_file)
-                preview_image.save()
-                instance.automatic_preview_images.add(preview_image)
-            except Exception as e:
-                print(f"Error extracting frame at {t} seconds: {e}")
-        instance.save()
+# @receiver(post_save, sender=Video)
+# def generate_preview_images(sender, instance, created, **kwargs):
+#
+#     print(f"generate_preview_images - instance: {instance.id}")
+#
+#     if instance.video_file:
+#         # Reload the instance to ensure we get the latest data
+#         instance.refresh_from_db()
+#
+#         for item in instance.automatic_preview_images.all():
+#             print(f"item {item}")
+#
+#         # show count of automatic_preview_images
+#         print(f"Automatic preview images count: {instance.automatic_preview_images.count()}")
+#
+#         if not instance.automatic_preview_images.exists():
+#             video_path = instance.video_file.path
+#             times = [5, 10, 15]
+#             for t in times:
+#                 try:
+#                     frame_file = extract_frame(video_path, t)
+#                     preview_image = AutomaticPreviewImage()
+#                     preview_image.image.save(frame_file.name, frame_file)
+#                     preview_image.save()
+#                     instance.automatic_preview_images.add(preview_image)
+#                 except Exception as e:
+#                     print(f"Error extracting frame at {t} seconds: {e}")
+#             instance.save()
+
+#
+# @receiver(post_save, sender=Video)
+# def generate_preview_images_post_save(sender, instance, created, **kwargs):
+#     if created:
+#         instance._is_new = True
+#     else:
+#         instance._is_new = False
+#
+#
+# @receiver(m2m_changed, sender=Video.automatic_preview_images.through)
+# def generate_preview_images_m2m(sender, instance, action, **kwargs):
+#     print("generate_preview_images_m2m")
+#     if action == "post_add":
+#         if instance.video_file:
+#             if not instance.automatic_preview_images.exists():
+#                 video_path = instance.video_file.path
+#                 times = [5, 10, 15]
+#                 for t in times:
+#                     try:
+#                         frame_file = extract_frame(video_path, t)
+#                         preview_image = AutomaticPreviewImage()
+#                         preview_image.image.save(frame_file.name, frame_file)
+#                         preview_image.save()
+#                         instance.automatic_preview_images.add(preview_image)
+#                     except Exception as e:
+#                         print(f"Error extracting frame at {t} seconds: {e}")
+#
+#                 # Debug logs
+#                 for item in instance.automatic_preview_images.all():
+#                     print(f"item {item}")
+#
+#                 # Show count of automatic_preview_images
+#                 print(f"Automatic preview images count: {instance.automatic_preview_images.count()}")
 

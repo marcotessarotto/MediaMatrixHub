@@ -9,6 +9,28 @@ from django.urls import path
 from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
     Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent, VideoCounter, AutomaticPreviewImage
+from .forms import VideoAdminForm
+
+
+class CategoryListFilter(admin.SimpleListFilter):
+    title = 'category'  # Human-readable title which will be displayed in the right admin sidebar just above the filter options.
+    parameter_name = 'category'  # Parameter for the filter that will be used in the URL query.
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each tuple is the coded value for the option that will appear in the URL query.
+        The second element is the human-readable name for the option that will appear in the right sidebar.
+        """
+        categories = Category.objects.all()
+        return [(category.id, category.name) for category in categories]
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value provided in the query string and retrievable via `self.value()`.
+        """
+        if self.value():
+            return queryset.filter(categories__id=self.value())
+        return queryset
 
 
 class PlaylistVideoInline(admin.TabularInline):
@@ -48,12 +70,20 @@ class VideoDocumentInline(admin.TabularInline):
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
+    form = VideoAdminForm
+
     list_display = (
         'id', 'title', 'display_categories', 'duration', 'enabled', 'has_fulltext_search_data', 'structure', 'created_at',
     )
-    list_filter = ('enabled', 'structure', TagListFilter)  # Use custom tag filter
+    list_filter = ('enabled', 'structure', CategoryListFilter,)
     search_fields = ('title', 'description')
     inlines = [VideoCategoryInline, VideoDocumentInline]
+    fields = (
+        'title', 'description', 'authors', 'enabled', 'tags', 'ref_token', 'structure', 'preview_image', 'cover_image',
+        'automatic_preview_images', 'fulltext_search_data', 'raw_transcription_file', 'transcription_type',
+        'is_transcription_available', 'publication_date', 'created_at', 'updated_at'
+    )
+    readonly_fields = ('created_at', 'updated_at')
 
     def display_categories(self, obj):
         """Display categories related to the video."""
@@ -125,27 +155,6 @@ class DocumentCategoryInline(admin.TabularInline):
 class DocumentTagInline(admin.TabularInline):
     model = Document.tags.through
     extra = 1
-
-
-class CategoryListFilter(admin.SimpleListFilter):
-    title = 'category'  # Human-readable title which will be displayed in the right admin sidebar just above the filter options.
-    parameter_name = 'category'  # Parameter for the filter that will be used in the URL query.
-
-    def lookups(self, request, model_admin):
-        """
-        Returns a list of tuples. The first element in each tuple is the coded value for the option that will appear in the URL query.
-        The second element is the human-readable name for the option that will appear in the right sidebar.
-        """
-        categories = Category.objects.all()
-        return [(category.id, category.name) for category in categories]
-
-    def queryset(self, request, queryset):
-        """
-        Returns the filtered queryset based on the value provided in the query string and retrievable via `self.value()`.
-        """
-        if self.value():
-            return queryset.filter(categories__id=self.value())
-        return queryset
 
 
 class IsAssociatedWithVideoFilter(admin.SimpleListFilter):
