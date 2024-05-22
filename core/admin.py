@@ -78,10 +78,11 @@ class VideoAdmin(admin.ModelAdmin):
     )
     list_filter = ('enabled', 'structure', CategoryListFilter,)
     search_fields = ('title', 'description')
-    inlines = [TagInline, VideoCategoryInline, VideoDocumentInline]
+    inlines = [VideoCategoryInline, VideoDocumentInline]
     fields = (
         'title', 'description', 'authors', 'enabled', 'tags', 'ref_token', 'structure', 'preview_image', 'cover_image',
-        'automatic_preview_images', 'fulltext_search_data', 'raw_transcription_file', 'transcription_type',
+        # 'automatic_preview_images',
+        'fulltext_search_data', 'raw_transcription_file', 'transcription_type',
         'is_transcription_available', 'publication_date', 'created_at', 'updated_at'
     )
     readonly_fields = ('created_at', 'updated_at')
