@@ -1,0 +1,15 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block object-tools %}
+    {% if change and not is_popup %}
+        <ul class="object-tools">
+            <li>
+                <a href="{{ video_extract_frames_url }}" class="button" style="background-color: #f0ad4e; color: white;">
+                    {% trans "Extract frames from video" %}
+                </a>
+            </li>
+        </ul>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}

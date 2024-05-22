@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-28 12:08+0100\n"
+"POT-Creation-Date: 2024-05-22 16:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,119 +18,132 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: core/admin.py:94
+#: core/admin.py:43
+msgid "tags"
+msgstr ""
+
+#: core/admin.py:173
 msgid "Category Details"
 msgstr ""
 
-#: core/admin.py:95
+#: core/admin.py:174
 msgid "Hierarchy and Ordering"
 msgstr ""
 
-#: core/admin.py:96
+#: core/admin.py:175
 msgid "SEO Settings"
 msgstr ""
 
-#: core/admin.py:97
+#: core/admin.py:176
 msgid "Dates"
 msgstr ""
 
-#: core/models.py:74
+#: core/models.py:112
 msgid "Authors"
 msgstr ""
 
-#: core/models.py:82
+#: core/models.py:120
 msgid "Immagine di preview"
 msgstr ""
 
-#: core/models.py:84
+#: core/models.py:125 core/models.py:169 core/models.py:244
+msgid "Cover Image"
+msgstr ""
+
+#: core/models.py:128
 msgid "Dati per la ricerca fulltext"
 msgstr ""
 
-#: core/models.py:87
+#: core/models.py:131
 msgid "File Trascrizione Raw"
 msgstr ""
 
-#: core/models.py:90
+#: core/models.py:134
 msgid "vtt"
 msgstr ""
 
-#: core/models.py:91
+#: core/models.py:135
 msgid "Testo"
 msgstr ""
 
-#: core/models.py:94
+#: core/models.py:138
 msgid "Tipo Trascrizione"
 msgstr ""
 
-#: core/models.py:97 core/templates/core/gallery-v2.html:277
+#: core/models.py:141 core/templates/core/gallery-v2.html:286
+#: core/templates/core/gallery-v2.html:366
 msgid "Publication Date"
 msgstr "Data di pubblicazione"
 
-#: core/models.py:99
+#: core/models.py:143
 msgid "Created at"
 msgstr ""
 
-#: core/models.py:100
+#: core/models.py:144
 msgid "Updated at"
 msgstr ""
 
-#: core/models.py:284 registration/models.py:229
+#: core/models.py:312 registration/models.py:233
 msgid "Nome"
 msgstr ""
 
-#: core/models.py:285 registration/models.py:68
+#: core/models.py:313 registration/models.py:72
 msgid "Descrizione"
 msgstr ""
 
-#: core/models.py:286
+#: core/models.py:314
 msgid "Slug"
 msgstr ""
 
-#: core/models.py:288
+#: core/models.py:316
 msgid "Parent Category"
 msgstr ""
 
-#: core/models.py:289
+#: core/models.py:317
 msgid "Is Active"
 msgstr ""
 
-#: core/models.py:290
+#: core/models.py:318
 msgid "Icon"
 msgstr ""
 
-#: core/models.py:291
+#: core/models.py:319
 msgid "Created At"
 msgstr ""
 
-#: core/models.py:292
+#: core/models.py:320
 msgid "Updated At"
 msgstr ""
 
-#: core/models.py:293
+#: core/models.py:321
 #: venv/lib/python3.11/site-packages/django/forms/formsets.py:484
 #: venv/lib/python3.11/site-packages/django/forms/formsets.py:491
 msgid "Order"
 msgstr ""
 
-#: core/models.py:294 registration/models.py:89
+#: core/models.py:322 registration/models.py:93
 msgid "Meta Title"
 msgstr ""
 
-#: core/models.py:295 registration/models.py:90
+#: core/models.py:323 registration/models.py:94
 msgid "Meta Description"
 msgstr ""
 
-#: core/models.py:296 registration/models.py:91
+#: core/models.py:324 registration/models.py:95
 msgid "Meta Keywords"
 msgstr ""
 
-#: core/models.py:304 core/templates/core/gallery-v2.html:180
+#: core/models.py:332 core/templates/core/gallery-v2.html:180
 msgid "Category"
 msgstr "Categoria"
 
-#: core/models.py:305 core/templates/core/categories.html:8
+#: core/models.py:333 core/templates/core/categories.html:8
 msgid "Categories"
 msgstr "Categorie"
+
+#: core/templates/admin/video_change_form.html:8
+msgid "Extract frames from video"
+msgstr "Estrapola frame dal video"
 
 #: core/templates/core/categories.html:21
 msgid "View Category"
@@ -161,28 +174,31 @@ msgstr "Documento PDF"
 msgid "Close"
 msgstr "Chiudi"
 
-#: core/templates/core/gallery-v2.html:274
+#: core/templates/core/gallery-v2.html:275
+#: core/templates/core/gallery-v2.html:355
 msgid "Description"
 msgstr "Descrizione"
 
-#: core/templates/core/gallery-v2.html:280
+#: core/templates/core/gallery-v2.html:289
+#: core/templates/core/gallery-v2.html:369
 msgid "Author(s)"
 msgstr "Autore(i)"
 
-#: core/templates/core/gallery-v2.html:282
+#: core/templates/core/gallery-v2.html:291
 #: venv/lib/python3.11/site-packages/django/db/models/fields/__init__.py:1857
 msgid "Duration"
 msgstr "Durata"
 
-#: core/templates/core/gallery-v2.html:285
+#: core/templates/core/gallery-v2.html:294
 msgid "Documents associated to the video"
 msgstr "Documenti associati al video"
 
-#: core/templates/core/gallery-v2.html:294
+#: core/templates/core/gallery-v2.html:303
 msgid "View PDF"
 msgstr "Mostra PDF"
 
-#: core/templates/core/gallery-v2.html:314
+#: core/templates/core/gallery-v2.html:328
+#: core/templates/core/gallery-v2.html:379
 msgid "There are no videos or documents to show."
 msgstr "Non ci sono video o documenti da mostrare."
 
@@ -202,143 +218,143 @@ msgstr ""
 msgid "Additional Information"
 msgstr ""
 
-#: registration/models.py:55
+#: registration/models.py:59
 msgid "Virtuale"
 msgstr ""
 
-#: registration/models.py:56
+#: registration/models.py:60
 msgid "Fisico"
 msgstr ""
 
-#: registration/models.py:57
+#: registration/models.py:61
 msgid "Ibrido"
 msgstr ""
 
-#: registration/models.py:59
+#: registration/models.py:63
 msgid "Tipo di evento"
 msgstr ""
 
-#: registration/models.py:60
+#: registration/models.py:64
 msgid "data evento"
 msgstr ""
 
-#: registration/models.py:61
+#: registration/models.py:65
 msgid "ora inizio"
 msgstr ""
 
-#: registration/models.py:62
+#: registration/models.py:66
 msgid "ora fine"
 msgstr ""
 
-#: registration/models.py:63
+#: registration/models.py:67
 msgid "URL per partecipare"
 msgstr ""
 
-#: registration/models.py:64
+#: registration/models.py:68
 msgid "Speaker"
 msgstr ""
 
-#: registration/models.py:65
+#: registration/models.py:69
 msgid "Nome struttura"
 msgstr ""
 
-#: registration/models.py:66
+#: registration/models.py:70
 msgid "Matricola struttura"
 msgstr ""
 
-#: registration/models.py:67
+#: registration/models.py:71
 msgid "Titolo evento"
 msgstr ""
 
-#: registration/models.py:69
+#: registration/models.py:73
 msgid "Enabled"
 msgstr ""
 
-#: registration/models.py:71
+#: registration/models.py:75
 msgid "Categoria"
 msgstr ""
 
-#: registration/models.py:72
+#: registration/models.py:76
 msgid "Località"
 msgstr ""
 
-#: registration/models.py:73
+#: registration/models.py:77
 msgid "Required for physical and hybrid events."
 msgstr ""
 
-#: registration/models.py:74
+#: registration/models.py:78
 msgid "Numero massimo partecipanti"
 msgstr ""
 
-#: registration/models.py:75
+#: registration/models.py:79
 msgid "Termine iscrizione"
 msgstr ""
 
-#: registration/models.py:77
+#: registration/models.py:81
 msgid "Planned"
 msgstr ""
 
-#: registration/models.py:78
+#: registration/models.py:82
 msgid "Ongoing"
 msgstr ""
 
-#: registration/models.py:79
+#: registration/models.py:83
 msgid "Completed"
 msgstr ""
 
-#: registration/models.py:80
+#: registration/models.py:84
 msgid "Cancelled"
 msgstr ""
 
-#: registration/models.py:82
+#: registration/models.py:86
 msgid "Stato evento"
 msgstr ""
 
-#: registration/models.py:83
+#: registration/models.py:87
 msgid "Cancellato"
 msgstr ""
 
-#: registration/models.py:84
+#: registration/models.py:88
 msgid "Immagine evento"
 msgstr ""
 
-#: registration/models.py:99
+#: registration/models.py:103
 msgid "Information Event"
 msgstr "Evento Informativo"
 
-#: registration/models.py:100
+#: registration/models.py:104
 msgid "Information Events"
 msgstr "Eventi Informativi"
 
-#: registration/models.py:228
+#: registration/models.py:232
 msgid "Email"
 msgstr ""
 
-#: registration/models.py:230
+#: registration/models.py:234
 msgid "Cognome"
 msgstr ""
 
-#: registration/models.py:231
+#: registration/models.py:235
 msgid "Matricola"
 msgstr ""
 
-#: registration/models.py:237 registration/models.py:253
+#: registration/models.py:241 registration/models.py:257
 msgid "Subscriber"
 msgstr ""
 
-#: registration/models.py:238
+#: registration/models.py:242
 msgid "Subscribers"
 msgstr ""
 
-#: registration/models.py:252
+#: registration/models.py:256
 msgid "Evento"
 msgstr ""
 
-#: registration/models.py:262
+#: registration/models.py:266
 msgid "Event Participation"
 msgstr ""
 
-#: registration/models.py:263
+#: registration/models.py:267
 msgid "Event Participations"
 msgstr ""
 

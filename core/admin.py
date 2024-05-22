@@ -1,15 +1,16 @@
 from django.contrib import admin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Count
 from django.http import HttpResponseRedirect
-from django.urls import path
+from django.urls import path, reverse
 
 from mediamatrixhub.admin_utils import ExportExcelMixin
 from .models import Video, VideoPill, Playlist, Structure, Person, Tag, PlaylistVideo, Category, VideoCategory, \
     Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent, VideoCounter, AutomaticPreviewImage
 from .forms import VideoAdminForm
+from .signals import extract_frame
 
 
 class CategoryListFilter(admin.SimpleListFilter):
@@ -77,13 +78,14 @@ class VideoAdmin(admin.ModelAdmin):
     )
     list_filter = ('enabled', 'structure', CategoryListFilter,)
     search_fields = ('title', 'description')
-    inlines = [VideoCategoryInline, VideoDocumentInline]
+    inlines = [TagInline, VideoCategoryInline, VideoDocumentInline]
     fields = (
         'title', 'description', 'authors', 'enabled', 'tags', 'ref_token', 'structure', 'preview_image', 'cover_image',
         'automatic_preview_images', 'fulltext_search_data', 'raw_transcription_file', 'transcription_type',
         'is_transcription_available', 'publication_date', 'created_at', 'updated_at'
     )
     readonly_fields = ('created_at', 'updated_at')
+    change_form_template = "admin/video_change_form.html"  # Specify the custom template
 
     def display_categories(self, obj):
         """Display categories related to the video."""
@@ -91,6 +93,40 @@ class VideoAdmin(admin.ModelAdmin):
         return ', '.join([category.name for category in categories])
 
     display_categories.short_description = "Categories"
+
+    def video_extract_frames(self, request, video_id):
+
+        video = get_object_or_404(Video, pk=video_id)
+        if video.video_file:
+            video_path = video.video_file.path
+            times = [5, 10, 15]
+            for t in times:
+                try:
+                    frame_file = extract_frame(video_path, t)
+                    preview_image = AutomaticPreviewImage()
+                    preview_image.image.save(frame_file.name, frame_file)
+                    preview_image.save()
+                    video.automatic_preview_images.add(preview_image)
+                except Exception as e:
+                    self.message_user(request, f"Error extracting frame at {t} seconds: {e}", level='error')
+            video.save()
+            self.message_user(request, "Frames extracted successfully", level='success')
+        else:
+            self.message_user(request, "No video file found", level='error')
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('<path:video_id>/video_extract_frames/', self.admin_site.admin_view(self.video_extract_frames), name='video_extract_frames'),
+        ]
+        return custom_urls + urls
+
+    def render_change_form(self, request, context, *args, **kwargs):
+        context['video_extract_frames_url'] = reverse('admin:video_extract_frames', args=[context['object_id']])
+        return super().render_change_form(request, context, *args, **kwargs)
+
 
 
 @admin.register(VideoPill)
