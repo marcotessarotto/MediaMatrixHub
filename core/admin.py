@@ -128,7 +128,6 @@ class VideoAdmin(admin.ModelAdmin):
         return super().render_change_form(request, context, *args, **kwargs)
 
 
-
 @admin.register(VideoPill)
 class VideoPillAdmin(admin.ModelAdmin):
     list_display = ('video', 'start_time', 'stop_time')
