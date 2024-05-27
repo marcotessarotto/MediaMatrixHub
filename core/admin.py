@@ -159,8 +159,6 @@ class VideoAdmin(admin.ModelAdmin):
         video = get_object_or_404(Video, pk=video_id)
         if video.video_file:
 
-
-
             width, height = get_video_resolution(video.video_file.path)
             print(f"Resolution: {width, height}")
             print(f"w: {width}, h: {height}")
