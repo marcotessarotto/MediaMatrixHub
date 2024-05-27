@@ -9,6 +9,11 @@
                     {% trans "Extract frames from video" %}
                 </a>
             </li>
+            <li>
+                <a href="{{ calculate_video_duration_url }}" class="button" style="background-color: #f0ad4e; color: white;">
+                    {% trans "Calculate video duration and resolution" %}
+                </a>
+            </li>
         </ul>
     {% endif %}
     {{ block.super }}

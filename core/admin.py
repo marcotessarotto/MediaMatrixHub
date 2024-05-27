@@ -11,6 +11,7 @@ from .models import Video, VideoPill, Playlist, Structure, Person, Tag, Playlist
     Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent, VideoCounter, AutomaticPreviewImage
 from .forms import VideoAdminForm
 from .signals import extract_frame
+from .tools.movie_tools import get_video_resolution
 
 
 class CategoryListFilter(admin.SimpleListFilter):
@@ -96,6 +97,11 @@ class VideoAdmin(admin.ModelAdmin):
         'is_transcription_available',
         'video_file',
         'publication_date',
+        'duration',
+        'start_time',
+        'stop_time',
+        'width',
+        'height',
         'created_at',
         'updated_at'
     )
@@ -135,12 +141,37 @@ class VideoAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         custom_urls = [
             path('<path:video_id>/video_extract_frames/', self.admin_site.admin_view(self.video_extract_frames), name='video_extract_frames'),
+            path('<path:video_id>/calculate_video_duration/', self.admin_site.admin_view(self.calculate_video_duration), name='calculate_video_duration'),
         ]
+
+        print(f"custom_urls: {custom_urls}")
         return custom_urls + urls
 
     def render_change_form(self, request, context, *args, **kwargs):
         context['video_extract_frames_url'] = reverse('admin:video_extract_frames', args=[context['object_id']])
+        context['calculate_video_duration_url'] = reverse('admin:calculate_video_duration', args=[context['object_id']])
         return super().render_change_form(request, context, *args, **kwargs)
+
+    def calculate_video_duration(self, request, video_id):
+
+        print(f"calculate_video_duration: {video_id}")
+
+        video = get_object_or_404(Video, pk=video_id)
+        if video.video_file:
+
+            width, height = get_video_resolution(video.video_file.path)
+            print(f"Resolution: {width, height}")
+            print(f"w: {width}, h: {height}")
+            print(f"type of width: {type(width)}")
+            video.width = width
+            video.height = height
+
+            video.save()
+            self.message_user(request, "Video duration calculated successfully", level='success')
+        else:
+            self.message_user(request, "No video file found", level='error')
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @admin.register(VideoPill)
