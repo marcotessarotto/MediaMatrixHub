@@ -11,7 +11,7 @@ from .models import Video, VideoPill, Playlist, Structure, Person, Tag, Playlist
     Document, VideoDocument, DocumentCategory, MessageLog, VideoPlaybackEvent, VideoCounter, AutomaticPreviewImage
 from .forms import VideoAdminForm
 from .signals import extract_frame
-from .tools.movie_tools import get_video_resolution
+from .tools.movie_tools import get_video_resolution, get_video_duration
 
 
 class CategoryListFilter(admin.SimpleListFilter):
@@ -159,6 +159,8 @@ class VideoAdmin(admin.ModelAdmin):
         video = get_object_or_404(Video, pk=video_id)
         if video.video_file:
 
+
+
             width, height = get_video_resolution(video.video_file.path)
             print(f"Resolution: {width, height}")
             print(f"w: {width}, h: {height}")
@@ -167,6 +169,11 @@ class VideoAdmin(admin.ModelAdmin):
             video.height = height
 
             video.save()
+
+            video.duration = get_video_duration(video.video_file.path)
+            video.stop_time = video.duration
+            video.save(update_fields=['duration', 'stop_time', 'width', 'height'])
+
             self.message_user(request, "Video duration calculated successfully", level='success')
         else:
             self.message_user(request, "No video file found", level='error')
