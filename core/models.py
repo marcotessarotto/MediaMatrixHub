@@ -160,6 +160,16 @@ class Media(models.Model):
     def has_tags(self):
         return self.tags.exists()
 
+    def get_associated_image(self):
+        # if self.preview_image:
+        #     print(f"Associated image: {self.preview_image}")
+        #     print(f"Associated image URL: {self.preview_image.url}")
+        #
+        # if self.cover_image:
+        #     print(f"Associated cover image: {self.cover_image}")
+        #     print(f"Associated cover image URL: {self.cover_image.image.url}")
+        return self.preview_image or self.cover_image.image
+
 
 class Document(Media):
     categories = models.ManyToManyField('core.Category', through='DocumentCategory')

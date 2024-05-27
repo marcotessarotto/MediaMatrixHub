@@ -80,10 +80,24 @@ class VideoAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description')
     inlines = [VideoCategoryInline, VideoDocumentInline]
     fields = (
-        'title', 'description', 'authors', 'enabled', 'tags', 'ref_token', 'structure', 'preview_image', 'cover_image',
+        'title',
+        'description',
+        'authors',
+        'enabled',
+        'tags',
+        'ref_token',
+        'structure',
+        'preview_image',
+        'cover_image',
         # 'automatic_preview_images',
-        'fulltext_search_data', 'raw_transcription_file', 'transcription_type',
-        'is_transcription_available', 'publication_date', 'created_at', 'updated_at'
+        'fulltext_search_data',
+        'raw_transcription_file',
+        'transcription_type',
+        'is_transcription_available',
+        'video_file',
+        'publication_date',
+        'created_at',
+        'updated_at'
     )
     readonly_fields = ('created_at', 'updated_at')
     change_form_template = "admin/video_change_form.html"  # Specify the custom template
