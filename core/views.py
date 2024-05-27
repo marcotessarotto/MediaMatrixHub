@@ -14,6 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from core.models import Category, Media, Video, VideoPlaybackEvent, VideoCounter, get_category_documents
 from core.tools.stat_tools import process_http_request
+from mediamatrixhub import settings
 from mediamatrixhub.settings import DEBUG, APPLICATION_TITLE, TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT
 
 from mediamatrixhub.view_tools import is_private_ip
@@ -44,36 +45,39 @@ class ShowHomeWithCategory(CreateView):
 
     def get(self, request, category_slug, *args, **kwargs):
         http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
+        try:
+            if not request.user.is_authenticated or not request.user.is_superuser:
+                # Check if the IP is private
+                if http_real_ip != '' and not is_private_ip(http_real_ip) and not settings.DEBUG:
+                    syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
+                    return render(request, 'core/show_generic_message.html',
+                                  {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
 
-        if not request.user.is_authenticated or not request.user.is_superuser:
-            # Check if the IP is private
-            if http_real_ip != '' and not is_private_ip(http_real_ip) and not DEBUG:
-                syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
-                return render(request, 'core/show_generic_message.html',
-                              {'message': "403 Forbidden - accesso consentito solo da intranet"}, status=403)
+            process_http_request(request)
 
-        process_http_request(request)
+            category = get_object_or_404(Category, slug=category_slug)
 
-        category = get_object_or_404(Category, slug=category_slug)
+            # Querying each concrete model separately
+            videos_list = Video.objects.filter(categories=category).filter(enabled=True)
 
-        # print(f"Category: {category}")
-        # print(f"Category slug: {category_slug}")
+            context = {
+                'category': category,
+                'videos_list': videos_list,
+                'documents_list': get_category_documents(category),
+                'page_header': 'Category Home',
+                'APPLICATION_TITLE': settings.APPLICATION_TITLE,
+                'TECHNICAL_CONTACT_EMAIL': settings.TECHNICAL_CONTACT_EMAIL,
+                'TECHNICAL_CONTACT': settings.TECHNICAL_CONTACT,
+            }
 
-        # Querying each concrete model separately
-        videos_list = Video.objects.filter(categories=category).filter(enabled=True)
-        # print(f"list of videos: {videos_list}")
-
-        context = {
-            'category': category,
-            'videos_list': videos_list,
-            'documents_list': get_category_documents(category),
-            'page_header': 'Category Home',
-            'APPLICATION_TITLE': APPLICATION_TITLE,
-            'TECHNICAL_CONTACT_EMAIL': TECHNICAL_CONTACT_EMAIL,
-            'TECHNICAL_CONTACT': TECHNICAL_CONTACT,
-        }
-
-        return render(request, 'core/gallery-v2.html', context)
+            return render(request, 'core/gallery-v2.html', context)
+        except Category.DoesNotExist:
+            return render(request, 'core/show_generic_message.html',
+                          {'message': "Category not found"}, status=404)
+        except Exception as e:
+            syslog.syslog(syslog.LOG_ERR, f'Unexpected error: {str(e)}')
+            return render(request, 'core/show_generic_message.html',
+                          {'message': "An unexpected error occurred. Please try again later."}, status=500)
 
     def post(self, request, *args, **kwargs):
         pass

@@ -168,7 +168,15 @@ class Media(models.Model):
         # if self.cover_image:
         #     print(f"Associated cover image: {self.cover_image}")
         #     print(f"Associated cover image URL: {self.cover_image.image.url}")
-        return self.preview_image or self.cover_image.image
+
+        if self.preview_image:
+            return self.preview_image
+        elif self.cover_image and self.cover_image.image:
+            return self.cover_image.image
+        else:
+            return None
+
+        # return self.preview_image or self.cover_image.image
 
 
 class Document(Media):
