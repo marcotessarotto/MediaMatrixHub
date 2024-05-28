@@ -381,7 +381,7 @@ class Category(models.Model):
     @classmethod
     def get_categories_hierarchy_html_v2(cls):
         def render_category_row(category, level=0):
-            indent = '&nbsp;' * 8 * level
+            indent = '&nbsp;' * 12 * level
             row = f"<tr><td>{indent}{category.name}</td></tr>"
             for child in category.get_children_categories().filter(is_active=True):
                 row += render_category_row(child, level + 1)
