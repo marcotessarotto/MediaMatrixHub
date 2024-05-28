@@ -16,7 +16,7 @@
                 {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ category.name }}</h5>
-                    <p class="card-text">{{ category.description }}</p>
+                    <p class="card-text">{{ category.description|safe }}</p>
                     <!-- Link to show subcategories or category details -->
                     <a href="{% url 'show-category-home' category.slug %}" class="btn btn-primary">{% trans 'View Category' %}</a>
                 </div>
