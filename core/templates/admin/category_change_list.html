@@ -1,0 +1,14 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+    <div class="object-tools">
+        {% block object-tools-items %}
+            <ul class="object-tools">
+                <li>
+                    <a href="{% url 'admin:category_hierarchy' %}" class="button">Show Categories Hierarchy</a>
+                </li>
+            </ul>
+        {% endblock %}
+    </div>
+    {{ block.super }}
+{% endblock %}

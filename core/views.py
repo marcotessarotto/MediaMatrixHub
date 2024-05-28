@@ -172,3 +172,7 @@ def video_player_event(request):
     return JsonResponse({'status': 'success', 'message': 'ref_token received'})
 
 
+def category_hierarchy_view(request):
+    category_html_table = Category.get_categories_hierarchy_html()   #objects.first().get_html_table()  # Assuming there is at least one category
+    return render(request, 'core/admin/category_hierarchy.html', {'category_html_table': category_html_table})
+

@@ -144,7 +144,7 @@ class VideoAdmin(admin.ModelAdmin):
             path('<path:video_id>/calculate_video_duration/', self.admin_site.admin_view(self.calculate_video_duration), name='calculate_video_duration'),
         ]
 
-        print(f"custom_urls: {custom_urls}")
+        # print(f"custom_urls: {custom_urls}")
         return custom_urls + urls
 
     def render_change_form(self, request, context, *args, **kwargs):
@@ -154,7 +154,7 @@ class VideoAdmin(admin.ModelAdmin):
 
     def calculate_video_duration(self, request, video_id):
 
-        print(f"calculate_video_duration: {video_id}")
+        # print(f"calculate_video_duration: {video_id}")
 
         video = get_object_or_404(Video, pk=video_id)
         if video.video_file:
@@ -231,6 +231,24 @@ class CategoryAdmin(admin.ModelAdmin):
         form = super(CategoryAdmin, self).get_form(request, obj, **kwargs)
         # Custom form modifications can go here
         return form
+
+    change_list_template = "admin/category_change_list.html"  # Specify the custom template
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('category_hierarchy/', self.admin_site.admin_view(self.category_hierarchy_view), name='category_hierarchy'),
+        ]
+        return custom_urls + urls
+
+    def category_hierarchy_view(self, request):
+        category_html_table = Category.get_categories_hierarchy_html_v2() # objects.first().get_categories_hierarchy_html()  # Assuming there is at least one category
+        context = {
+            'category_html_table': category_html_table,
+            'opts': self.model._meta,
+            'title': 'Category Hierarchy',
+        }
+        return render(request, 'admin/category_hierarchy.html', context)
 
 
 class DocumentCategoryInline(admin.TabularInline):

@@ -5,6 +5,7 @@ import PIL
 from django.core.files.base import ContentFile
 from django.db.models import F, Count
 from django.utils import timezone
+from django.utils.html import format_html
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.translation import gettext_lazy as _
 
@@ -352,6 +353,49 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    # define a class method to get all the categories that have no parent
+    @classmethod
+    def get_root_categories(cls):
+        return cls.objects.filter(parent=None).filter(is_active=True).order_by('order')
+
+    @classmethod
+    def get_categories_hierarchy_html(cls):
+        def render_category_row(category, level=0):
+            indent = '&nbsp;' * 4 * level
+            row = f"<tr><td>{indent}{category.name}</td><td>{category.description}</td><td>{category.is_active}</td></tr>"
+            for child in category.get_children_categories().filter(is_active=True):
+                row += render_category_row(child, level + 1)
+            return row
+
+        # Get top-level categories (those without a parent)
+        top_categories = Category.objects.filter(parent__isnull=True).filter(is_active=True).order_by('order')
+
+        # Render table headers
+        table = "<table><thead><tr><th>Name</th><th>Description</th><th>Is Active</th></tr></thead><tbody>"
+        for category in top_categories:
+            table += render_category_row(category)
+        table += "</tbody></table>"
+        return format_html(table)
+
+    @classmethod
+    def get_categories_hierarchy_html_v2(cls):
+        def render_category_row(category, level=0):
+            indent = '&nbsp;' * 8 * level
+            row = f"<tr><td>{indent}{category.name}</td></tr>"
+            for child in category.get_children_categories().filter(is_active=True):
+                row += render_category_row(child, level + 1)
+            return row
+
+        # Get top-level categories (those without a parent)
+        top_categories = Category.objects.filter(parent__isnull=True).filter(is_active=True).order_by('order')
+
+        # Render table headers
+        table = "<table><thead><tr><th>Name</th></tr></thead><tbody>"
+        for category in top_categories:
+            table += render_category_row(category)
+        table += "</tbody></table>"
+        return format_html(table)
 
 
 class DocumentCategory(models.Model):
