@@ -5,10 +5,33 @@
         {% block object-tools-items %}
             <ul class="object-tools">
                 <li>
-                    <a href="{% url 'admin:category_hierarchy' %}" class="button">Show Categories Hierarchy</a>
+                    <a href="{% url 'admin:category_hierarchy' %}" class="button" id="show-hierarchy-button" target="_blank">Show Categories Hierarchy</a>
                 </li>
             </ul>
         {% endblock %}
     </div>
     {{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("DOM fully loaded and parsed");
+            var button = document.getElementById("show-hierarchy-button");
+            if (button) {
+                console.log("Button found:", button);
+                console.log("Button is an <a> tag:", button instanceof HTMLAnchorElement);
+                button.addEventListener("click", function(event) {
+                    console.log("Button clicked");
+                    event.preventDefault();
+                    console.log("Opening popup window with URL:", this.href);
+                    window.open(this.href, "CategoryHierarchy", "width=800,height=600,scrollbars=yes,resizable=yes");
+                });
+            } else {
+                console.log("Button not found");
+            }
+        });
+    </script>
+
 {% endblock %}
