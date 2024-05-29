@@ -305,3 +305,9 @@ class EventLog(models.Model):
         return f"EventLog #{self.id}  event_type={self.event_type} event_target={self.event_target} event_title={self.event_title} {self.created_at}"
 
 
+class SubscriptionAlertMessage(models.Model):
+    enabled = models.BooleanField(default=True, verbose_name=_("Enabled"))
+    message = models.TextField(verbose_name=_("Message"),null=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

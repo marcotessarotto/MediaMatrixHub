@@ -12,7 +12,7 @@ from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA
 from mediamatrixhub.view_tools import is_private_ip
 from .forms import SubscriberLoginForm, EventParticipationForm
 from .logic import create_event_log
-from .models import Subscriber, InformationEvent, EventParticipation, EventLog
+from .models import Subscriber, InformationEvent, EventParticipation, EventLog, SubscriptionAlertMessage
 
 
 def subscriber_login(request):
@@ -87,6 +87,13 @@ def manage_subscription(request):
 
     additional_message = f'Puoi visualizzare le registrazioni delle precedenti pillole informative a questo indirizzo: ' \
                          f'<a href="{VIDEOTECA_URL}" target="_blank">{VIDEOTECA_URL}</a>'
+
+    # get the latest enabled SubscriptionAlertMessage instance
+    try:
+        alert_message = SubscriptionAlertMessage.objects.filter(enabled=True).latest('created_at')
+        additional_message += f'<br><br><h2 align="center">{alert_message.message}</h2></a>'
+    except SubscriptionAlertMessage.DoesNotExist:
+        pass
 
     if request.method == 'POST':
         form = EventParticipationForm(request.POST)

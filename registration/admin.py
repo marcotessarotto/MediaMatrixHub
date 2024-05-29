@@ -4,11 +4,12 @@ from openpyxl.workbook import Workbook
 
 from django.utils.translation import gettext_lazy as _
 
-from .models import InformationEvent, Subscriber, EventParticipation, EventLog
+from .models import InformationEvent, Subscriber, EventParticipation, EventLog, SubscriptionAlertMessage
 
 
 class InformationEventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'event_type', 'event_date', 'event_start_time', 'speaker', 'enabled', 'ref_token', 'status')
+    list_display = (
+    'title', 'event_type', 'event_date', 'event_start_time', 'speaker', 'enabled', 'ref_token', 'status')
     list_filter = ('enabled', 'event_type', 'status', 'event_date')
     search_fields = ('title', 'description', 'speaker', 'structure_name')
     list_editable = ('enabled', 'status')
@@ -16,9 +17,9 @@ class InformationEventAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Event Details"), {
             'fields': (
-            'title', 'description', 'category', 'event_type', 'event_date', 'event_start_time', 'event_end_time',
-            'ref_token',
-            'status')
+                'title', 'description', 'category', 'event_type', 'event_date', 'event_start_time', 'event_end_time',
+                'ref_token',
+                'status')
         }),
         (_("Virtual Event Details"), {
             'fields': ('meeting_url',),
@@ -30,8 +31,9 @@ class InformationEventAdmin(admin.ModelAdmin):
         }),
         (_("Additional Information"), {
             'fields': (
-            'speaker', 'structure_name', 'structure_matricola', 'max_participants', 'registration_deadline', 'enabled',
-            'is_deleted', 'image', 'meta_title', 'meta_description', 'meta_keywords')
+                'speaker', 'structure_name', 'structure_matricola', 'max_participants', 'registration_deadline',
+                'enabled',
+                'is_deleted', 'image', 'meta_title', 'meta_description', 'meta_keywords')
         }),
     )
 
@@ -125,3 +127,10 @@ class EventLogAdmin(admin.ModelAdmin):
     list_filter = ['event_type']
 
 
+class SubscriptionAlertMessageAdmin(admin.ModelAdmin):
+    list_display = ('enabled', 'message', 'created_at', 'updated_at')
+    list_filter = ('enabled',)
+    search_fields = ('message',)
+
+
+admin.site.register(SubscriptionAlertMessage, SubscriptionAlertMessageAdmin)
