@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import CheckSubscriberView
 
 urlpatterns = [
     path('login/', views.subscriber_login, name='subscriber-login'),
@@ -7,5 +8,6 @@ urlpatterns = [
     path('manage-subscription/', views.manage_subscription, name='manage-subscription'),
     path('logout/', views.subscriber_logout, name='subscriber-logout'),
     path('events/download/<uuid:ref_token>/', views.download_ics_file, name='download_ics_event'),
+    path('check-subscriber/', CheckSubscriberView.as_view(), name='check-subscriber'),
 ]
 

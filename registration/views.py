@@ -1,11 +1,13 @@
 import syslog
 import uuid
 
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
+from django.views import View
 
+from mediamatrixhub import settings
 from mediamatrixhub.email_utils import my_send_email, MyTemporaryFile
 from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA_URL, APPLICATION_TITLE, \
     TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT, FROM_EMAIL, EMAIL_HOST
@@ -230,3 +232,32 @@ def download_ics_file(request, ref_token):
     response = HttpResponse(ics_content, content_type='text/calendar')
     response['Content-Disposition'] = f'attachment; filename="event_{event.ref_token}.ics"'
     return response
+
+
+class CheckSubscriberView(View):
+    def get(self, request, *args, **kwargs):
+
+        http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
+        try:
+            if not request.user.is_authenticated or not request.user.is_superuser:
+                # Check if the IP is private
+                if http_real_ip != '' and not is_private_ip(http_real_ip) and not settings.DEBUG:
+                    syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
+                    return JsonResponse({'error': '403 Forbidden - accesso consentito solo da intranet'}, status=403)
+
+            matricola = request.GET.get('matricola')
+            email = request.GET.get('email')
+
+            if not matricola or not email:
+                return JsonResponse({'error': 'matricola and email are required'}, status=400)
+
+            exists = Subscriber.objects.filter(matricola=matricola, email=email).exists()
+            return JsonResponse({'exists': exists})
+
+        except Exception as e:
+            syslog.syslog(syslog.LOG_ERR, f'Unexpected error: {str(e)}')
+            return JsonResponse({'error': 'An unexpected error occurred. Please try again later.'}, status=500)
+
+
+
+
