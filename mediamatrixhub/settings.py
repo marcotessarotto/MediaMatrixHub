@@ -71,7 +71,10 @@ PRODID = env('PRODID')
 
 INTERNET_DOMAIN = env('INTERNET_DOMAIN')
 
-WS_SRC_IP_ALLOWED = env('WS_SRC_IP_ALLOWED')
+try:
+    WS_SRC_IP_ALLOWED = env('WS_SRC_IP_ALLOWED', ).split()
+except:
+    WS_SRC_IP_ALLOWED = []
 
 # CKEditor 5 settings
 

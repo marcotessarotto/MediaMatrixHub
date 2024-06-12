@@ -10,7 +10,7 @@ from django.views import View
 from mediamatrixhub import settings
 from mediamatrixhub.email_utils import my_send_email, MyTemporaryFile
 from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA_URL, APPLICATION_TITLE, \
-    TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT, FROM_EMAIL, EMAIL_HOST
+    TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT, FROM_EMAIL, EMAIL_HOST, WS_SRC_IP_ALLOWED
 from mediamatrixhub.view_tools import is_private_ip
 from .forms import SubscriberLoginForm, EventParticipationForm
 from .logic import create_event_log
@@ -239,7 +239,11 @@ class CheckSubscriberView(View):
 
         http_real_ip = request.META.get('HTTP_X_REAL_IP', '')
         try:
-            if not request.user.is_authenticated or not request.user.is_superuser:
+            # syslog.syslog(syslog.LOG_INFO, f'CheckSubscriberView: http_real_ip: {http_real_ip}')
+            # syslog.syslog(syslog.LOG_INFO, f'CheckSubscriberView: WS_SRC_IP_ALLOWED: {WS_SRC_IP_ALLOWED}')
+            if http_real_ip in WS_SRC_IP_ALLOWED:
+                pass
+            elif not request.user.is_authenticated or not request.user.is_superuser:
                 # Check if the IP is private
                 if http_real_ip != '' and not is_private_ip(http_real_ip) and not settings.DEBUG:
                     syslog.syslog(syslog.LOG_ERR, f'IP address {http_real_ip} is not private')
