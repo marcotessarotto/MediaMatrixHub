@@ -255,8 +255,19 @@ class CheckSubscriberView(View):
             if not matricola or not email:
                 return JsonResponse({'error': 'matricola and email are required'}, status=400)
 
-            exists = Subscriber.objects.filter(matricola=matricola, email=email).exists()
-            return JsonResponse({'exists': exists})
+            subscriber = Subscriber.objects.filter(matricola=matricola, email=email).first()
+
+            if subscriber:
+                subscriber_data = {
+                    'id': subscriber.id,  # 'id': subscriber.id,
+                    'matricola': subscriber.matricola,
+                    'email': subscriber.email,
+                    'name': subscriber.name,
+                    'surname': subscriber.surname,
+                }
+                return JsonResponse({'exists': True, 'subscriber': subscriber_data})
+            else:
+                return JsonResponse({'exists': False})
 
         except Exception as e:
             syslog.syslog(syslog.LOG_ERR, f'Unexpected error: {str(e)}')
