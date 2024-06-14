@@ -292,6 +292,8 @@ class EventLog(models.Model):
     LOGIN = "LOGIN"
     LOGIN_FAILED = "LOGIN_FAILED"
     LOGIN_SUCCESS = "LOGIN_SUCCESS"
+    LOGIN_SUCCESS_JSON = "LOGIN_SUCCESS_JSON"
+    LOGIN_FAILED_JSON = "LOGIN_FAILED_JSON"
     REMAINDER_EMAIL_SENT = "REMAINDER_EMAIL_SENT"
 
     created_at = models.DateTimeField(auto_now_add=True)

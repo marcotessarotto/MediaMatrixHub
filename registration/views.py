@@ -265,8 +265,22 @@ class CheckSubscriberView(View):
                     'name': subscriber.name,
                     'surname': subscriber.surname,
                 }
+
+                create_event_log(
+                    event_type=EventLog.LOGIN_SUCCESS_JSON,
+                    event_title="Subscriber login success - JSON response",
+                    event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip}",
+                )
+
                 return JsonResponse({'exists': True, 'subscriber': subscriber_data})
             else:
+
+                create_event_log(
+                    event_type=EventLog.LOGIN_FAILED_JSON,
+                    event_title="Subscriber login failed - JSON response",
+                    event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip}",
+                )
+
                 return JsonResponse({'exists': False})
 
         except Exception as e:
