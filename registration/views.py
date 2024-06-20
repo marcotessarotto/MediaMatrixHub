@@ -13,6 +13,7 @@ from mediamatrixhub.settings import DEBUG, DEBUG_EMAIL, SUBJECT_EMAIL, VIDEOTECA
     TECHNICAL_CONTACT_EMAIL, TECHNICAL_CONTACT, FROM_EMAIL, EMAIL_HOST, WS_SRC_IP_ALLOWED
 from mediamatrixhub.view_tools import is_private_ip
 from .forms import SubscriberLoginForm, EventParticipationForm
+from .json_tools import lookup_subscriber_json_data_by_matricola
 from .logic import create_event_log
 from .models import Subscriber, InformationEvent, EventParticipation, EventLog, SubscriptionAlertMessage
 
@@ -258,12 +259,22 @@ class CheckSubscriberView(View):
             subscriber = Subscriber.objects.filter(matricola=matricola, email=email).first()
 
             if subscriber:
+
+                extended_data = lookup_subscriber_json_data_by_matricola(subscriber.matricola)
+
+                # get data at position 5
+                uaf = extended_data[5]
+
+                structure = extended_data[6]
+
                 subscriber_data = {
                     'id': subscriber.id,  # 'id': subscriber.id,
                     'matricola': subscriber.matricola,
                     'email': subscriber.email,
                     'name': subscriber.name,
                     'surname': subscriber.surname,
+                    'uaf': uaf,
+                    'structure': structure,
                 }
 
                 create_event_log(

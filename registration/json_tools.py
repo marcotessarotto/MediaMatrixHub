@@ -30,3 +30,29 @@ def parse_json_file_to_dict_by_matricola(file_name):
 # Example usage:
 # result = parse_json_file_to_dict_by_matricola('path_to_your_file.json')
 # print(result)
+
+
+__preloaded_dict = {}
+
+
+def lookup_subscriber_json_data_by_matricola(matricola):
+    """
+    Lookup a person by their 'matricola'.
+
+    Args:
+    matricola (str): The 'matricola' of the person to lookup.
+
+    Returns:
+    list: The details of the person with the given 'matricola'.
+    """
+    global __preloaded_dict
+    if not __preloaded_dict:
+        __preloaded_dict = parse_json_file_to_dict_by_matricola('registration/res/persfvg_dump_persone_entita.json')
+    return __preloaded_dict.get(matricola, None)
+
+
+result = parse_json_file_to_dict_by_matricola('./res/persfvg_dump_persone_entita.json')
+print(result)
+
+for key, value in result.items():
+    print(key, value)
