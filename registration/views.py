@@ -142,14 +142,14 @@ def manage_subscription(request):
 
             # invia email riassuntiva all'utente
             if subscriptions:
-                message_body = f'Ciao {subscriber.surname},<br><br>' \
+                message_body = f'Ciao {subscriber.name},<br><br>' \
                                f'hai aggiornato con successo le tue iscrizioni alle prossime pillole informative.<br><br>' \
                                f'Ecco un riepilogo delle future pillole informative a cui ti sei iscritto:<br><br>' \
                                f'{"<br><hr>".join([f"{subscription}" for subscription in subscriptions])}<br><br>' \
                                f"{additional_message}<br><br>" \
                                f'Grazie per la tua partecipazione.<br><br>'
             else:
-                message_body = f'Ciao {subscriber.surname},<br><br>' \
+                message_body = f'Ciao {subscriber.name},<br><br>' \
                                f'hai aggiornato con successo le tue iscrizioni alle pillole informative.<br><br>' \
                                f'Ecco un riepilogo delle pillole informative a cui ti sei iscritto:<br><br>' \
                                f'Al momento non sei iscritto ad alcuna futura pillola informativa.<br><br>' \
