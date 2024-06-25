@@ -256,16 +256,22 @@ class CheckSubscriberView(View):
             if not matricola or not email:
                 return JsonResponse({'error': 'matricola and email are required'}, status=400)
 
+            syslog.syslog(syslog.LOG_INFO, f'CheckSubscriberView: matricola: {matricola} email: {email} http_real_ip: {http_real_ip}')
+
             subscriber = Subscriber.objects.filter(matricola=matricola, email=email).first()
 
             if subscriber:
 
                 extended_data = lookup_subscriber_json_data_by_matricola(subscriber.matricola)
 
-                # get data at position 5
-                uaf = extended_data[5]
+                if not extended_data:
+                    uaf = 'dato non presente'
+                    structure = 'dato non presente'
+                else:
+                    # get data at position 5
+                    uaf = extended_data[5]
 
-                structure = extended_data[6]
+                    structure = extended_data[6]
 
                 subscriber_data = {
                     'id': subscriber.id,  # 'id': subscriber.id,
