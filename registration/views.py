@@ -264,7 +264,7 @@ class CheckSubscriberView(View):
 
                 extended_data = lookup_subscriber_json_data_by_matricola(subscriber.matricola)
 
-                if not extended_data:
+                if extended_data is None:
                     uaf = 'dato non presente'
                     structure = 'dato non presente'
                 else:
@@ -303,7 +303,9 @@ class CheckSubscriberView(View):
         except Exception as e:
             syslog.syslog(syslog.LOG_ERR, f'Unexpected error: {str(e)}')
             return JsonResponse({'error': 'An unexpected error occurred. Please try again later.'}, status=500)
-
+        except TypeError as e:
+            syslog.syslog(syslog.LOG_ERR, f'Unexpected error: {str(e)}')
+            return JsonResponse({'error': 'An unexpected error occurred. Please try again later.'}, status=500)
 
 
 
