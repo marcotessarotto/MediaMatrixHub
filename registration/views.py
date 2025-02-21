@@ -1,6 +1,7 @@
 import syslog
 import uuid
 
+from django.core.exceptions import MultipleObjectsReturned
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -34,7 +35,42 @@ def subscriber_login(request):
             matricola = form.cleaned_data['matricola']
             email = form.cleaned_data['email']
             try:
-                subscriber = Subscriber.objects.get(matricola=matricola, email=email)
+                try:
+                    subscriber = Subscriber.objects.get(matricola=matricola, email=email)
+                except MultipleObjectsReturned:
+
+                    message_subject = f'{SUBJECT_EMAIL} Subscriber multiplo - WARNING'
+
+                    message_body = f'Ciao admin,<br><br>' \
+                                    f'ho riscontrato più di un utente con la stessa matricola e email:<br><br>' \
+                                    f'matricola: {matricola}<br>' \
+                                    f'email: {email}<br><br>' \
+                                    f'Per favore, controlla il database e risolvi il problema.<br><br>' \
+                                    f'Grazie.<br><br>' \
+                                    f'Questo messaggio è stato inviato automaticamente dal sistema.<br><br>'
+
+                    my_send_email(
+                        FROM_EMAIL,
+                        [TECHNICAL_CONTACT_EMAIL],
+                        message_subject,
+                        message_body,
+                        bcc_addresses=[DEBUG_EMAIL],
+                        attachments=[],
+                        email_host=EMAIL_HOST
+                    )
+
+                    create_event_log(
+                        event_type=EventLog.MULTIPLE_SUBSCRIBER_DETECTED,
+                        event_title="Multiple subscriber detected",
+                        event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip}",
+                    )
+
+                    subscribers = Subscriber.objects.filter(matricola=matricola, email=email)
+                    # Handle the case where multiple subscribers are found
+                    # For example, you can select the first one or raise an error
+                    subscriber = subscribers.first()  # or handle as needed
+                except Subscriber.DoesNotExist:
+                    subscriber = None  # or handle the case where no subscriber is found
 
                 create_event_log(
                     event_type=EventLog.LOGIN_SUCCESS,
