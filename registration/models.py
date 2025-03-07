@@ -234,6 +234,8 @@ class Subscriber(models.Model):
     surname = models.CharField(verbose_name=_("Cognome"), max_length=255)
     matricola = models.CharField(verbose_name=_("Matricola"), max_length=255)
 
+    enabled = models.BooleanField(default=True, verbose_name=_("Enabled"))
+
     def __str__(self):
         return f"{self.name} {self.surname}"
 
@@ -291,9 +293,11 @@ class EventLog(models.Model):
     SUBSCRIPTION_REMOVED = "SUBSCRIPTION_REMOVED"
     LOGIN = "LOGIN"
     LOGIN_FAILED = "LOGIN_FAILED"
+    LOGIN_FAILED_USER_DISABLED = "LOGIN_FAILED_USER_DISABLED"
     LOGIN_SUCCESS = "LOGIN_SUCCESS"
     LOGIN_SUCCESS_JSON = "LOGIN_SUCCESS_JSON"
     LOGIN_FAILED_JSON = "LOGIN_FAILED_JSON"
+    LOGIN_FAILED_JSON_USER_DISABLED = "LOGIN_FAILED_JSON_USER_DISABLED"
     REMAINDER_EMAIL_SENT = "REMAINDER_EMAIL_SENT"
     MULTIPLE_SUBSCRIBER_DETECTED = "MULTIPLE_SUBSCRIBER_DETECTED"
 

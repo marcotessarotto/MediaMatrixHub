@@ -47,6 +47,8 @@ class Command(BaseCommand):
 
         not_valid = {}
 
+        matricola_email = {}
+
         for k, v in data2.items():
 
             print(f"key: {k}")
@@ -56,6 +58,8 @@ class Command(BaseCommand):
             email = v[1]
             surname = v[3]
             name = v[4]
+
+            matricola_email[matricola] = email
 
             print()
             print(f"matricola: {matricola}")
@@ -88,6 +92,34 @@ class Command(BaseCommand):
         print()
 
         print(not_valid)
+
+        print()
+
+        print("*************")
+
+        # now check that each Subscriber instance exists in the data2 dictionary
+
+        counter = 0
+
+        for subscriber in Subscriber.objects.all():
+            matricola = subscriber.matricola
+            email = subscriber.email
+
+            if not subscriber.enabled:
+                continue
+
+            if matricola not in matricola_email:
+                print(f"Subscriber with matricola: {matricola} and email: {email} not found in matricola_email.")
+                counter += 1
+
+                subscriber.enabled = False
+                subscriber.save()
+            else:
+                # print(f"Subscriber with matricola: {matricola} and email: {email} found in matricola_email.")
+                continue
+
+        print(f"Total subscribers not found in matricola_email: {counter}")
+        print("*************")
 
 
 

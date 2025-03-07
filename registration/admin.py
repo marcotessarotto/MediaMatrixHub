@@ -63,8 +63,8 @@ admin.site.register(InformationEvent, InformationEventAdmin)
 
 @admin.register(Subscriber)
 class SubscriberAdmin(admin.ModelAdmin):
-    list_display = ('email', 'name', 'surname', 'matricola')
-    list_filter = ('name', 'surname')
+    list_display = ('email', 'name', 'surname', 'matricola', 'enabled')
+    list_filter = ('enabled', )
     search_fields = ('email', 'name', 'surname', 'matricola')
 
 

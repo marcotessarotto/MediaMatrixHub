@@ -72,17 +72,27 @@ def subscriber_login(request):
                 except Subscriber.DoesNotExist:
                     subscriber = None  # or handle the case where no subscriber is found
 
-                create_event_log(
-                    event_type=EventLog.LOGIN_SUCCESS,
-                    event_title="Subscriber login success",
-                    event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip}",
-                )
 
-                # login(request, user, backend=AUTHENTICATION_BACKENDS[0])
+                if not subscriber.enabled:
+                    create_event_log(
+                        event_type=EventLog.LOGIN_FAILED_USER_DISABLED,
+                        event_title="Subscriber login failed - user disabled",
+                        event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip}",
+                    )
 
-                # Simulate login by saving subscriber's ID in session (example)
-                request.session['subscriber_id'] = subscriber.id
-                return redirect('manage-subscription')
+                    messages.error(request, 'errore: matricola o email non validi')
+                else:
+                    create_event_log(
+                        event_type=EventLog.LOGIN_SUCCESS,
+                        event_title="Subscriber login success",
+                        event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip}",
+                    )
+
+                    # login(request, user, backend=AUTHENTICATION_BACKENDS[0])
+
+                    # Simulate login by saving subscriber's ID in session (example)
+                    request.session['subscriber_id'] = subscriber.id
+                    return redirect('manage-subscription')
             except Subscriber.DoesNotExist:
 
                 create_event_log(
@@ -297,6 +307,15 @@ class CheckSubscriberView(View):
             subscriber = Subscriber.objects.filter(matricola=matricola, email=email).first()
 
             if subscriber:
+
+                if not subscriber.enabled:
+                    create_event_log(
+                        event_type=EventLog.LOGIN_FAILED_JSON_USER_DISABLED,
+                        event_title="Subscriber login failed - user NOT ENABLED - JSON response",
+                        event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip} user is not enabled",
+                    )
+
+                    return JsonResponse({'exists': False})
 
                 extended_data = lookup_subscriber_json_data_by_matricola(subscriber.matricola)
 
