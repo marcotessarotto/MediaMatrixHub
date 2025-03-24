@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.db.models import Count
 from django.utils import formats, timezone
 
+from core.logic import get_video_playback_events_totals
 from mediamatrixhub.email_utils import my_send_email
 from mediamatrixhub.settings import SUBJECT_EMAIL, MONITOR_EMAIL_ADDRESSES, FROM_EMAIL, EMAIL_HOST
 from registration.models import InformationEvent
@@ -20,6 +21,10 @@ class Command(BaseCommand):
         # Fetch enabled events with participation count
         enabled_events_with_counts = InformationEvent.enabled_events.with_participation_count().order_by(
             'event_date', 'event_start_time')
+
+        video_playback_events_totals = get_video_playback_events_totals()
+
+        # print(video_playback_events_totals)
 
         if not send_email:
 
@@ -44,6 +49,18 @@ class Command(BaseCommand):
                     event_info = f"#{event.id}, {event.title}, {formatted_event_date}: {event.participation_count} iscrizioni<br>"
                     self.stdout.write(event_info)
                     email_body += event_info
+
+                email_body += "<br><br>"
+
+                # add video_playback_events_totals to email_body
+                email_body += "<h1>Conteggio visualizzazioni pillole informative</h1><br>"
+                email_body += "<p>Conteggio delle visualizzazioni delle pillole informative da parte di utenti unici</p><br>"
+                for video_title, count in video_playback_events_totals.items():
+                    video_info = f"{video_title}: {count} visualizzazioni<br>"
+                    self.stdout.write(video_info)
+                    email_body += video_info
+
+                email_body += "<br><br>"
 
                 current_date = timezone.now().date()
                 # add today date to email_body
