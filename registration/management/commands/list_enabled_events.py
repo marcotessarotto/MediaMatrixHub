@@ -24,8 +24,6 @@ class Command(BaseCommand):
 
         video_playback_events_totals = get_video_playback_events_totals()
 
-        # print(video_playback_events_totals)
-
         if not send_email:
 
             if enabled_events_with_counts:
