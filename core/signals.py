@@ -5,7 +5,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.db.models.signals import post_save, post_delete, m2m_changed
 from django.dispatch import receiver
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 
 from core.models import Document, Video, AutomaticPreviewImage
 from core.tools.movie_tools import get_video_resolution, get_video_duration, extract_text_from_vtt

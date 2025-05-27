@@ -1,7 +1,7 @@
 import re
-
-from moviepy.editor import VideoFileClip
 import datetime
+
+from moviepy import VideoFileClip
 
 
 def get_video_duration(video_path):
