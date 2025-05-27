@@ -128,7 +128,10 @@ class Media(models.Model):
 
     fulltext_search_data = models.TextField(blank=True, verbose_name=_("Dati per la ricerca fulltext"))
 
-    raw_transcription_file = models.FileField(upload_to=calc_directory_path, null=True, blank=True,
+    raw_transcription_file = models.FileField(upload_to=calc_directory_path,
+                                              null=True,
+                                              blank=True,
+                                              max_length = 512,
                                               verbose_name=_("File Trascrizione Raw"))
     # raw_transcription = models.TextField(blank=True, verbose_name=_("Trascrizione raw"))
     TRANSCRIPTION_TYPE_CHOICES = [
@@ -182,7 +185,7 @@ class Media(models.Model):
 
 class Document(Media):
     categories = models.ManyToManyField('core.Category', through='DocumentCategory')
-    document_file = models.FileField(upload_to=calc_directory_path, )
+    document_file = models.FileField(upload_to=calc_directory_path, max_length=512)
 
     cover_image = models.ForeignKey(AutomaticPreviewImage, related_name='cover_for_document', on_delete=models.SET_NULL,
                                     blank=True, null=True, verbose_name=_("Cover Image"))
@@ -249,7 +252,7 @@ class VideoDocument(models.Model):
 class Video(Media):
     categories = models.ManyToManyField('core.Category', through='VideoCategory')
 
-    video_file = models.FileField(upload_to=calc_directory_path, )
+    video_file = models.FileField(upload_to=calc_directory_path, max_length = 512)
     duration = models.DurationField(null=True, blank=True)
     start_time = models.DurationField(null=True, blank=True)
     stop_time = models.DurationField(null=True, blank=True)
