@@ -50,4 +50,6 @@ def lookup_subscriber_json_data_by_matricola(matricola):
         __preloaded_dict = parse_json_file_to_dict_by_matricola('registration/res/persfvg_dump_persone_entita.json')
     return __preloaded_dict.get(matricola, None)
 
-
+# __preloaded_
+#
+# def get_dump_final():
