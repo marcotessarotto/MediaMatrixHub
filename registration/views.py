@@ -281,6 +281,7 @@ def download_ics_file(request, ref_token):
     return response
 
 
+# this view is called by other applications
 class CheckSubscriberView(View):
     def get(self, request, *args, **kwargs):
 

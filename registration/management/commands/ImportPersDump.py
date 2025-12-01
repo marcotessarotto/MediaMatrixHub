@@ -70,6 +70,8 @@ class Command(BaseCommand):
 
             if not email:
                 print(f"Skipping subscriber with  key={k} matricola: {matricola} and email: {email}.")
+                print("***")
+                print()
 
                 not_valid[k] = v
                 continue
@@ -78,12 +80,16 @@ class Command(BaseCommand):
 
             if Subscriber.objects.filter(matricola=matricola, email=email).exists():
                 print(f"Subscriber with matricola: {matricola} and email: {email} already exists.")
+                print("***")
+                print()
                 continue
 
             # if not, create a new instance of Subscriber
             create_subscriber(email, name, surname, matricola)
 
             print(f"Subscriber with matricola: {matricola} and email: {email} created.")
+            print("***")
+            print()
 
             counter += 1
 
