@@ -296,8 +296,6 @@
                     <p>
                       <button type="button"
                               class="btn btn-primary view-pdf-button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#pdfViewerModal"
                               data-pdf-url="{{ doc.document_file.url }}">
                         {% trans "View PDF" %}: {{ doc.title}}
                       </button>
@@ -490,19 +488,21 @@
         }, false);
     });
 
+    var modalEl = document.getElementById('pdfViewerModal');
+
     document.querySelectorAll('.view-pdf-button').forEach(button => {
       button.addEventListener('click', function() {
         var pdfUrl = this.getAttribute('data-pdf-url'); // Get the PDF URL
         var modalIframe = document.querySelector('#pdfViewerModal iframe');
         modalIframe.src = pdfUrl; // Set the iframe src to the PDF URL
-        var pdfViewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
+        var pdfViewerModal = bootstrap.Modal.getOrCreateInstance(modalEl);
         pdfViewerModal.show(); // Show the modal
       });
     });
 
 
     // Optional: Clear the iframe src when the modal is closed to stop the PDF from displaying
-    $('#pdfViewerModal').on('hidden.bs.modal', function (e) {
+    modalEl.addEventListener('hidden.bs.modal', function () {
       var modalIframe = document.querySelector('#pdfViewerModal iframe');
       modalIframe.src = ''; // Clear the iframe source
     });
