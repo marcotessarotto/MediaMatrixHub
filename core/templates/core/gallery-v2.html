@@ -120,6 +120,12 @@
             height: 8rem;
         }
 
+        .media-wrapper .mejs__container.show-overlay .mejs__overlay,
+        .media-wrapper .mejs__container.show-overlay .mejs__overlay-play {
+            display: flex !important;
+            opacity: 1;
+        }
+
 
     </style>
   <!-- media element -->
@@ -456,6 +462,14 @@
 
   document.addEventListener('DOMContentLoaded', function() {
 
+    function setOverlayVisible(video, visible) {
+        var container = video.closest('.mejs__container');
+        if (!container) {
+            return;
+        }
+        container.classList.toggle('show-overlay', visible);
+    }
+
     // Select all video elements or a specific class if they have one
     $('video').each(function() {
         // 'this' refers to the current video element in the loop
@@ -465,6 +479,7 @@
 
         // Add event listener for the play event
         video.addEventListener('play', function() {
+            setOverlayVisible(video, false);
             console.log("Video is now playing");
 
             // Extract the video file URL from the source element
@@ -503,6 +518,14 @@
             } else if (video.msRequestFullscreen) { // IE/Edge
                 video.msRequestFullscreen();
             }
+        }, false);
+
+        video.addEventListener('pause', function() {
+            setOverlayVisible(video, true);
+        }, false);
+
+        video.addEventListener('ended', function() {
+            setOverlayVisible(video, true);
         }, false);
     });
 
