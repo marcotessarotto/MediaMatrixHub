@@ -115,6 +115,10 @@ msgstr ""
 msgid "Updated At"
 msgstr ""
 
+#: core/templates/core/gallery-v2.html:269
+msgid "Video index"
+msgstr "Indice dei video"
+
 #: core/models.py:321
 #: venv/lib/python3.11/site-packages/django/forms/formsets.py:484
 #: venv/lib/python3.11/site-packages/django/forms/formsets.py:491

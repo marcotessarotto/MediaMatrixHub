@@ -126,6 +126,33 @@
             opacity: 1;
         }
 
+        .video-index {
+            margin: 20px 0 10px;
+            padding: 0;
+            list-style: none;
+            columns: 2;
+            column-gap: 24px;
+        }
+
+        .video-index li {
+            break-inside: avoid;
+            margin-bottom: 6px;
+        }
+
+        .video-index a {
+            text-decoration: none;
+        }
+
+        .video-anchor {
+            scroll-margin-top: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .video-index {
+                columns: 1;
+            }
+        }
+
 
     </style>
   <!-- media element -->
@@ -242,6 +269,21 @@
   </div>
 </div><!-- End Page Header -->
 
+{% if videos_list|length > 4 %}
+<section class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2>{% trans "Video index" %}</h2>
+      <ul class="video-index">
+        {% for item in videos_list|dictsort:"title" %}
+          <li><a href="#video-{{ item.pk }}">{{ item.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 
 
 
@@ -278,7 +320,7 @@
 
 <!--          <div class="col-xl-3 col-lg-4 col-md-6">-->
           <div class="col-xl-6 col-lg-8 col-md-6"> <!-- Adjusted column sizes here -->
-            <div class="gallery-item h-100">
+            <div class="gallery-item h-100{% if item.is_video %} video-anchor{% endif %}"{% if item.is_video %} id="video-{{ item.pk }}"{% endif %}>
               {% if item.is_video %}
                 <div class="media-wrapper">
                   <video id="player{{ forloop.counter }}"
