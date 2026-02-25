@@ -285,7 +285,15 @@
       <h2>{% trans "Video index" %}</h2>
       <ul class="video-index">
         {% for item in videos_list|dictsort:"title" %}
-          <li><a href="#video-{{ item.pk }}">{{ item.title }}</a></li>
+          <li>
+            <a href="#video-{{ item.pk }}">{{ item.title }}</a>
+            {% if item.publication_date %}
+              <span> — {% trans "Publication Date" %}: {{ item.publication_date|date:"SHORT_DATE_FORMAT" }}</span>
+            {% endif %}
+            {% if item.authors %}
+              <span> — {% trans "Author" %}: {{ item.authors }}</span>
+            {% endif %}
+          </li>
         {% endfor %}
       </ul>
     </div>

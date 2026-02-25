@@ -42,6 +42,9 @@ msgstr ""
 msgid "Authors"
 msgstr ""
 
+msgid "Author"
+msgstr "Autore"
+
 #: core/models.py:120
 msgid "Immagine di preview"
 msgstr ""
