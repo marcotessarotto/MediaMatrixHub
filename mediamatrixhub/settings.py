@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import locale
 import os
+import syslog
 from pathlib import Path
 import environ
 
@@ -347,3 +348,6 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 MAX_IMAGE_WIDTH = 800
 MAX_IMAGE_HEIGHT = 800
+
+syslog.openlog(logoption=syslog.LOG_PID, facility=syslog.LOG_INFO)
+syslog.syslog('processing MediaMatrixHub settings finished...')

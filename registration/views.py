@@ -34,6 +34,8 @@ def subscriber_login(request):
         if form.is_valid():
             matricola = form.cleaned_data['matricola']
             email = form.cleaned_data['email']
+
+            syslog.syslog(syslog.LOG_INFO, f'SubscriberLoginForm: matricola: {matricola} email: {email} http_real_ip: {http_real_ip}')
             try:
                 try:
                     subscriber = Subscriber.objects.get(matricola=matricola, email=email)
@@ -101,6 +103,16 @@ def subscriber_login(request):
                     event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip}",
                 )
 
+                messages.error(request, 'errore: matricola o email non validi')
+
+            except Exception as e:
+                create_event_log(
+                    event_type=EventLog.LOGIN_FAILED_UNKNOWN,
+                    event_title="Subscriber login failed - unknown error",
+                    event_data=f"matricola: {matricola} email: {email} http_real_ip: {http_real_ip} error: {str(e)}",
+                )
+
+                syslog.syslog(syslog.LOG_ERR, f'SubscriberLoginForm: matricola: {matricola} email: {email} http_real_ip: {http_real_ip} error: {str(e)}')
                 messages.error(request, 'errore: matricola o email non validi')
 
     else:
