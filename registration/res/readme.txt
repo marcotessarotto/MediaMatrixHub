@@ -1,4 +1,4 @@
 
-update the dump file pers.... in the dashboard
+update the dump file "pers dump person entita" in the dashboard
 
 use ImportPersDump to import the dump file
