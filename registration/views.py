@@ -331,15 +331,40 @@ class CheckSubscriberView(View):
                     return JsonResponse({'exists': False})
 
                 extended_data = lookup_subscriber_json_data_by_matricola(subscriber.matricola)
+                missing_value = 'dato non presente'
 
-                if extended_data is None:
-                    uaf = 'dato non presente'
-                    structure = 'dato non presente'
+                if not isinstance(extended_data, (list, tuple)):
+                    # Il dato esteso può mancare o avere un formato inatteso.
+                    syslog.syslog(
+                        syslog.LOG_WARNING,
+                        'CheckSubscriberView: extended subscriber data missing or not a list/tuple'
+                    )
+                    uaf = missing_value
+                    structure = missing_value
                 else:
-                    # get data at position 5
-                    uaf = extended_data[5]
+                    missing_fields = []
+                    if len(extended_data) <= 5:
+                        missing_fields.append('uaf (index 5)')
+                    if len(extended_data) <= 6:
+                        missing_fields.append('structure (index 6)')
 
-                    structure = extended_data[6]
+                    if missing_fields:
+                        syslog.syslog(
+                            syslog.LOG_WARNING,
+                            f'CheckSubscriberView: incomplete extended subscriber data '
+                            f'(length={len(extended_data)}, missing={", ".join(missing_fields)})'
+                        )
+
+                    uaf = (
+                        extended_data[5]
+                        if len(extended_data) > 5 and extended_data[5] not in (None, '')
+                        else missing_value
+                    )
+                    structure = (
+                        extended_data[6]
+                        if len(extended_data) > 6 and extended_data[6] not in (None, '')
+                        else missing_value
+                    )
 
                 subscriber_data = {
                     'id': subscriber.id,  # 'id': subscriber.id,
