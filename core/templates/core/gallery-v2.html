@@ -98,6 +98,12 @@
             margin-bottom: 24px;
         }
 
+        .document-description {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e9ef;
+        }
+
         .players {
             max-width: 800px;
         }
@@ -431,7 +437,7 @@
                   <div class="video-info mt-2">
                     <br><br>
                     {% if item.description %}
-                    <p>{% trans "Description" %}: {{ item.description|safe }}</p>
+                    <div class="document-description">{% trans "Description" %}: {{ item.description|safe }}</div>
                     {% endif %}
                     {% if item.has_tags %}
                     <span style="font-size: 32px;">&#x1F3F7;</span>
