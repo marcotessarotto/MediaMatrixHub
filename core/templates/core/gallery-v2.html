@@ -104,6 +104,10 @@
             border-bottom: 1px solid #e5e9ef;
         }
 
+        .document-title {
+            margin-bottom: 1rem;
+        }
+
         .players {
             max-width: 800px;
         }
@@ -429,13 +433,13 @@
           <div class="col-xl-6 col-lg-8 col-md-6"> <!-- Adjusted column sizes here -->
             <div class="gallery-item h-100">
                 <div class="media-wrapper">
+                  <h3 class="document-title">{{ item.title }}</h3>
 
                   {% if item.get_associated_image %}
                   <img src="{{ item.get_associated_image.url }}" class="img-fluid view-pdf-button" alt="{{ item.alt_text }}" data-pdf-url="{{ item.document_file.url }}">
                   {% endif %}
 
                   <div class="video-info mt-2">
-                    <br><br>
                     {% if item.description %}
                     <div class="document-description">{% trans "Description" %}: {{ item.description|safe }}</div>
                     {% endif %}
